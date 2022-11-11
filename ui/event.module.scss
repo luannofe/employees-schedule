@@ -1,0 +1,63 @@
+$fontFamily: sans-serif;
+
+
+.eventDiv {
+    min-height: 200px;
+    width: 170px;
+    background-color: #BFD7D9;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.eventTitle {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;    
+}
+
+.eventDesc {
+    font-family: $fontFamily;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    text-align: center;
+}
+
+.eventCoord {
+    font-family: $fontFamily;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.eventUL {
+    text-align: center;
+    li {
+        line-height: 13px;
+    }
+}
+
+.eventID {
+    width: 46px;
+    height: 28px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        color: black;
+    }
+}

@@ -17,6 +17,12 @@
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.56.1",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.2",
     "typescript": "4.8.4"
+  },
+  "devDependencies": {
+    "@types/sqlite3": "^3.1.8"
   }
 }
