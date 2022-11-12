@@ -6,7 +6,6 @@ const db = new Database('db.sqlite');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    //TODO: reject requests without all necessary properties
     //TODO: return errors
     //TODO: EVENTS table should have a eventNumber column, to its identification within a day
 
@@ -19,11 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     let body : databaseEventInterface = JSON.parse(req.body)
+    let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'dataRegistrado', 'titulo'])
+
+    if (validatedParameters.result == false) {
+        return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
+    }
+
+    
     let dayId = await validateDay(body)
     let responseStatus = await writeEvent(body, dayId)
     
 
-    return res.status(responseStatus).json('asda')
+    return res.status(responseStatus).json('Event registered')
 }
 
 async function validateDay(body : databaseEventInterface) {
@@ -59,5 +65,31 @@ async function writeEvent(body : databaseEventInterface, diaId : number) {
        
         
     })
+
+}
+
+async function validateReq(body : databaseEventInterface, neededProperties: string[]) {
+    return new Promise<{result: boolean, missingParameter?: string}>((resolve, reject) => {
+
+        let isMissingParameters = false;
+        let missingParameters : string[] = [];
+        let i = 1
+        for (let item of neededProperties) {
+
+            if (!(body.hasOwnProperty(item))) {
+                isMissingParameters = true;
+                missingParameters = [...missingParameters, `${item}`]
+            }
+
+            i++
+            if (i == neededProperties.length) {
+                if (isMissingParameters) {
+                    resolve({result: false, missingParameter: `[${missingParameters}]`})
+                }
+                resolve({result: true})
+            }
+        }
+    })
+
 
 }
