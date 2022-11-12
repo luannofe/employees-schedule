@@ -16,13 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(await readDB(body.table))
 }
 
-
-
-async function initiateDB() {
-
-    db.exec(fs.readFileSync('./sql/initiate.sql').toString());
-  
-}
   
 async function readDB(table: string) {
 
@@ -40,11 +33,12 @@ async function readDB(table: string) {
 }
 
 export interface databaseEventInterface {
-    id: number,
-    desc: string,
+    id?: number,
+    desc?: string,
     veiculo: string,
     responsavel: string,
-    data: string,
+    dataEvento: string,
     dataRegistrado: string,
-    titulo: string
+    titulo: string,
+    diaId?: number
 }

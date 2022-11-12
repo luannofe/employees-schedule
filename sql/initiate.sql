@@ -13,14 +13,25 @@ CREATE TABLE IF NOT EXISTS responsaveis (
     nome VARCHAR(200) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS dias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dia VARCHAR(200) NOT NULL UNIQUE
+
+);
+
 CREATE TABLE IF NOT EXISTS eventos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     desc VARCHAR(200) NOT NULL,
     veiculo VARCHAR(200) NOT NULL,
     responsavel VARCHAR(200) NOT NULL,
-    data VARCHAR(200) NOT NULL,
-    dataRegistrado VARCHAR(200) NOT NULL
+    dataEvento VARCHAR(200) NOT NULL,
+    dataRegistrado VARCHAR(200) NOT NULL,
+    diaId INTEGER NOT NULL,
+    FOREIGN KEY (diaId)
+        REFERENCES dias (id)
+
 );
+
 
 INSERT OR REPLACE INTO funcionarios VALUES
     (1, 'Pedro'),
@@ -32,6 +43,9 @@ INSERT OR REPLACE INTO responsaveis VALUES
 
 INSERT OR REPLACE INTO carros VALUES
     (1, 'FIAT UNO');
+
+
+
 
 
 
