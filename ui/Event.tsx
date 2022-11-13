@@ -4,13 +4,14 @@ import iconPersonWorker from '../public/iconPersonWorker.svg'
 import iconVehicle from '../public/iconVehicle.svg'
 import Image from 'next/image';
 import style from './event.module.scss'
-import { databaseEventInterface } from '../pages/api/data';
+import { databaseEventInterface } from '../pages/api/calendar';
 
 export default function(props: {event: databaseEventInterface}) {
+    
     return (
         <div className={style.eventDiv}>
             <div className={style.eventID}>
-                <span>1</span>
+                <span>{props.event.diaOrdem}</span>
             </div>
             <span className={style.eventTitle}>{props.event.titulo}</span>
             <span className={style.eventDesc}>{props.event.desc}</span>

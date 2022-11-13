@@ -1,32 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Database } from "sqlite3";
-import { databaseEventInterface } from "./data";
+import { databaseEventInterface } from "./calendar";
 
 const db = new Database('db.sqlite');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    //TODO: return errors
-    //TODO: EVENTS table should have a eventNumber column, to its identification within a day
 
     if (req.method != 'POST') {
         return res.status(422).json({ message: 'POST only allowed method.'})
     }
-    
-    if (!req.body) {
+
+    if (Object.keys(req.body).length == 0) {
         return res.status(422).json({ message: 'Body is empty.'})
     }
 
-    let body : databaseEventInterface = JSON.parse(req.body)
-    let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'dataRegistrado', 'titulo'])
+    let body = req.body
 
+
+    let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
     if (validatedParameters.result == false) {
         return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
     }
 
     
-    let dayId = await validateDay(body)
-    let responseStatus = await writeEvent(body, dayId)
+    let dayData = await validateDay(body)
+    let responseStatus = await writeEvent(body, dayData.id, dayData.eventCount)
     
 
     return res.status(responseStatus).json('Event registered')
@@ -34,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function validateDay(body : databaseEventInterface) {
     
-    return new Promise<number>((resolve, reject) => {
+    return new Promise<{id: number, eventCount: number}>((resolve, reject) => {
         db.exec(`INSERT OR IGNORE INTO dias(dia) VALUES ('${body.dataEvento}')`)
 
         db.get(`SELECT id FROM dias WHERE dia = '${body.dataEvento}'`, (err, row) => {
@@ -42,23 +41,35 @@ async function validateDay(body : databaseEventInterface) {
                 reject(err)
             }
             
-            resolve(row.id)
+            db.get(`SELECT COUNT(*) as 'eventCount' FROM eventos WHERE diaId = ${row.id}`, (err, count) => {
+                if (err) {
+                    reject(err)
+                }
+
+                resolve({id: row.id, eventCount: count.eventCount + 1})
+            })
         })
     })
     
 }
 
-async function writeEvent(body : databaseEventInterface, diaId : number) {
+async function writeEvent(body : databaseEventInterface, diaId : number, diaOrdem: number) {
+
+    let processedDate = await processDate(body.dataEvento)
 
     return new Promise<number>((resolve, reject) => {
+
+
         db.exec(`INSERT INTO 
-        eventos(desc, veiculo, responsavel, dataEvento, dataRegistrado, diaId) 
-        VALUES ('${body.desc}', '${body.veiculo}', '${body.responsavel}', '${body.dataEvento}', '${body.dataRegistrado}', '${diaId}')`,
+        eventos(titulo, desc, veiculo, responsavel, dataEvento, dataRegistrado, diaId, diaOrdem, funcionarios) 
+        VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
         (err) => {
             if (err) {
                 console.error(err)
                 reject(422);
             }
+            console.log('REGISTERED')
+            console.log(body)
             resolve(200);
         }
         )
@@ -69,7 +80,8 @@ async function writeEvent(body : databaseEventInterface, diaId : number) {
 }
 
 async function validateReq(body : databaseEventInterface, neededProperties: string[]) {
-    return new Promise<{result: boolean, missingParameter?: string}>((resolve, reject) => {
+
+    return new Promise<{result: boolean, missingParameter?: string}>(async (resolve, reject) => {
 
         let isMissingParameters = false;
         let missingParameters : string[] = [];
@@ -81,15 +93,25 @@ async function validateReq(body : databaseEventInterface, neededProperties: stri
                 missingParameters = [...missingParameters, `${item}`]
             }
 
-            i++
             if (i == neededProperties.length) {
                 if (isMissingParameters) {
                     resolve({result: false, missingParameter: `[${missingParameters}]`})
                 }
                 resolve({result: true})
             }
+            i++
         }
     })
 
 
+}
+
+async function processDate(date: string) {
+    if (!date) {
+        return ''
+    }
+
+    let strArr = date.split('/')
+    let processedDate = new Date(`${strArr[1]}/${strArr[0]}/${strArr[2]}`).toDateString()
+    return `${processedDate}`
 }

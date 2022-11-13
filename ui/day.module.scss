@@ -1,0 +1,23 @@
+.day {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 40px;
+    text-align: center;
+}
+
+.subTitle {
+    font-size: 30px;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 6px;
+}
+
+
+
+.bar {
+    background-color: black;
+    width: 4px;
+}

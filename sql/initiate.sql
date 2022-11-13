@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS eventos (
     dataRegistrado VARCHAR(200) NOT NULL,
     diaId INTEGER NOT NULL,
     diaOrdem INTEGER NOT NULL,
+    titulo TEXT NOT NULL,
+    funcionarios TEXT,
     FOREIGN KEY (diaId)
         REFERENCES dias (id)
 
