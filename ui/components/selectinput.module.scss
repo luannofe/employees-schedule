@@ -1,0 +1,50 @@
+.input {
+    width: 100%;
+    min-height: 128px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px 16px 16px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.insertedInput {
+    color: rgb(31, 31, 31);
+    height: fit-content;
+    width: fit-content;
+    padding: 8px 8px 8px 8px;
+    background-color: rgb(228, 228, 228);
+    border-radius: 8px;
+    display: flex;
+    font-family: 'Times New Roman', Times, serif;
+
+
+    button {
+        color: white;
+        border: none;
+        height: 20px;
+        width: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 4px;
+        background-color: rgb(168, 0, 0);
+        margin-left: 4px;
+    }
+}
+
+.span {
+    width: fit-content;
+    height: fit-content;
+    outline: 1px rgb(228, 228, 228) dotted;
+    border-radius: 4px;
+    padding: 8px 8px 8px 8px;
+
+}
+
+.span[contenteditable] {
+}

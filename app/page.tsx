@@ -3,8 +3,10 @@ import styles from './page.module.scss'
 import Calendar from "../ui/Calendar";
 
 import { calendarInterface, databaseEventInterface } from '../pages/api/calendar';
+import NavbarBot from '../ui/NavbarBot';
+import NavbarTop from '../ui/NavbarTop';
+import Frame from '../ui/Frame';
 
-import Image from 'next/image';
 
 
 
@@ -16,26 +18,9 @@ export default async function App() {
 
   let events = await populateMonthsArray()
 
-
   return (
     <div className={styles.bodyContainer}>
-      <div className={styles.navbarTop}>
-        <span >power<span>diamond</span></span>
-      </div>
-      <Calendar data={events}/>
-      <div className={styles.navbarBot}>
-        <div className={styles.buttonsContainer}>
-          <button className={styles.button} >
-            <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
-          </button>
-          <button className={styles.button} >
-            <Image className={styles.icons} width={50} height={50} src='/iconEdit.svg' alt='Editar'></Image>
-          </button>
-          <button className={styles.buttonDelete}>
-            <Image className={styles.icons}  width={50} height={50} src='/iconX.svg' alt='Apagar'></Image>
-          </button>
-        </div>
-      </div>
+      <Frame events={events}/>
     </div>
   )
 
