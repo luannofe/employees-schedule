@@ -4,6 +4,10 @@ import { databaseEventInterface } from "./calendar";
 
 const db = new Database('db.sqlite');
 
+
+
+
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 
@@ -15,10 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(422).json({ message: 'Body is empty.'})
     }
 
-    let body = req.body
-
+    let body = JSON.parse(req.body) 
+    console.log(body)
 
     let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
+    
     if (validatedParameters.result == false) {
         return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
     }
@@ -55,7 +60,7 @@ async function validateDay(body : databaseEventInterface) {
 
 async function writeEvent(body : databaseEventInterface, diaId : number, diaOrdem: number) {
 
-    let processedDate = await processDate(body.dataEvento)
+    let processedDate = body.dataEvento
 
     return new Promise<number>((resolve, reject) => {
 

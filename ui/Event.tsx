@@ -11,18 +11,18 @@ export default function(props: {event: databaseEventInterface}) {
     return (
         <div className={style.eventDiv}>
             <div className={style.eventID}>
-                <span>{props.event.diaOrdem}</span>
+                <span>{props.event?.diaOrdem}</span>
             </div>
-            <span className={style.eventTitle}>{props.event.titulo}</span>
-            <span className={style.eventDesc}>{props.event.desc}</span>
+            <span className={style.eventTitle}>{props.event?.titulo}</span>
+            <span className={style.eventDesc}>{props.event?.desc}</span>
             <div style={{display: 'flex', flexDirection: 'column'}}>
                 <span className={style.eventCoord}>
                     <Image style={{marginRight: '6px'}} src={iconPersonWorker} alt='icone de pessoa'></Image>
-                    {props.event.responsavel}
+                    {props.event?.responsavel}
                 </span>
                 <span className={style.eventCoord}>
                     <Image style={{marginRight: '6px'}} src={iconVehicle} alt='icone de veículo'></Image>
-                    {props.event.veiculo}
+                    {props.event?.veiculo}
                 </span>
             </div>
             <div className={style.eventUL}>

@@ -1,13 +1,19 @@
 'use client'
 
 import style from './selectinput.module.scss'
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
+import { formContext } from '../Frame'
 
 
 export default function SelectInput(props : { insertedValues: string[], setInsertedValues: any}) {
 
     let insertedValues = props.insertedValues
     let setInsertedValues = props.setInsertedValues
+    let FormContext = useContext(formContext)
+
+    useEffect(() => {
+        FormContext?.insertFormInputs((values: any) => ({...values, ['funcionarios']: insertedValues}))
+    }, [insertedValues])
 
     return (
         <div className={style.input} >

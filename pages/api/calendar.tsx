@@ -103,5 +103,5 @@ export interface databaseEventInterface {
     titulo: string,
     diaId?: number,
     diaOrdem?: number,
-    funcionarios?: string
+    funcionarios?: string[]
 }

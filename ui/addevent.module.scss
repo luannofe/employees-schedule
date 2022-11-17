@@ -12,9 +12,9 @@ $font: 'Times-new-roman';
     width: 100vw;
     overflow-y: scroll;
     padding-top: 32px;
-    flex-direction: column;
     justify-content: center;  
     align-items: center;  
+    gap: 80px;
 }
 
 .addEventTitle {
