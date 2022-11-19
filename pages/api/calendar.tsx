@@ -22,7 +22,6 @@ async function readDatabase() {
             if (err) {
             reject(err.message)
             }
-    
             resolve(res)
         })  
     })
@@ -30,52 +29,51 @@ async function readDatabase() {
 }
 
 async function sortDays(array: databaseEventInterface[]) {
+    console.log('SORTANDO DIAS')
 
     if (array.length <= 0) {
         return 'no'
     }
 
     return new Promise<calendarInterface>((resolve, reject) => {
-        let days: calendarInterface = [
-            {
-                dia: array[0].dataEvento,
-                eventos: []
-            }
-        ]
-    
-        let i = 1
-        for (let event of array) {
-            let j = 1
-            for (let day of days) {
-                if (event.dataEvento == day.dia) {
-                    day.eventos? day.eventos = [...day.eventos, event] : day.eventos = [event]
 
-                    if (i == array.length) {
-                        resolve(days)
-                    }
-    
-                    j++
-                    break;
-                }
-    
-                if (j == days.length) {
-                    days = [...days, {
-                        dia: event.dataEvento,
-                        eventos: [event]
-                    }]
-                }
-    
-                if (i == array.length && j == days.length) {
-                    resolve(days)
+        let days: calendarInterface = [
+        ]
+
+        let i = 0;
+        while (i < array.length) {
+            console.log(`Event for day ${array[i].dataEvento}, searching matchs...`)
+            let inserted = false
+            let j = 0;
+            while (j < days.length) {
+                console.log(`Tried matching witch ${days[j].dia}`)
+                if (array[i].dataEvento == days[j].dia ) {
+                     days[j].eventos = [...days[j].eventos!, array[i]]
+                     inserted = true
+                     console.log(`matched.`)
+                     console.log(days)
                 }
                 j++
+            }  
+
+            if (!inserted) {
+                console.log(`not matched`)
+                days = [...days, {dia: array[i].dataEvento, eventos: [array[i]]}]
+                console.log(days)
             }
-            i ++
-        } 
+            i++
+        }  
+
+       resolve(days)
+            
     })
 
-
+        
+        
 }
+
+
+
 
 
 
@@ -99,7 +97,7 @@ export interface databaseEventInterface {
     veiculo: string,
     responsavel: string,
     dataEvento: string,
-    dataRegistrado: string,
+    dataRegistrado?: string,
     titulo: string,
     diaId?: number,
     diaOrdem?: number,

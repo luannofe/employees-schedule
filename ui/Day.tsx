@@ -8,12 +8,12 @@ export default function Day(props: {events?: databaseEventInterface[], day: stri
     
 
     return (
-        <div className={style.day}>
+        <div className={style.day} >
             <span className={style.title}>{processedDate.day}</span>
             <span className={style.subTitle}>{processedDate.weekDay}</span>
             <div style={{minHeight: '650px', minWidth: '170px'}}>
                 {props.events?.map((event) => {
-                    return <Event event={event}/>
+                    return <Event event={event} key={`asdasdasd${event.id}`}/>
                 })}
             </div>
         </div>

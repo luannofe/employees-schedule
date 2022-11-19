@@ -15,6 +15,12 @@ export default function NavbarBot(props: {
 }) {
 
   const addEventFormData = useContext(formContext)
+  const [confirmButtonState, setConfirmButtonState] = useState(
+    {
+      activated: true,
+      styles: styles.button
+    }
+  )
 
   //update formdata, validate and send to api endpoint to post
 
@@ -50,7 +56,7 @@ export default function NavbarBot(props: {
           </button>
           </MotionButton>
           <MotionButton>
-          <button className={styles.button} >
+          <button className={confirmButtonState.styles}  >
             <Image className={styles.icons} onClick={(e)=> {sendData(e)}} width={50} height={50} src='/iconConfirm.svg' alt='Confirmar'></Image>
           </button>
           </MotionButton>
@@ -63,23 +69,87 @@ export default function NavbarBot(props: {
 
   async function sendData(e: FormEvent) {
 
-    e.preventDefault()
-    let formdata = addEventFormData?.formInputs
-    console.log(formdata)
+    if (!confirmButtonState.activated) {
+      return
+    }
+
+    let formdata = await validateForm()
+
+    if (!formdata.passed) {
+      return alert('Preencha todos os campos necessários.')
+    }
+
+    setConfirmButtonState({
+      activated: false,
+      styles: styles.deactivatedButton
+    })
 
     fetch('http://localhost:3000/api/create_event', {
       method: 'POST',
       body: JSON.stringify({
-        dataEvento: formdata?.dataEvento,
-        titulo: formdata?.titulo,
-        desc: formdata?.desc,
-        responsavel: formdata?.responsavel,
-        veiculo: formdata?.veiculo,
-        colaboradores: formdata?.funcionarios
+        dataEvento: formdata.processedForm!.dataEvento,
+        titulo: formdata.processedForm!.titulo,
+        desc: formdata.processedForm!.desc,
+        responsavel: formdata.processedForm!.responsavel,
+        veiculo: formdata.processedForm!.veiculo,
+        colaboradores: formdata.processedForm!.funcionarios
       })
     })
     .then( res => res.json())
-    .then(data => console.log(data))
+    .then(data => {
+  
+
+      setTimeout(() => {
+      setConfirmButtonState({
+        activated: true,
+        styles: styles.button
+      })}, 800)
+
+    })
+  }
+
+  async function validateForm() {
+
+
+    let formdata = addEventFormData?.formInputs
+
+    console.log(formdata)
+
+    let  processedForm = {
+      dataEvento: formdata!.dataEvento,
+      titulo: formdata!.titulo,
+      desc: formdata!.desc,
+      responsavel: formdata!.responsavel,
+      funcionarios: formdata!.funcionarios,
+      veiculo: formdata!.veiculo
+    }
+    
+    return new Promise<{passed: boolean, processedForm?: databaseEventInterface}>((resolve, reject) => {
+
+      let processedFormArr = Object.entries(processedForm)
+
+      let i = 1
+
+      for (let item of processedFormArr) {
+
+        if (item[1] == undefined) {
+
+          if (item[0] != 'desc') {
+            console.log(`missing item ${item[0]}, received ${item[1]}`)
+            resolve({passed: false})
+          } else {
+            processedForm.desc = 'Sem descrição.'
+            resolve({passed: true, processedForm})
+          }
+        }
+
+        if (i == processedFormArr.length) {
+          resolve({passed: true, processedForm})
+        }
+        i ++
+      }
+    })
+
   }
 }
 

@@ -39,9 +39,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function validateDay(body : databaseEventInterface) {
     
     return new Promise<{id: number, eventCount: number}>((resolve, reject) => {
-        db.exec(`INSERT OR IGNORE INTO dias(dia) VALUES ('${body.dataEvento}')`)
+        db.exec(`INSERT OR IGNORE INTO dias(dia) VALUES ('${new Date(body.dataEvento).toDateString()}')`)
 
-        db.get(`SELECT id FROM dias WHERE dia = '${body.dataEvento}'`, (err, row) => {
+        db.get(`SELECT id FROM dias WHERE dia = '${new Date(body.dataEvento).toDateString()}'`, (err, row) => {
             if (err) {
                 reject(err)
             }
@@ -60,7 +60,9 @@ async function validateDay(body : databaseEventInterface) {
 
 async function writeEvent(body : databaseEventInterface, diaId : number, diaOrdem: number) {
 
-    let processedDate = body.dataEvento
+    console.log(`RECEIVED DATE: ${body.dataEvento}`)
+    let processedDate = new Date(body.dataEvento + ' 00:00:00').toDateString() 
+    console.log(`PROCESSED DATE: ${processedDate}`)
 
     return new Promise<number>((resolve, reject) => {
 
@@ -84,7 +86,7 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
 
 }
 
-async function validateReq(body : databaseEventInterface, neededProperties: string[]) {
+export async function validateReq(body : databaseEventInterface, neededProperties: string[]) {
 
     return new Promise<{result: boolean, missingParameter?: string}>(async (resolve, reject) => {
 

@@ -70,6 +70,17 @@ $borderRadius: 15px;
     }
 }
 
+.deactivatedButton {
+    background-color: $navbarColor;
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    border: none;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    font-size: 1.5em;
+    transition: 0.5s; 
+}
+
 .buttonDelete {
 
     background-color: $backgroundColor;

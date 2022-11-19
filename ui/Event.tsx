@@ -9,7 +9,7 @@ import { databaseEventInterface } from '../pages/api/calendar';
 export default function(props: {event: databaseEventInterface}) {
     
     return (
-        <div className={style.eventDiv}>
+        <div className={style.eventDiv} key={`eventkey${props.event.id}`}>
             <div className={style.eventID}>
                 <span>{props.event?.diaOrdem}</span>
             </div>
