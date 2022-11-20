@@ -59,18 +59,21 @@ async function mountMonthsPeriod(initialDate: Date, span: number) {
 }
 
 async function populateMonthsArray() {
-  console.log('here')
+
   let unpopulatedMonthsArray = await mountMonthsPeriod(new Date(), 1)
-  console.log('here')
+
   let eventsArray = await getData()
 
-  console.log(eventsArray)
-  console.log(unpopulatedMonthsArray)
+  // console.log(eventsArray)
+  // console.log(unpopulatedMonthsArray)
+
+
 
   return unpopulatedMonthsArray.map((item, i, arr) => {
-    console.log()
+
     let j = 0
     while (j < eventsArray.length) {
+      
       if (eventsArray[j].dia == item) {
         return eventsArray[j]
       }

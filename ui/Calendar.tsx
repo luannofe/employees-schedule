@@ -2,13 +2,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import React from 'react'
+import React, { createContext, useState } from 'react'
 import { calendarInterface, databaseEventInterface } from '../pages/api/calendar'
 import style from './calendar.module.scss'
 import Day from './Day'
 
-export default  function Calendar( props: {data: calendarInterface }) {
 
+
+export default  function Calendar( props: {data: calendarInterface }) {
+    
     
 
     return  (

@@ -20,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     let body = JSON.parse(req.body) 
+    console.log('RECEIVED BODY')
     console.log(body)
 
     let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
@@ -27,6 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (validatedParameters.result == false) {
         return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
     }
+
 
     
     let dayData = await validateDay(body)
@@ -64,24 +66,45 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
     let processedDate = new Date(body.dataEvento + ' 00:00:00').toDateString() 
     console.log(`PROCESSED DATE: ${processedDate}`)
 
-    return new Promise<number>((resolve, reject) => {
 
 
-        db.exec(`INSERT INTO 
-        eventos(titulo, desc, veiculo, responsavel, dataEvento, dataRegistrado, diaId, diaOrdem, funcionarios) 
-        VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
-        (err) => {
-            if (err) {
-                console.error(err)
-                reject(422);
+    return new Promise<number>(async (resolve, reject) => {
+
+        let id = await validateId(body)
+
+        if (!id) {
+            db.exec(`INSERT INTO 
+            eventos(titulo, desc, veiculo, responsavel, dataEvento, dataRegistrado, diaId, diaOrdem, funcionarios) 
+            VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
+            (err) => {
+                if (err) {
+                    console.error(err)
+                    reject(422);
+                }
+                console.log(`REGISTERED, BECAUSE ID ${id} DOESN'T EXISTS`)
+                console.log(body)
+                resolve(200);
             }
-            console.log('REGISTERED')
-            console.log(body)
-            resolve(200);
-        }
-        )
+            )     
+        } else {
+
+            db.exec(`UPDATE eventos
+            SET titulo = '${body.titulo}', desc = '${body.desc}', veiculo = '${body.veiculo}', responsavel = '${body.responsavel}', dataEvento = '${processedDate}', dataRegistrado = '${new Date().toDateString()}', 
+            diaId = '${diaId}', diaOrdem = '${diaOrdem}', funcionarios = '${body.funcionarios}' 
+            WHERE id = ${body.id}`,
+            (err) => {
+                if (err) {
+                    console.error(err)
+                    reject(422);
+                }
+                console.log('UPDATED')
+                console.log(body)
+                resolve(200);
+            }
+            )
+
        
-        
+    }
     })
 
 }
@@ -113,12 +136,25 @@ export async function validateReq(body : databaseEventInterface, neededPropertie
 
 }
 
-async function processDate(date: string) {
-    if (!date) {
-        return ''
-    }
+async function validateId(body: databaseEventInterface) {
 
-    let strArr = date.split('/')
-    let processedDate = new Date(`${strArr[1]}/${strArr[0]}/${strArr[2]}`).toDateString()
-    return `${processedDate}`
+    
+    return new Promise<boolean >((resolve, reject) => {
+
+        if (!body.id) {
+            console.log(`body id ${body.id} doesnt exists, returning false`)
+            resolve(false)
+        }
+
+        db.get(`SELECT id FROM eventos WHERE eventos.id = ${body.id}`, (err, row) => {
+
+            if (err) {
+                console.log('ERRO AQUI')
+                reject(err)
+            }
+            console.log(`body id ${body.id} exists, returning true`)
+            resolve(true)
+        })
+        
+    })
 }

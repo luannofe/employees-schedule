@@ -2,14 +2,15 @@
 
 import style from './selectinput.module.scss'
 import React, { useContext, useEffect, useState } from "react"
-import { formContext } from '../Frame'
+import { frameContext } from '../Frame'
 
 
-export default function SelectInput(props : { insertedValues: string[], setInsertedValues: any}) {
+export default function SelectInput(props : { insertedValues: string[], setInsertedValues: any, selectedEventTitle?: string}) {
 
     let insertedValues = props.insertedValues
     let setInsertedValues = props.setInsertedValues
-    let FormContext = useContext(formContext)
+    let FormContext = useContext(frameContext)?.formContext
+    let selectedContext = useContext(frameContext)?.eventSelectionContext
 
     useEffect(() => {
         FormContext?.insertFormInputs((values: any) => ({...values, ['funcionarios']: insertedValues}))
@@ -18,7 +19,7 @@ export default function SelectInput(props : { insertedValues: string[], setInser
     return (
         <div className={style.input} >
             {insertedValues.map((item) => {
-                return <InsertedInput insertedValues={insertedValues} setInsertedValues={setInsertedValues} text={item}/>
+                return <InsertedInput insertedValues={insertedValues} setInsertedValues={setInsertedValues} text={item} />
             })}
             <span className={style.span} contentEditable placeholder='Oi' onKeyDown={(e) => {insertValue(e)}}></span>
         </div>

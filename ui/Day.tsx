@@ -5,7 +5,7 @@ import Event from './Event'
 export default function Day(props: {events?: databaseEventInterface[], day: string}) {
 
     let processedDate = dateProcess(props.day)
-    
+
 
     return (
         <div className={style.day} >

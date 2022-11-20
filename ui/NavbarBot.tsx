@@ -5,22 +5,47 @@ import styles from './navbar.module.scss'
 import { useRouter } from 'next/navigation'
 import { METHODS } from "http"
 import { databaseEventInterface } from "../pages/api/calendar"
-import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useState } from "react"
+import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { formContext } from "./Frame"
+import { frameContext } from "./Frame"
 
 export default function NavbarBot(props: {
   setChoosenView: React.SetStateAction<any>,
   choosenView: string
 }) {
 
-  const addEventFormData = useContext(formContext)
+  const addEventFormData = useContext(frameContext)?.formContext
+  const selectionContext = useContext(frameContext)?.eventSelectionContext
+
   const [confirmButtonState, setConfirmButtonState] = useState(
     {
       activated: true,
       styles: styles.button
     }
   )
+
+  const [editButtonState, setEditButtonState] = useState(
+    {
+      activated: false,
+      styles: styles.deactivatedButton
+    }
+  )
+
+  useEffect(() => {
+
+    if (selectionContext?.state.selected) {
+      return setEditButtonState({
+        activated: true,
+        styles: styles.button
+      })
+    }
+
+    return setEditButtonState({
+      activated: false,
+      styles: styles.deactivatedButton
+    })
+
+  }, [selectionContext?.state])
 
   //update formdata, validate and send to api endpoint to post
 
@@ -31,15 +56,13 @@ export default function NavbarBot(props: {
       <div className={styles.buttonsContainer}>
         {props.choosenView == 'Calendar' && (<>
           <MotionButton>
-            <button className={styles.button}  onClick={() => {
-              props.setChoosenView('AddEvent')
-            }}>
+            <button className={styles.button}  onClick={() => { addButton() }}>
               
               <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
             </button>
           </MotionButton>
           <MotionButton>
-          <button className={styles.button} >
+          <button className={editButtonState.styles} onClick={() => {editButton()}} >
             <Image className={styles.icons} width={50} height={50} src='/iconEdit.svg' alt='Editar'></Image>
           </button>
           </MotionButton>
@@ -49,7 +72,7 @@ export default function NavbarBot(props: {
           </button>
           </MotionButton>
         </>)}
-        {props.choosenView == 'AddEvent' && (<>
+        {(props.choosenView == 'AddEvent' || props.choosenView == 'EditEvent') && (<>
           <MotionButton>
           <button className={styles.buttonDelete} onClick={() => {props.setChoosenView('Calendar')}}>
             <Image className={styles.icons} width={50} height={50} src='/iconUndo.svg' alt='Voltar'></Image>
@@ -92,12 +115,21 @@ export default function NavbarBot(props: {
         desc: formdata.processedForm!.desc,
         responsavel: formdata.processedForm!.responsavel,
         veiculo: formdata.processedForm!.veiculo,
-        colaboradores: formdata.processedForm!.funcionarios
+        funcionarios: formdata.processedForm!.funcionarios,
+        id: formdata.processedForm?.id
       })
     })
     .then( res => res.json())
     .then(data => {
   
+      addEventFormData?.insertFormInputs({
+        titulo: '',
+        dataEvento: '',
+        veiculo: '',
+        responsavel: '',
+        desc: '',
+        funcionarios: []
+      })
 
       setTimeout(() => {
       setConfirmButtonState({
@@ -121,7 +153,7 @@ export default function NavbarBot(props: {
       desc: formdata!.desc,
       responsavel: formdata!.responsavel,
       funcionarios: formdata!.funcionarios,
-      veiculo: formdata!.veiculo
+      veiculo: formdata!.veiculo,
     }
     
     return new Promise<{passed: boolean, processedForm?: databaseEventInterface}>((resolve, reject) => {
@@ -139,17 +171,58 @@ export default function NavbarBot(props: {
             resolve({passed: false})
           } else {
             processedForm.desc = 'Sem descrição.'
-            resolve({passed: true, processedForm})
+            resolve({passed: true, processedForm: {
+              ...processedForm,
+              id: formdata?.id
+            }})
           }
         }
 
         if (i == processedFormArr.length) {
-          resolve({passed: true, processedForm})
+          resolve({passed: true, processedForm: {
+            ...processedForm,
+            id: formdata?.id
+          }})
         }
         i ++
       }
     })
 
+  }
+
+  async function editButton() {
+
+    if (!editButtonState.activated) {
+      return
+    }
+
+    if (selectionContext?.state.eventData) {
+      addEventFormData?.insertFormInputs({
+        titulo: selectionContext.state.eventData.titulo,
+        responsavel: selectionContext.state.eventData.responsavel,
+        dataEvento: selectionContext.state.eventData.dataEvento,
+        veiculo: selectionContext.state.eventData.veiculo,
+        funcionarios: selectionContext.state.eventData?.funcionarios,
+        desc: selectionContext.state.eventData?.desc,
+        id: selectionContext.state.eventData.id
+      })
+    }
+  
+
+    return props.setChoosenView('EditEvent')
+  }
+
+  async function addButton() {
+
+    addEventFormData?.insertFormInputs({
+      titulo: '',
+      dataEvento: '',
+      veiculo: '',
+      responsavel: '',
+      desc: '',
+      funcionarios: []
+    })
+    props.setChoosenView('AddEvent')
   }
 }
 

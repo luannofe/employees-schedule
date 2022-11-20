@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function readDatabase() {
 
     return new Promise<any>((resolve, reject) => {
-        db.all(`SELECT eventos.id, eventos.titulo, eventos.desc, eventos.veiculo, eventos.responsavel, eventos.dataEvento, eventos.diaOrdem, dias.dia
+        db.all(`SELECT eventos.id, eventos.titulo, eventos.desc, eventos.veiculo, eventos.responsavel, eventos.dataEvento, eventos.diaOrdem, eventos.funcionarios, dias.dia
         FROM eventos INNER JOIN dias ON eventos.diaId = dias.id`, (err, res) => {
 
             if (err) {
