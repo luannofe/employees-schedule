@@ -28,7 +28,7 @@ export default async function App() {
 
 async function getData() {
 
-  return await fetch('http://localhost:3000/api/calendar', {
+  return await fetch('/api/calendar', {
     method: 'POST',
   }).then(res => res.json())
     .then(data => data) as calendarInterface
