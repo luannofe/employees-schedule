@@ -29,7 +29,6 @@ async function readDatabase() {
 }
 
 async function sortDays(array: databaseEventInterface[]) {
-    console.log('SORTANDO DIAS')
 
     if (array.length <= 0) {
         return 'no'
@@ -42,24 +41,18 @@ async function sortDays(array: databaseEventInterface[]) {
 
         let i = 0;
         while (i < array.length) {
-            console.log(`Event for day ${array[i].dataEvento}, searching matchs...`)
             let inserted = false
             let j = 0;
             while (j < days.length) {
-                console.log(`Tried matching witch ${days[j].dia}`)
                 if (array[i].dataEvento == days[j].dia ) {
                      days[j].eventos = [...days[j].eventos!, array[i]]
                      inserted = true
-                     console.log(`matched.`)
-                     console.log(days)
                 }
                 j++
             }  
 
             if (!inserted) {
-                console.log(`not matched`)
                 days = [...days, {dia: array[i].dataEvento, eventos: [array[i]]}]
-                console.log(days)
             }
             i++
         }  

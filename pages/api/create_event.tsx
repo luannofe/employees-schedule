@@ -20,8 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     let body = JSON.parse(req.body) 
-    console.log('RECEIVED BODY')
-    console.log(body)
 
     let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
     
@@ -62,9 +60,8 @@ async function validateDay(body : databaseEventInterface) {
 
 async function writeEvent(body : databaseEventInterface, diaId : number, diaOrdem: number) {
 
-    console.log(`RECEIVED DATE: ${body.dataEvento}`)
     let processedDate = new Date(body.dataEvento + ' 00:00:00').toDateString() 
-    console.log(`PROCESSED DATE: ${processedDate}`)
+
 
 
 
@@ -78,11 +75,8 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
             VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
             (err) => {
                 if (err) {
-                    console.error(err)
                     reject(422);
                 }
-                console.log(`REGISTERED, BECAUSE ID ${id} DOESN'T EXISTS`)
-                console.log(body)
                 resolve(200);
             }
             )     
@@ -90,15 +84,13 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
 
             db.exec(`UPDATE eventos
             SET titulo = '${body.titulo}', desc = '${body.desc}', veiculo = '${body.veiculo}', responsavel = '${body.responsavel}', dataEvento = '${processedDate}', dataRegistrado = '${new Date().toDateString()}', 
-            diaId = '${diaId}', diaOrdem = '${diaOrdem}', funcionarios = '${body.funcionarios}' 
+            diaId = '${diaId}', diaOrdem = '${diaOrdem - 1}', funcionarios = '${body.funcionarios}' 
             WHERE id = ${body.id}`,
             (err) => {
                 if (err) {
                     console.error(err)
                     reject(422);
                 }
-                console.log('UPDATED')
-                console.log(body)
                 resolve(200);
             }
             )
@@ -152,7 +144,6 @@ async function validateId(body: databaseEventInterface) {
                 console.log('ERRO AQUI')
                 reject(err)
             }
-            console.log(`body id ${body.id} exists, returning true`)
             resolve(true)
         })
         

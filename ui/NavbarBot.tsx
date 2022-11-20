@@ -16,6 +16,7 @@ export default function NavbarBot(props: {
 
   const addEventFormData = useContext(frameContext)?.formContext
   const selectionContext = useContext(frameContext)?.eventSelectionContext
+  const router = useRouter()
 
   const [confirmButtonState, setConfirmButtonState] = useState(
     {
@@ -31,14 +32,36 @@ export default function NavbarBot(props: {
     }
   )
 
+  const [deleteButtonState, setDeleteButtonState] = useState(
+    {
+      activated: false,
+      clickedOnce: false,
+      styles: styles.deactivatedButton,
+
+    }
+  )
+
   useEffect(() => {
 
     if (selectionContext?.state.selected) {
-      return setEditButtonState({
+      setEditButtonState({
         activated: true,
         styles: styles.button
       })
+
+      return setDeleteButtonState({
+        activated: true,
+        clickedOnce: false,
+        styles: styles.buttonDelete
+      })
     }
+
+    setDeleteButtonState({
+      activated: false,
+      clickedOnce: false,
+      styles: styles.deactivatedButton
+    }) 
+
 
     return setEditButtonState({
       activated: false,
@@ -47,7 +70,6 @@ export default function NavbarBot(props: {
 
   }, [selectionContext?.state])
 
-  //update formdata, validate and send to api endpoint to post
 
 
   return (
@@ -67,14 +89,14 @@ export default function NavbarBot(props: {
           </button>
           </MotionButton>
           <MotionButton>
-          <button className={styles.buttonDelete}>
+          <button className={deleteButtonState.styles} onClick={() => {deleteButton()}}>
             <Image className={styles.icons} width={50} height={50} src='/iconX.svg' alt='Apagar'></Image>
           </button>
           </MotionButton>
         </>)}
         {(props.choosenView == 'AddEvent' || props.choosenView == 'EditEvent') && (<>
           <MotionButton>
-          <button className={styles.buttonDelete} onClick={() => {props.setChoosenView('Calendar')}}>
+          <button className={styles.buttonDelete} onClick={() => {undoButton()}}>
             <Image className={styles.icons} width={50} height={50} src='/iconUndo.svg' alt='Voltar'></Image>
           </button>
           </MotionButton>
@@ -107,7 +129,7 @@ export default function NavbarBot(props: {
       styles: styles.deactivatedButton
     })
 
-    fetch('http://localhost:3000/api/create_event', {
+    fetch('/api/create_event', {
       method: 'POST',
       body: JSON.stringify({
         dataEvento: formdata.processedForm!.dataEvento,
@@ -121,6 +143,11 @@ export default function NavbarBot(props: {
     })
     .then( res => res.json())
     .then(data => {
+
+      if (props.choosenView == 'EditEvent') {
+        router.refresh()
+        props.setChoosenView('Calendar')
+      }
   
       addEventFormData?.insertFormInputs({
         titulo: '',
@@ -223,6 +250,36 @@ export default function NavbarBot(props: {
       funcionarios: []
     })
     props.setChoosenView('AddEvent')
+  }
+
+  async function deleteButton() {
+
+    if (deleteButtonState.clickedOnce) {
+      fetch('/api/delete_event', {
+        method: 'POST',
+        body: JSON.stringify({
+          id: selectionContext?.state.eventData?.id
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        selectionContext?.setState({selected: false})
+        router.refresh()
+      })
+    } else {
+      setDeleteButtonState({
+        activated: true,
+        clickedOnce: true,
+        styles: styles.buttonDelete,
+      })
+    }
+
+  }
+
+  async function undoButton() {
+    selectionContext?.setState({selected: false})
+    router.refresh()
+    props.setChoosenView('Calendar')
   }
 }
 

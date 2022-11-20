@@ -29,6 +29,8 @@ interface frameContext  {
 
 export const frameContext = createContext<frameContext | null>(null)
 
+
+
 export default function Frame(
     props: {
         events: calendarInterface,
@@ -56,18 +58,21 @@ export default function Frame(
         }
     }
 
-    
 
     useEffect(()=> {
         console.log(addEventFormInputs)
     }, [addEventFormInputs])
+
+    useEffect(() => {
+        console.log(selectedEvent.eventData)
+    }, [selectedEvent.eventData])
     
 
     return <frameContext.Provider value={contextProviders}>
         <NavbarTop/>
-        {choosenView == 'Calendar' && <Calendar data={props.events}/>}
-        {choosenView == 'AddEvent' && <AddEvent/>}
-        {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
+            {choosenView == 'Calendar' && <Calendar data={props.events}/>}
+            {choosenView == 'AddEvent' && <AddEvent/>}
+            {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
         <NavbarBot choosenView={choosenView} setChoosenView={setChoosenView}/>
     </frameContext.Provider>   
     

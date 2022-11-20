@@ -14,7 +14,7 @@ export default function (props: { event: databaseEventInterface }) {
     const [styles, setStyles] = useState({})
 
     let employeesArr = String(props.event?.funcionarios).split(',') 
-    console.log(props.event)
+
     
     useEffect(() => {
 
