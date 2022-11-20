@@ -1,8 +1,7 @@
 import styles from './page.module.scss'
-
 import Calendar from "../ui/Calendar";
-
-import { calendarInterface, databaseEventInterface } from '../pages/api/calendar';
+import url from 'url'
+import calendarHandler, { calendarInterface, databaseEventInterface } from '../pages/api/calendar';
 import NavbarBot from '../ui/NavbarBot';
 import NavbarTop from '../ui/NavbarTop';
 import Frame from '../ui/Frame';
@@ -28,10 +27,8 @@ export default async function App() {
 
 async function getData() {
 
-  return await fetch('/api/calendar', {
-    method: 'POST',
-  }).then(res => res.json())
-    .then(data => data) as calendarInterface
+  return await calendarHandler()
+
 }
 
 async function mountMonthsPeriod(initialDate: Date, span: number) {

@@ -4,11 +4,11 @@ import { Database } from "sqlite3";
 
 const db = new Database('db.sqlite');
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function calendarHandler() {
 
     let db = await readDatabase()
     let sortedDb = await sortDays(db)
-    return res.status(200).json(sortedDb)
+    return sortedDb
 
 }
 
@@ -31,7 +31,7 @@ async function readDatabase() {
 async function sortDays(array: databaseEventInterface[]) {
 
     if (array.length <= 0) {
-        return 'no'
+        return []
     }
 
     return new Promise<calendarInterface>((resolve, reject) => {
