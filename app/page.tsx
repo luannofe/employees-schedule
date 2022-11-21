@@ -8,9 +8,6 @@ import Frame from '../ui/Frame';
 
 
 
-
-
-
 export default async function App() {
 
   //TODO: user selected months UX

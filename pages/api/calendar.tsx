@@ -4,6 +4,57 @@ import { Database } from "sqlite3";
 
 const db = new Database('db.sqlite');
 
+const sqlInitiate = `CREATE TABLE IF NOT EXISTS funcionarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS carros (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS responsaveis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dia VARCHAR(200) NOT NULL UNIQUE
+
+);
+
+CREATE TABLE IF NOT EXISTS eventos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    desc VARCHAR(200) NOT NULL,
+    veiculo VARCHAR(200) NOT NULL,
+    responsavel VARCHAR(200) NOT NULL,
+    dataEvento VARCHAR(200) NOT NULL,
+    dataRegistrado VARCHAR(200) NOT NULL,
+    diaId INTEGER NOT NULL,
+    diaOrdem INTEGER NOT NULL,
+    titulo TEXT NOT NULL,
+    funcionarios TEXT,
+    FOREIGN KEY (diaId)
+        REFERENCES dias (id)
+
+);
+
+
+INSERT OR REPLACE INTO funcionarios VALUES
+    (1, 'Pedro'),
+    (2, 'Joao');
+
+
+INSERT OR REPLACE INTO responsaveis VALUES
+    (1, 'Ricardo');
+
+INSERT OR REPLACE INTO carros VALUES
+    (1, 'FIAT UNO');`
+
+db.exec(sqlInitiate)
+
 export default async function calendarHandler() {
 
     let db = await readDatabase()
@@ -64,14 +115,6 @@ async function sortDays(array: databaseEventInterface[]) {
         
         
 }
-
-
-
-
-
-
-
-
 
 
 
