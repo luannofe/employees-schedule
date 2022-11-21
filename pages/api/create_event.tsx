@@ -135,16 +135,16 @@ async function validateId(body: databaseEventInterface) {
 
         if (!body.id) {
             console.log(`body id ${body.id} doesnt exists, returning false`)
-            resolve(false)
-        }
+           return resolve(false)
+        } 
 
         db.get(`SELECT id FROM eventos WHERE eventos.id = ${body.id}`, (err, row) => {
 
             if (err) {
                 console.log('ERRO AQUI')
-                reject(err)
+                return reject(err)
             }
-            resolve(true)
+            return resolve(true)
         })
         
     })
