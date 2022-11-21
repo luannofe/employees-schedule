@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Database } from "sqlite3";
 
 
+
+
 export const db = new Database('db.sqlite');
 
 const sqlInitiate = `CREATE TABLE IF NOT EXISTS funcionarios (

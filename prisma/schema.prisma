@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db.sqlite"
+}
+
+model dias {
+  id      Int       @id @default(autoincrement())
+  dia     String    @unique(map: "sqlite_autoindex_dias_1")
+  eventos eventos[]
+}
+
+model eventos {
+  id                       Int     @id @default(autoincrement())
+  desc                     String
+  veiculo                  String
+  responsavel              String
+  dataEvento               String
+  dataRegistrado           String
+  diaId                    Int
+  diaOrdem                 Int
+  titulo                   String
+  funcionarios             String?
+  dataEvento_diasToeventos dias    @relation(fields: [diaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model carros {
+  id   Int    @id @default(autoincrement())
+  nome String
+}
+
+model funcionarios {
+  id   Int    @id @default(autoincrement())
+  nome String
+}
+
+model responsaveis {
+  id   Int    @id @default(autoincrement())
+  nome String
+}
