@@ -71,9 +71,9 @@ async function readDatabase() {
         FROM eventos INNER JOIN dias ON eventos.diaId = dias.id`, (err, res) => {
 
             if (err) {
-            reject(err.message)
+                return reject(err.message)
             }
-            resolve(res)
+            return resolve(res)
         })  
     })
 
@@ -108,7 +108,7 @@ async function sortDays(array: databaseEventInterface[]) {
             i++
         }  
 
-       resolve(days)
+        return resolve(days)
             
     })
 

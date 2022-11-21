@@ -32,10 +32,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             db.exec(`DELETE FROM eventos WHERE id = ${id}`, async (err) => {
                 if (err) {
                     console.log(err)
-                    resolve(422)
+                    return resolve(422)
                 }
                 
-                    resolve(200)
+                return resolve(200)
 
 
             })       
@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (err) {
                     console.log(`ERROR at selecting id`)
                     console.log(err)
-                    resolve(false)
+                    return resolve(false)
                 }
                 console.log('ID SELECTED')
                 console.log(row)
@@ -70,10 +70,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     if (err) {
                         console.log(`ERROR at updating diaOrdem with id ${row.diaId}`)
                         console.log(err)
-                        resolve(false)
+                        return resolve(false)
                     }
 
-                    resolve(true)
+                    return resolve(true)
                 })
             })
             

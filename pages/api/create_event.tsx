@@ -43,15 +43,15 @@ async function validateDay(body : databaseEventInterface) {
 
         db.get(`SELECT id FROM dias WHERE dia = '${new Date(body.dataEvento).toDateString()}'`, (err, row) => {
             if (err) {
-                reject(err)
+                return reject(err)
             }
             
             db.get(`SELECT COUNT(*) as 'eventCount' FROM eventos WHERE diaId = ${row.id}`, (err, count) => {
                 if (err) {
-                    reject(err)
+                    return reject(err)
                 }
 
-                resolve({id: row.id, eventCount: count.eventCount + 1})
+                return resolve({id: row.id, eventCount: count.eventCount + 1})
             })
         })
     })
@@ -75,9 +75,10 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
             VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
             (err) => {
                 if (err) {
-                    reject(422);
+                    return reject(422);
                 }
-                resolve(200);
+                console.log('REGISTERED')
+                return resolve(200);
             }
             )     
         } else {
@@ -89,9 +90,10 @@ async function writeEvent(body : databaseEventInterface, diaId : number, diaOrde
             (err) => {
                 if (err) {
                     console.error(err)
-                    reject(422);
+                    return reject(422);
                 }
-                resolve(200);
+                console.log('UPDATED')
+                return resolve(200);
             }
             )
 
@@ -117,9 +119,9 @@ export async function validateReq(body : databaseEventInterface, neededPropertie
 
             if (i == neededProperties.length) {
                 if (isMissingParameters) {
-                    resolve({result: false, missingParameter: `[${missingParameters}]`})
+                    return resolve({result: false, missingParameter: `[${missingParameters}]`})
                 }
-                resolve({result: true})
+                return resolve({result: true})
             }
             i++
         }
