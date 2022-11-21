@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Database } from "sqlite3";
 import { validateReq } from "./create_event";
+import { db } from "./calendar";
 
-const db = new Database('db.sqlite');
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 

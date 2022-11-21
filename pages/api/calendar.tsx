@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Database } from "sqlite3";
 
 
-const db = new Database('db.sqlite');
+export const db = new Database('db.sqlite');
 
 const sqlInitiate = `CREATE TABLE IF NOT EXISTS funcionarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Database } from "sqlite3";
 import { databaseEventInterface } from "./calendar";
+import { db } from "./calendar";
 
-const db = new Database('db.sqlite');
 
 
 
