@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Database } from "sqlite3";
 import { validateReq } from "./create_event";
-import { db } from "./calendar";
+import { prisma } from "./calendar";
+
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -23,60 +23,69 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     await updateDiaOrdem(body.id)
-    return res.status(await deleteEvent(body.id)).json({message: 'Successfully deleted.'})
+
+    const result = await deleteEvent(body.id)
+    
+    return res.status(result.status).json({message: result.message})
 
 
     async function deleteEvent(id : number) {
         
-        return new Promise<number>((resolve, reject) => {
-            db.exec(`DELETE FROM eventos WHERE id = ${id}`, async (err) => {
-                if (err) {
-                    console.log(err)
-                    return resolve(422)
-                }
-                
-                return resolve(200)
-
-
-            })       
+        const deletedEvent = await prisma.eventos.delete({
+            where: {
+                id: id
+            },
+            select: {
+                titulo: true,
+                dataEvento: true,
+                id: true
+            }
         })
 
+        if (!deletedEvent.id) {
+            return {
+                status: 200,
+                message: `No event for id ${id}`
+            }
+        }
 
+        return {
+            status: 200,
+            message: `Deleted event from ${deletedEvent.dataEvento}, title: ${deletedEvent.titulo} and id ${deletedEvent.id}`
+        }
     }
 
     async function updateDiaOrdem(id : number) {
 
         console.log(`ID RECEIVED TO UPDATE: ${id}`)
 
-        return new Promise<boolean>((resolve, reject) => {
+        let eventDate = await prisma.eventos.findFirst({
+            where: {
+                id: id
+            },
+            select: {
+                dataEvento: true
+            }
+        })
 
-            db.get(`SELECT diaId FROM eventos WHERE id = ${id} LIMIT 1`, (err, row) => {
-                if (err) {
-                    console.log(`ERROR at selecting id`)
-                    console.log(err)
-                    return resolve(false)
-                }
-                console.log('ID SELECTED')
-                console.log(row)
+        await prisma.eventos.updateMany({
+            where: {
+                dataEvento: eventDate?.dataEvento,
+            },
+            data: {
+                diaOrdem: {
+                    decrement: 1
+                } 
+            }
+        })
 
-                db.exec(`
-                UPDATE eventos 
-                SET diaOrdem = 
-                CASE WHEN diaOrdem > 1 
-                THEN diaOrdem - 1 
-                ELSE diaOrdem END
-                WHERE diaId = ${row.diaId}`, (err) => {
-
-                    if (err) {
-                        console.log(`ERROR at updating diaOrdem with id ${row.diaId}`)
-                        console.log(err)
-                        return resolve(false)
-                    }
-
-                    return resolve(true)
-                })
-            })
-            
+        return await prisma.eventos.updateMany({
+            where: {
+                diaOrdem: 0
+            },
+            data: {
+                diaOrdem: 1
+            }
         })
 
 

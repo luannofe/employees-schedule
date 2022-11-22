@@ -13,6 +13,7 @@ export default async function App() {
   //TODO: user selected months UX
 
   let events = await populateMonthsArray()
+  console.log(events)
 
   return (
     <div className={styles.bodyContainer}>

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Database } from "sqlite3";
-import { databaseEventInterface } from "./calendar";
-import { db } from "./calendar";
+import { prisma } from "./calendar";
+import type { eventos }  from '@prisma/client'
 
 
 
@@ -19,91 +18,81 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(422).json({ message: 'Body is empty.'})
     }
 
-    let body = JSON.parse(req.body) 
+    const body = JSON.parse(req.body) 
 
-    let validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
+    const validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
     
     if (validatedParameters.result == false) {
         return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
     }
 
-
     
-    let dayData = await validateDay(body)
-    let responseStatus = await writeEvent(body, dayData.id, dayData.eventCount)
+    let eventDate = processedDate(new Date(body.dataEvento + ' 00:00:00'))
+    let dayData = await validateDay(eventDate)
+
+    let writeResult = await writeEvent(body, dayData!)
     
 
-    return res.status(responseStatus).json('Event registered')
+    return res.status(writeResult.status).json(writeResult.message)
 }
 
-async function validateDay(body : databaseEventInterface) {
-    
-    return new Promise<{id: number, eventCount: number}>((resolve, reject) => {
-        db.exec(`INSERT OR IGNORE INTO dias(dia) VALUES ('${new Date(body.dataEvento).toDateString()}')`)
+async function validateDay(eventDate : string) {
 
-        db.get(`SELECT id FROM dias WHERE dia = '${new Date(body.dataEvento).toDateString()}'`, (err, row) => {
-            if (err) {
-                return reject(err)
-            }
-            
-            db.get(`SELECT COUNT(*) as 'eventCount' FROM eventos WHERE diaId = ${row.id}`, (err, count) => {
-                if (err) {
-                    return reject(err)
-                }
-
-                return resolve({id: row.id, eventCount: count.eventCount + 1})
-            })
-        })
+    await prisma.dias.upsert({
+        where: {dia: eventDate},
+        update: {dia: eventDate},
+        create: {dia: eventDate},
     })
+
+    console.log(`VALIDATING DATE ${eventDate}`)
+
+    return await prisma.dias.findUnique({
+        where: {dia: eventDate},
+        select: {id: true, dia: true}
+    })
+
     
 }
 
-async function writeEvent(body : databaseEventInterface, diaId : number, diaOrdem: number) {
+async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
 
-    let processedDate = new Date(body.dataEvento + ' 00:00:00').toDateString() 
+    let count = await prisma.eventos.count({
+        where: {diaId: dayData.id}
+    })
 
+    let insert = await prisma.eventos.upsert({
+        where: {id: dayData.id},
+        create: {
+            ...body,
+            diaOrdem: count + 1,
+            funcionarios: String(body.funcionarios),
+            dataRegistrado: processedDate(new Date()),
+            diaId: dayData.id,
+            dataEvento: dayData.dia
+        },
+        update: {
+            ...body,
+            funcionarios: String(body.funcionarios)
+        }
+    })
 
-
-
-    return new Promise<number>(async (resolve, reject) => {
-
-        let id = await validateId(body)
-
-        if (!id) {
-            db.exec(`INSERT INTO 
-            eventos(titulo, desc, veiculo, responsavel, dataEvento, dataRegistrado, diaId, diaOrdem, funcionarios) 
-            VALUES ('${body.titulo}', '${body.desc}', '${body.veiculo}', '${body.responsavel}', '${processedDate}', '${new Date().toDateString()}', '${diaId}', '${diaOrdem}', '${body.funcionarios}')`,
-            (err) => {
-                if (err) {
-                    return reject(422);
-                }
-                console.log('REGISTERED')
-                return resolve(200);
-            }
-            )     
-        } else {
-
-            db.exec(`UPDATE eventos
-            SET titulo = '${body.titulo}', desc = '${body.desc}', veiculo = '${body.veiculo}', responsavel = '${body.responsavel}', dataEvento = '${processedDate}', dataRegistrado = '${new Date().toDateString()}', 
-            diaId = '${diaId}', diaOrdem = '${diaOrdem - 1}', funcionarios = '${body.funcionarios}' 
-            WHERE id = ${body.id}`,
-            (err) => {
-                if (err) {
-                    console.error(err)
-                    return reject(422);
-                }
-                console.log('UPDATED')
-                return resolve(200);
-            }
-            )
-
-       
+    if (typeof insert !== 'object') {
+        return {
+            status: 422,
+            message: 'There was an error while creating event.'
+        }
     }
-    })
+
+    return {
+        status: 200,
+        message: {
+            registeredEvent: insert
+        }
+    }
 
 }
 
-export async function validateReq(body : databaseEventInterface, neededProperties: string[]) {
+export async function validateReq(body : eventos, neededProperties: string[]) {
 
     return new Promise<{result: boolean, missingParameter?: string}>(async (resolve, reject) => {
 
@@ -130,24 +119,7 @@ export async function validateReq(body : databaseEventInterface, neededPropertie
 
 }
 
-async function validateId(body: databaseEventInterface) {
-
-    
-    return new Promise<boolean >((resolve, reject) => {
-
-        if (!body.id) {
-            console.log(`body id ${body.id} doesnt exists, returning false`)
-           return resolve(false)
-        } 
-
-        db.get(`SELECT id FROM eventos WHERE eventos.id = ${body.id}`, (err, row) => {
-
-            if (err) {
-                console.log('ERRO AQUI')
-                return reject(err)
-            }
-            return resolve(true)
-        })
-        
-    })
+export function processedDate(date: Date) {
+    return date.toString().slice(0,15)
 }
+

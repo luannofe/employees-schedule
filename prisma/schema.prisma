@@ -9,22 +9,21 @@ datasource db {
 
 model dias {
   id      Int       @id @default(autoincrement())
-  dia     String    @unique(map: "sqlite_autoindex_dias_1")
-  eventos eventos[]
+  dia     String    @unique
 }
 
 model eventos {
-  id                       Int     @id @default(autoincrement())
-  desc                     String
-  veiculo                  String
-  responsavel              String
-  dataEvento               String
-  dataRegistrado           String
-  diaId                    Int
-  diaOrdem                 Int
-  titulo                   String
-  funcionarios             String?
-  dataEvento_diasToeventos dias    @relation(fields: [diaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             Int    @id @default(autoincrement())
+  desc           String
+  veiculo        String
+  responsavel    String
+  dataEvento     String
+  dataRegistrado String
+  diaId          Int
+  diaOrdem       Int
+  titulo         String
+  funcionarios   String
+      
 }
 
 model carros {
