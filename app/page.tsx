@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import Calendar from "../ui/Calendar";
 import url from 'url'
-import calendarHandler, { calendarInterface, databaseEventInterface } from '../pages/api/calendar';
+import calendarHandler from '../pages/api/calendar';
 import NavbarBot from '../ui/NavbarBot';
 import NavbarTop from '../ui/NavbarTop';
 import Frame from '../ui/Frame';
-
+import type {eventos} from '@prisma/client'
 
 
 export default async function App() {

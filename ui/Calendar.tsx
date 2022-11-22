@@ -9,7 +9,7 @@ import Day from './Day'
 
 
 
-export default  function Calendar( props: {data: calendarInterface }) {
+export default  function Calendar( props: {data: any[] }) {
     
     
 

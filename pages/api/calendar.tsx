@@ -63,9 +63,6 @@ async function sortDays(array: eventos[]) {
 
 
 
-
-
-
 export type calendarInterface = {
     dia: string,
     eventos?: eventos[]
