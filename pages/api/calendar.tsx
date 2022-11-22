@@ -8,6 +8,8 @@ export const prisma = new PrismaClient()
 
 export default async function calendarHandler() {
 
+    //TODO: CHANGE THIS FUNCTION TO API CALL, TO FORCE DB RE-READ
+
     let db = await readDatabase()
     console.log('PURE DATABASE')
     console.log(db)

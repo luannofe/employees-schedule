@@ -1,11 +1,11 @@
 -- CreateTable
-CREATE TABLE "dia" (
+CREATE TABLE "dias" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "dia" TEXT NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "evento" (
+CREATE TABLE "eventos" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "desc" TEXT NOT NULL,
     "veiculo" TEXT NOT NULL,
@@ -37,4 +37,4 @@ CREATE TABLE "responsaveis" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "dia_dia_key" ON "dia"("dia");
+CREATE UNIQUE INDEX "dias_dia_key" ON "dias"("dia");
