@@ -146,7 +146,7 @@ export default function NavbarBot(props: {
 
       if (props.choosenView == 'EditEvent') {
         router.refresh()
-        props.setChoosenView('Calendar')
+        props.setChoosenView('Update')
       }
   
       addEventFormData?.insertFormInputs({
@@ -265,6 +265,7 @@ export default function NavbarBot(props: {
       .then(data => {
         selectionContext?.setState({selected: false})
         router.refresh()
+        props.setChoosenView('Update')
       })
     } else {
       setDeleteButtonState({
@@ -279,7 +280,7 @@ export default function NavbarBot(props: {
   async function undoButton() {
     selectionContext?.setState({selected: false})
     router.refresh()
-    props.setChoosenView('Calendar')
+    props.setChoosenView('Update')
   }
 }
 

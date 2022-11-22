@@ -57,7 +57,7 @@ export default function Frame() {
 
     const [events, setEvents] = useState<frontEndCalendarEventos[]> ()
 
-    const [choosenView, setChoosenView] = useState('Calendar')
+    const [choosenView, setChoosenView] = useState('Update')
 
     const [addEventFormInputs, setAddEventFormInputs] = useState({} as any)
 
@@ -65,6 +65,10 @@ export default function Frame() {
         selected : false
     })
 
+
+
+
+    
     const contextProviders : frameContext = {
         formContext: {
             formInputs: addEventFormInputs,
@@ -77,12 +81,16 @@ export default function Frame() {
     }
 
 
+
     useEffect(() => {
-        if ('Calendar') {
-            getCalendarData()
+
+        if (choosenView == 'Update') {
+            getCalendarData() 
+            setChoosenView('Calendar') 
         } else {
             return
         }
+
     }, [choosenView])
 
     useEffect(()=> {

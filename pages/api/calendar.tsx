@@ -1,7 +1,9 @@
 import {PrismaClient} from '@prisma/client'
 import type {eventos} from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
+import dayjs from 'dayjs'
 
+dayjs().format
 
 
 
@@ -10,7 +12,8 @@ console.log('1')
 
 export default async function calendarHandler(req: NextApiRequest, res: NextApiResponse) {
 
-    //TODO: CHANGE THIS FUNCTION TO API CALL, TO FORCE DB RE-READ
+
+    //TODO: days span selectable by user 
 
 
     let db = await readDatabase()
@@ -74,31 +77,32 @@ async function sortDays(array: eventos[]) {
 
 async function mountMonthsPeriod(initialDate: Date, span: number) {
 
-    let date = new Date(
-      initialDate.getFullYear(),
-      initialDate.getMonth(),
-      1
-    )
+    let date = getPastSunday(initialDate)
+
     let dates = []
   
-    let MonthsAhead = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth() + span,
-      new Date().getDate()
-    );
-  
-  
-    while (date.getMonth() != MonthsAhead.getMonth()) {
+    console.log('im here')
+    let i = 0
+    while (i < span) {
       dates.push(date.toDateString())
       date.setDate(date.getDate() + 1)
+      i++
+      console.log(i)
     }
+    console.log('ended loop')
   
     return dates as string[]
+
+    function getPastSunday(today: Date) {
+      let tempDate = new Date() 
+      tempDate.setDate(today.getDate() - (today.getDay()||7) * 2);
+      return tempDate
+    }
 }
 
 async function populateMonthsArray(eventsArray : calendarInterface) {
 
-    let unpopulatedMonthsArray = await mountMonthsPeriod(new Date(), 1)
+    let unpopulatedMonthsArray = await mountMonthsPeriod(new Date(), 84)
 
   
     // console.log(eventsArray)
@@ -139,5 +143,5 @@ export interface databaseEventInterface {
     titulo: string,
     diaId?: number,
     diaOrdem?: number,
-    funcionarios?: string
+    funcionarios?: string[]
 }
