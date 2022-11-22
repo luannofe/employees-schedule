@@ -7,7 +7,7 @@ import { METHODS } from "http"
 import { databaseEventInterface } from "../pages/api/calendar"
 import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { frameContext } from "./Frame"
+import { frameContext, frontEndEventos } from "./Frame"
 
 export default function NavbarBot(props: {
   setChoosenView: React.SetStateAction<any>,
@@ -183,7 +183,7 @@ export default function NavbarBot(props: {
       veiculo: formdata!.veiculo,
     }
     
-    return new Promise<{passed: boolean, processedForm?: databaseEventInterface}>((resolve, reject) => {
+    return new Promise<{passed: boolean, processedForm?: frontEndEventos}>((resolve, reject) => {
 
       let processedFormArr = Object.entries(processedForm)
 

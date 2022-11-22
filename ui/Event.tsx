@@ -4,11 +4,12 @@ import iconPersonWorker from '../public/iconPersonWorker.svg'
 import iconVehicle from '../public/iconVehicle.svg'
 import Image from 'next/image';
 import style from './event.module.scss'
-import { databaseEventInterface } from '../pages/api/calendar';
-import React, { MouseEventHandler, useContext, useEffect, useState } from 'react';
-import { frameContext } from './Frame';
 
-export default function (props: { event: databaseEventInterface }) {
+import React, { MouseEventHandler, useContext, useEffect, useState } from 'react';
+import { frameContext, frontEndEventos } from './Frame';
+import { eventos } from '@prisma/client';
+
+export default function (props: { event: frontEndEventos }) {
 
     const selectionContext = useContext(frameContext)?.eventSelectionContext
     const [styles, setStyles] = useState({})

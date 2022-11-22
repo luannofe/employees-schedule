@@ -6,12 +6,16 @@ import React, { createContext, useState } from 'react'
 import { calendarInterface, databaseEventInterface } from '../pages/api/calendar'
 import style from './calendar.module.scss'
 import Day from './Day'
+import { frontEndCalendarEventos, frontEndEventos } from './Frame'
 
 
 
-export default  function Calendar( props: {data: any[] }) {
+export default  function Calendar( props: {
+    data: frontEndCalendarEventos[]
     
+}) {
     
+    console.log(props.data)
 
     return  (
         <motion.div className={style.calendar} >

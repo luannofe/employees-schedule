@@ -1,8 +1,9 @@
-import { databaseEventInterface } from '../pages/api/calendar'
+import { eventos } from '@prisma/client'
 import style from './day.module.scss'
 import Event from './Event'
+import { frontEndEventos } from './Frame'
 
-export default function Day(props: {events?: databaseEventInterface[], day: string}) {
+export default function Day(props: {events?: frontEndEventos[], day: string}) {
 
     let processedDate = dateProcess(props.day)
 

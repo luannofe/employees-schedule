@@ -7,16 +7,15 @@ import Image from 'next/image'
 import SelectInput from './components/SelectInput'
 import { useContext, useEffect, useState } from 'react'
 import Event from './Event'
-import { frameContext } from './Frame'
-import { databaseEventInterface } from '../pages/api/calendar'
+import { frameContext, frontEndEventos } from './Frame'
+import { eventos } from '@prisma/client'
 
 
 
-export default function AddEvent(props: {selectedEvent?: databaseEventInterface}) {
+export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
 
     // TODO: reset when submitted
 
-    //TODO: event diaOrdem is increasing when updated
     let employeesArr : string[];
     if (props.selectedEvent?.funcionarios) {
         employeesArr = String(props.selectedEvent?.funcionarios).split(',')
@@ -56,7 +55,7 @@ export default function AddEvent(props: {selectedEvent?: databaseEventInterface}
                                 </label>
                             </div>
                             <label htmlFor="">
-                                <textarea className={styles.inputBase}  onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.titulo}/>
+                                <textarea className={styles.inputBase}  onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Colaboradores:</span>
                             <label htmlFor="">                           

@@ -41,14 +41,14 @@ async function validateDay(eventDate : string) {
     await prisma.dias.upsert({
         where: {dia: eventDate},
         update: {dia: eventDate},
-        create: {dia: eventDate},
+        create: {dia: eventDate}
     })
 
     console.log(`VALIDATING DATE ${eventDate}`)
 
     return await prisma.dias.findUnique({
         where: {dia: eventDate},
-        select: {id: true, dia: true}
+        select: {dia: true, id: true}
     })
 
     
@@ -60,21 +60,31 @@ async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
         where: {diaId: dayData.id}
     })
 
-    let insert = await prisma.eventos.upsert({
-        where: {id: dayData.id},
-        create: {
-            ...body,
-            diaOrdem: count + 1,
-            funcionarios: String(body.funcionarios),
-            dataRegistrado: processedDate(new Date()),
-            diaId: dayData.id,
-            dataEvento: dayData.dia
-        },
-        update: {
-            ...body,
-            funcionarios: String(body.funcionarios)
-        }
-    })
+    let insert;
+    
+    if (!body.id) {
+        insert = await prisma.eventos.create({
+            data: {
+                ...body,
+                diaOrdem: count + 1,
+                funcionarios: String(body.funcionarios),
+                dataRegistrado: processedDate(new Date()),
+                diaId: dayData.id,
+                dataEvento: dayData.dia
+            }
+        })
+    } else {
+        insert = await prisma.eventos.update({
+            where: {
+                id: body.id
+            },
+            data: {
+                ...body,
+                funcionarios: String(body.funcionarios),
+                dataEvento: dayData.dia
+            }
+        })
+    }
 
     if (typeof insert !== 'object') {
         return {

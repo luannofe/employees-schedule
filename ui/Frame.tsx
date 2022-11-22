@@ -6,18 +6,37 @@ import { calendarInterface, databaseEventInterface } from '../pages/api/calendar
 import AddEvent from "./AddEvent";
 import NavbarBot from "./NavbarBot";
 import NavbarTop from "./NavbarTop";
+import { eventos } from "@prisma/client";
 
+
+export interface frontEndEventos  {
+    veiculo: string,
+    titulo: string,
+    responsavel: string,
+    dataEvento: string,
+    diaId?: number,
+    id?: number,
+    desc?: string,
+    diaOrdem?: number,
+    funcionarios?: string[],
+    dataRegistrado?: string
+} 
+
+export interface frontEndCalendarEventos {
+    dia: string,
+    eventos: frontEndEventos[]
+}[]
 
 type eventSelectionState = {
     selected: boolean,
-    eventData?: databaseEventInterface
+    eventData?: frontEndEventos
 }
 
 interface frameContext  {
 
     formContext: {
-        formInputs: databaseEventInterface,
-        insertFormInputs: React.Dispatch<React.SetStateAction<databaseEventInterface>>
+        formInputs: frontEndEventos,
+        insertFormInputs: React.Dispatch<React.SetStateAction<frontEndEventos>>
     },
 
     eventSelectionContext: {
@@ -31,13 +50,12 @@ export const frameContext = createContext<frameContext | null>(null)
 
 
 
-export default function Frame(
-    props: {
-        events: calendarInterface,
-    }) {
+export default function Frame() {
     
     //TODO: animate components mounting
     //TODO: check if user is admin 
+
+    const [events, setEvents] = useState<frontEndCalendarEventos[]> ()
 
     const [choosenView, setChoosenView] = useState('Calendar')
 
@@ -59,24 +77,44 @@ export default function Frame(
     }
 
 
+    useEffect(() => {
+        if ('Calendar') {
+            getCalendarData()
+        } else {
+            return
+        }
+    }, [choosenView])
+
     useEffect(()=> {
-        console.log(addEventFormInputs)
+        return console.log(addEventFormInputs)
     }, [addEventFormInputs])
 
     useEffect(() => {
-        console.log(selectedEvent.eventData)
+        return console.log(selectedEvent.eventData)
     }, [selectedEvent.eventData])
     
 
     return <frameContext.Provider value={contextProviders}>
         <NavbarTop/>
-            {choosenView == 'Calendar' && <Calendar data={props.events}/>}
-            {choosenView == 'AddEvent' && <AddEvent/>}
-            {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
+            {
+            events? 
+            <>
+                {choosenView == 'Calendar' && <Calendar data={events}/>}
+                {choosenView == 'AddEvent' && <AddEvent/>}
+                {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
+            </>:
+            <h1>Loading events...
+            </h1>}
         <NavbarBot choosenView={choosenView} setChoosenView={setChoosenView}/>
     </frameContext.Provider>   
     
     
 
+
+
+    async function getCalendarData() {
+        let data = await fetch('/api/calendar').then( data => data.json()) as frontEndCalendarEventos[]
+        setEvents(data)
+    }
 
 }
