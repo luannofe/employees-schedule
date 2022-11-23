@@ -16,6 +16,7 @@ import ColorsBoxInput from './components/ColorsBoxInput'
 export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
 
     // TODO: reset when submitted
+    //TODO: select more than one car and more than one
 
     let employeesArr : string[];
     if (props.selectedEvent?.funcionarios) {
@@ -67,7 +68,9 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
                             <ColorsBoxInput/>
                         </form>
                     </div>
-                    <Event event={FormContext!.formInputs}></Event>
+                    <div style={{position: 'absolute', right: '120px'}}>
+                        <Event event={FormContext!.formInputs}></Event>
+                    </div>
             </div>
         )
 

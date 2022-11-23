@@ -190,12 +190,8 @@ export default function NavbarBot(props: {
           if (item[0] != 'desc' && item[0] != 'funcionarios') {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
             resolve({passed: false})
-          } else {
-            processedForm.desc = 'Sem descrição.'
-            resolve({passed: true, processedForm: {
-              ...processedForm,
-              id: formdata?.id
-            }})
+          } else if (item[0] == 'desc') {
+              processedForm.desc = 'Sem descrição.'
           }
         }
 

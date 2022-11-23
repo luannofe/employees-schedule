@@ -51,12 +51,13 @@ $borderRadius: 15px;
 
 
 .navbarBot {
-    background-color: $navbarColor;
+    position: absolute;
     height: 120px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0px 0px 0px 4px lightgrey;
+    bottom: 0;
+    left: calc(50% - 200px);
 }
 
 .icons {
