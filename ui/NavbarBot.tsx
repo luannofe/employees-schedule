@@ -187,7 +187,7 @@ export default function NavbarBot(props: {
 
         if (item[1] == undefined || item[1].length < 4) {
 
-          if (item[0] != 'desc') {
+          if (item[0] != 'desc' && item[0] != 'funcionarios') {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
             resolve({passed: false})
           } else {
