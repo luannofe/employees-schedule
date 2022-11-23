@@ -1,15 +1,27 @@
 import { eventos } from '@prisma/client'
+import { useInView } from 'framer-motion'
+import { useContext, useEffect, useRef } from 'react'
 import style from './day.module.scss'
 import Event from './Event'
-import { frontEndEventos } from './Frame'
+import { frameContext, frontEndEventos } from './Frame'
 
 export default function Day(props: {events?: frontEndEventos[], day: string}) {
 
     let processedDate = dateProcess(props.day)
 
+    const ref = useRef(null)
+    const isInView = useInView(ref)
+    const inViewContext = useContext(frameContext)?.inViewportMonthContext
+    const thisMonth = new Date(props.day).toLocaleString('default', {month: 'long'})
 
+    useEffect(() => {
+        if (isInView && inViewContext?.state !== thisMonth) {
+            inViewContext?.setState(thisMonth.toUpperCase())
+        }
+    }, [isInView])
+    
     return (
-        <div className={style.day} >
+        <div className={style.day} ref={ref}>
             <span className={style.title}>{processedDate.day}</span>
             <span className={style.subTitle}>{processedDate.weekDay}</span>
             <div style={{minHeight: '650px', minWidth: '170px'}}>

@@ -18,15 +18,12 @@ export default async function calendarHandler(req: NextApiRequest, res: NextApiR
 
     let db = await readDatabase()
     console.log('PURE DATABASE')
-    console.log(db)
 
     let sortedDb = await sortDays(db)
     console.log('SORTED DATABASE')
-    console.log(sortedDb)
 
     let populatedCalendar = await populateMonthsArray(sortedDb)
     console.log('POPULATED DATABASE')
-    console.log(populatedCalendar)
 
     return res.status(200).send(populatedCalendar) 
 
@@ -34,8 +31,9 @@ export default async function calendarHandler(req: NextApiRequest, res: NextApiR
 
   
 async function readDatabase() {
-    console.log('2')
+
     return await prisma.eventos.findMany()
+    
 }
 
 async function sortDays(array: eventos[]) {
@@ -77,27 +75,25 @@ async function sortDays(array: eventos[]) {
 
 async function mountMonthsPeriod(initialDate: Date, span: number) {
 
-    let date = getPastSunday(initialDate)
+    let date = new Date(dayjs().set('day', 0).set('day', -7).toString())
 
     let dates = []
   
-    console.log('im here')
+
     let i = 0
+    
     while (i < span) {
+
       dates.push(date.toDateString())
       date.setDate(date.getDate() + 1)
       i++
-      console.log(i)
+
     }
     console.log('ended loop')
   
     return dates as string[]
 
-    function getPastSunday(today: Date) {
-      let tempDate = new Date() 
-      tempDate.setDate(today.getDate() - (today.getDay()||7) * 2);
-      return tempDate
-    }
+
 }
 
 async function populateMonthsArray(eventsArray : calendarInterface) {

@@ -23,7 +23,7 @@ model eventos {
   diaOrdem       Int
   titulo         String
   funcionarios   String
-      
+  propColor      String    
 }
 
 model carros {

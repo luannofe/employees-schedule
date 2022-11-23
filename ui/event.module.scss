@@ -23,7 +23,9 @@ $fontFamily: sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
-    text-align: center;    
+    text-align: center;  
+    overflow-wrap: break-word;
+    width: 90%;  
 }
 
 .eventDesc {
@@ -32,6 +34,8 @@ $fontFamily: sans-serif;
     font-weight: 500;
     font-size: 13px;
     text-align: center;
+    overflow-wrap: break-word;
+    width: 90%;
 }
 
 .eventCoord {
@@ -42,10 +46,12 @@ $fontFamily: sans-serif;
 }
 
 .eventUL {
-    text-align: center;
-    li {
-        line-height: 13px;
+    text-align: left;
+    span {
+        font-style: italic;
+        font-weight: 600;
     }
+
 }
 
 .eventID {

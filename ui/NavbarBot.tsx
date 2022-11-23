@@ -131,15 +131,7 @@ export default function NavbarBot(props: {
 
     fetch('/api/create_event', {
       method: 'POST',
-      body: JSON.stringify({
-        dataEvento: formdata.processedForm!.dataEvento,
-        titulo: formdata.processedForm!.titulo,
-        desc: formdata.processedForm!.desc,
-        responsavel: formdata.processedForm!.responsavel,
-        veiculo: formdata.processedForm!.veiculo,
-        funcionarios: formdata.processedForm!.funcionarios,
-        id: formdata.processedForm?.id
-      })
+      body: JSON.stringify(formdata.processedForm)
     })
     .then( res => res.json())
     .then(data => {
@@ -157,6 +149,8 @@ export default function NavbarBot(props: {
         desc: '',
         funcionarios: []
       })
+      
+      addEventFormData?.formRef.current?.reset()
 
       setTimeout(() => {
       setConfirmButtonState({
@@ -172,7 +166,6 @@ export default function NavbarBot(props: {
 
     let formdata = addEventFormData?.formInputs
 
-    console.log(formdata)
 
     let  processedForm = {
       dataEvento: formdata!.dataEvento,
@@ -181,6 +174,7 @@ export default function NavbarBot(props: {
       responsavel: formdata!.responsavel,
       funcionarios: formdata!.funcionarios,
       veiculo: formdata!.veiculo,
+      propColor: formdata?.propColor
     }
     
     return new Promise<{passed: boolean, processedForm?: frontEndEventos}>((resolve, reject) => {
@@ -191,7 +185,7 @@ export default function NavbarBot(props: {
 
       for (let item of processedFormArr) {
 
-        if (item[1] == undefined) {
+        if (item[1] == undefined || item[1].length < 4) {
 
           if (item[0] != 'desc') {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
@@ -231,7 +225,8 @@ export default function NavbarBot(props: {
         veiculo: selectionContext.state.eventData.veiculo,
         funcionarios: selectionContext.state.eventData?.funcionarios,
         desc: selectionContext.state.eventData?.desc,
-        id: selectionContext.state.eventData.id
+        id: selectionContext.state.eventData.id,
+        propColor: selectionContext.state.eventData.propColor
       })
     }
   

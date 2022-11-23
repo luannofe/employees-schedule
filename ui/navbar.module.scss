@@ -2,10 +2,31 @@ $navbarColor: rgb(228, 228, 228);
 $backgroundColor: rgb(255, 255, 255);
 $borderRadius: 15px;
 
+.userCircle {
+    
+    background-color: $backgroundColor;
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    transition: 0.5s;
+    margin-left: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    &:hover {
+        background-color: rgb(236, 243, 237);
+        cursor: pointer;
+    }
+}
+
 .navbarTop {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     background-color: $navbarColor;
     height: 56px;
 
@@ -17,6 +38,7 @@ $borderRadius: 15px;
         font-weight: 900;
         margin-right: 11px;
         text-shadow: 1px 1px 2px rgb(95, 95, 95);
+        margin-left: auto;
 
         span {
             color: rgb(12, 12, 87);
@@ -40,6 +62,7 @@ $borderRadius: 15px;
 .icons {
     vertical-align: middle;
     filter: invert(50%);
+    
 }
 
 //butons

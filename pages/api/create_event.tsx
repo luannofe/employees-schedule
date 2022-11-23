@@ -19,6 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const body = JSON.parse(req.body) 
+    console.log('BODY IS')
+    console.log(body)
 
     const validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
     
@@ -61,6 +63,10 @@ async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
     })
 
     let insert;
+
+    
+
+    let propColor =  body.propColor ||= '#BFD7D9'
     
     if (!body.id) {
         insert = await prisma.eventos.create({
@@ -70,7 +76,8 @@ async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
                 funcionarios: String(body.funcionarios),
                 dataRegistrado: processedDate(new Date()),
                 diaId: dayData.id,
-                dataEvento: dayData.dia
+                dataEvento: dayData.dia,
+                propColor: String(propColor)
             }
         })
     } else {
