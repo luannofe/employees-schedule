@@ -2,6 +2,7 @@ $fontFamily: sans-serif;
 
 
 .eventDiv {
+
     min-height: 200px;
     min-width: 170px;
     max-width: 170px;
@@ -19,6 +20,7 @@ $fontFamily: sans-serif;
 }
 
 .eventTitle {
+
     font-family: $fontFamily;
     font-style: normal;
     font-weight: 700;
@@ -55,7 +57,7 @@ $fontFamily: sans-serif;
 }
 
 .eventID {
-    width: 46px;
+    width: 80px;
     height: 28px;
     background-color: white;
     border-radius: 15px;
@@ -64,7 +66,8 @@ $fontFamily: sans-serif;
     justify-content: center;
 
     span {
-        font-size: 24px;
+        font-family: $fontFamily;
+        font-size: 12px;
         font-weight: 700;
         text-align: center;
         color: black;

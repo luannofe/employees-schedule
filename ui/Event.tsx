@@ -13,7 +13,8 @@ import { useInView } from 'framer-motion';
 export default function (props: { event: frontEndEventos }) {
 
     const selectionContext = useContext(frameContext)?.eventSelectionContext
-    const choosenView = useContext(frameContext)?.choosenViewContext.state
+    const choosenView = useContext(frameContext)?.choosenViewContext
+    const addEventFormData = useContext(frameContext)?.formContext
 
     const [styles, setStyles] = useState({})
 
@@ -29,7 +30,7 @@ export default function (props: { event: frontEndEventos }) {
 
             return setStyles({}) 
 
-        } else if (choosenView == 'Calendar' ) {
+        } else if (choosenView?.state == 'Calendar' ) {
             
             return setStyles({
                 outline: '3px solid grey',
@@ -43,9 +44,9 @@ export default function (props: { event: frontEndEventos }) {
         <div className={style.eventDiv} style={{
             ...styles,
             backgroundColor: props.event.propColor
-        }} onClick={() => {selectEvent()}}>
+        }} onClick={() => {selectEvent()}} onDoubleClick={() => {handleDoubleClick()}}>
             <div className={style.eventID}>
-                <span>{props.event?.diaOrdem}</span>
+                <span>{props.event?.proposta}</span>
             </div>
             <span className={style.eventTitle}>{props.event?.titulo}</span>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -72,14 +73,41 @@ export default function (props: { event: frontEndEventos }) {
     function selectEvent() {
 
 
+        console.log('SELECTED EVENT:')
+        console.log(props)
+        console.log(`SENDED DATE ${new Date(props.event.dataEvento as string).toISOString().slice(0, 10)}`)
+
         selectionContext?.setState({
             selected: true,
             eventData: {
                 ...props.event,
                 funcionarios: props.event.funcionarios,
-                dataEvento: new Date(props.event.dataEvento).toISOString().slice(0, 10)
+                dataEvento: new Date(props.event.dataEvento as string).toISOString().slice(0, 10)
             }
         })
 
+    }
+
+    function handleDoubleClick() {
+
+        console.log(props)
+
+        if (selectionContext?.state.eventData) {
+
+            addEventFormData?.insertFormInputs({
+              titulo: selectionContext.state.eventData.titulo,
+              responsavel: selectionContext.state.eventData.responsavel,
+              dataEvento: selectionContext.state.eventData.dataEvento,
+              veiculo: selectionContext.state.eventData.veiculo,
+              funcionarios: selectionContext.state.eventData?.funcionarios,
+              desc: selectionContext.state.eventData?.desc,
+              id: selectionContext.state.eventData.id,
+              propColor: selectionContext.state.eventData.propColor,
+              proposta: selectionContext.state.eventData.proposta
+            })
+        }
+
+        choosenView?.setState('EditEvent')
+        
     }
 }

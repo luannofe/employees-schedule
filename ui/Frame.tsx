@@ -2,16 +2,19 @@
 
 import React, { createContext, useContext, useEffect, useRef, useState } from "react"
 import Calendar from "./Calendar"
-import { calendarInterface, databaseEventInterface } from '../pages/api/calendar';
 import AddEvent from "./AddEvent";
 import NavbarBot from "./NavbarBot";
 import NavbarTop from "./NavbarTop";
-import { eventos } from "@prisma/client";
 import Loading from "./components/LoadingPage";
 
 
 
 export const frameContext = createContext<frameContext | null>(null)
+
+export const viewPortContext = createContext<{
+    state: string,
+    setState: React.Dispatch<React.SetStateAction<string>>
+} | null >(null)
 
 
 
@@ -43,13 +46,13 @@ export default function Frame() {
             state: selectedEvent,
             setState: setSelectedEvent
         },
-        inViewportMonthContext: {
-            state: inViewportMonth,
-            setState: setInViewportMonth
-        },
         choosenViewContext: {
             state: choosenView,
             setState: setChoosenView
+        },
+        eventsContext: {
+            state: events,
+            setState: setEvents
         }
         
     }
@@ -77,19 +80,21 @@ export default function Frame() {
     
     
     return <frameContext.Provider value={contextProviders}>
-        <NavbarTop/>
-        {
-            events
-            ? 
-                <>
-                    {choosenView == 'Calendar' && <Calendar data={events}/>}
-                    {choosenView == 'AddEvent' && <AddEvent/>}
-                    {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
-                </>
-            :
-                <Loading/>
-        }
-        <NavbarBot choosenView={choosenView} setChoosenView={setChoosenView}/>
+        <viewPortContext.Provider value={{state: inViewportMonth, setState: setInViewportMonth}}>
+            <NavbarTop/>
+            {
+                events
+                ? 
+                    <>
+                        {choosenView == 'Calendar' && <Calendar data={events}/>}
+                        {choosenView == 'AddEvent' && <AddEvent/>}
+                        {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
+                    </>
+                :
+                    <Loading/>
+            }
+            <NavbarBot choosenView={choosenView} setChoosenView={setChoosenView}/>
+        </viewPortContext.Provider>
     </frameContext.Provider>   
     
     
@@ -114,11 +119,11 @@ export interface frontEndEventos  {
     veiculo: string,
     titulo: string,
     responsavel: string,
-    dataEvento: string,
+    dataEvento: string[] | string,
     diaId?: number,
     id?: number,
     desc?: string,
-    diaOrdem?: number,
+    proposta: string,
     funcionarios?: string[],
     dataRegistrado?: string,
     propColor?: string
@@ -146,15 +151,16 @@ interface frameContext  {
     eventSelectionContext: {
         state: eventSelectionState,
         setState: React.Dispatch<React.SetStateAction<eventSelectionState>>
-    }
-    
-    inViewportMonthContext: {
-        state: string
-        setState: React.Dispatch<React.SetStateAction<string>>,
     },
+    
 
     choosenViewContext: {
         state: string
         setState: React.Dispatch<React.SetStateAction<string>>,
+    },
+
+    eventsContext: {
+        state: frontEndCalendarEventos[] | undefined,
+        setState: React.Dispatch<React.SetStateAction<frontEndCalendarEventos[] | undefined>>
     }
 } 

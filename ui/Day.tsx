@@ -3,7 +3,7 @@ import { useInView } from 'framer-motion'
 import { useContext, useEffect, useRef } from 'react'
 import style from './day.module.scss'
 import Event from './Event'
-import { frameContext, frontEndEventos } from './Frame'
+import { frameContext, frontEndEventos, viewPortContext } from './Frame'
 
 export default function Day(props: {events?: frontEndEventos[], day: string}) {
 
@@ -11,7 +11,7 @@ export default function Day(props: {events?: frontEndEventos[], day: string}) {
 
     const ref = useRef(null)
     const isInView = useInView(ref)
-    const inViewContext = useContext(frameContext)?.inViewportMonthContext
+    const inViewContext = useContext(viewPortContext)
     const thisMonth = new Date(props.day).toLocaleString('default', {month: 'long'})
 
     useEffect(() => {

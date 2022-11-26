@@ -116,7 +116,7 @@ async function populateMonthsArray(eventsArray : calendarInterface) {
         }
         j++
       }
-      return { dia: item }
+      return { dia: item, eventos: [] }
     })
   
   }
@@ -125,7 +125,7 @@ async function populateMonthsArray(eventsArray : calendarInterface) {
 
 export type calendarInterface = {
     dia: string,
-    eventos?: eventos[]
+    eventos: eventos[]
 }[]
 
 

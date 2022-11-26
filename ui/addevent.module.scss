@@ -10,11 +10,20 @@ $font: 'Times-new-roman';
     display: flex;
     flex: 1;
     width: 100vw;
-    height: calc(100% - 320px);
     overflow-y: scroll;
     justify-content: center;  
     align-items: center;  
     gap: 80px;
+    position: relative;
+    max-height: calc(100% - 176px);
+
+
+}
+
+.addEventWraperContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .addEventTitle {

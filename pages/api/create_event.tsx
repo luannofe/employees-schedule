@@ -22,61 +22,65 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('BODY IS')
     console.log(body)
 
-    const validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo'])
+    const validatedParameters = await validateReq(body, ['veiculo', 'responsavel', 'dataEvento', 'titulo', 'proposta'])
     
     if (validatedParameters.result == false) {
         return res.status(422).json({message: `Missing or wrong ${validatedParameters.missingParameter} parameters.`})
     }
 
     
-    let eventDate = processedDate(new Date(body.dataEvento + ' 00:00:00'))
-    let dayData = await validateDay(eventDate)
-
-    let writeResult = await writeEvent(body, dayData!)
+    let eventDates = processedDate(body.dataEvento)
+    console.log(`processed dates to ${eventDates}`)
     
+    let daysData = await validateDates(eventDates)
 
-    return res.status(writeResult.status).json(writeResult.message)
+    let writeResponse = await writeCaller(daysData, body)
+
+    return res.status(writeResponse.status).send({message: writeResponse.message, writedEvents: writeResponse.writedEvents})
+
 }
 
-async function validateDay(eventDate : string) {
+async function validateDates(eventDates : string[]) {
 
-    await prisma.dias.upsert({
-        where: {dia: eventDate},
-        update: {dia: eventDate},
-        create: {dia: eventDate}
-    })
+    let i = 0;
+    let dateArr = []
 
-    console.log(`VALIDATING DATE ${eventDate}`)
+    console.log(`PARSING DATES ${eventDates}`)
 
-    return await prisma.dias.findUnique({
-        where: {dia: eventDate},
-        select: {dia: true, id: true}
-    })
+    while (i < eventDates.length) {
+        await prisma.dias.upsert({
+            where: {dia: eventDates[i]},
+            update: {dia: eventDates[i]},
+            create: {dia: eventDates[i]}
+        })
+
+        dateArr.push (await prisma.dias.findUnique({
+            where: {dia: eventDates[i]},
+            select: {dia: true, id: true}
+        }))
+
+        i++
+    }
+
+    console.log(`ENDED PARSING DATES TO ${dateArr}`)
+    return  dateArr as {id: number, dia: string}[]
 
     
 }
 
-async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
-
-    let count = await prisma.eventos.count({
-        where: {diaId: dayData.id}
-    })
+async function writeEvent(body : eventos, eventDates: {id: number, dia: string}) {
 
     let insert;
-
-    
-
     let propColor =  body.propColor ||= '#BFD7D9'
     
     if (!body.id) {
         insert = await prisma.eventos.create({
             data: {
                 ...body,
-                diaOrdem: count + 1,
                 funcionarios: String(body.funcionarios),
-                dataRegistrado: processedDate(new Date()),
-                diaId: dayData.id,
-                dataEvento: dayData.dia,
+                dataRegistrado: new Date().toString().slice(0,15),
+                diaId: eventDates.id,
+                dataEvento: eventDates.dia,
                 propColor: String(propColor)
             }
         })
@@ -88,7 +92,7 @@ async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
             data: {
                 ...body,
                 funcionarios: String(body.funcionarios),
-                dataEvento: dayData.dia
+                dataEvento: eventDates.dia
             }
         })
     }
@@ -102,10 +106,57 @@ async function writeEvent(body : eventos, dayData: {id: number, dia: string}) {
 
     return {
         status: 200,
-        message: {
-            registeredEvent: insert
-        }
+        message: 'Created event successfully.',
+        registeredEvent: insert
     }
+
+}
+
+async function writeCaller(daysData: {id: number, dia: string}[], body: eventos) {
+
+    let writeResults : apiCreateEventResponse = {
+        message : 'There was a problem while creating all sent events. If the problem persists, please contact your support.',
+        status: 422,
+        writedEvents: []
+    }
+
+    let okCount = 0;
+    let i = 0;
+    while (i < daysData.length) {
+
+        let thisWriteResult = await writeEvent(body, daysData[i])
+
+        if (thisWriteResult.status == 200){
+            okCount++
+            writeResults.writedEvents.push(thisWriteResult)
+        } else {
+            writeResults.writedEvents.push(thisWriteResult)
+        }
+        i ++
+    }
+
+    if (!okCount) {
+        return writeResults
+    }
+
+    writeResults.status = 200
+
+    if (okCount != daysData.length) {
+
+        writeResults = {
+            ...writeResults,
+            message: 'Events partially created.',
+        }
+
+        return writeResults
+    }
+
+    writeResults = {
+        ...writeResults,
+        message: 'All events created.'
+    }
+
+    return writeResults
 
 }
 
@@ -136,7 +187,27 @@ export async function validateReq(body : eventos, neededProperties: string[]) {
 
 }
 
-export function processedDate(date: Date) {
-    return date.toString().slice(0,15)
+export function processedDate(dates: string[]) {
+    console.log(`'Received ${dates}'`)
+    return dates.map( (stringDate) => new Date(stringDate + ' 00:00:00').toString().slice(0,15) )
+   
+}
+
+
+
+
+
+
+
+
+export interface apiCreateEventResponse {
+
+    status: number,
+    message : String | {},
+    writedEvents: {
+        status: number,
+        message: string,
+        registeredEvent?: eventos
+    }[]
 }
 

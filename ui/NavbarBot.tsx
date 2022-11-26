@@ -7,7 +7,9 @@ import { METHODS } from "http"
 import { databaseEventInterface } from "../pages/api/calendar"
 import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { frameContext, frontEndEventos } from "./Frame"
+import { frameContext, frontEndCalendarEventos, frontEndEventos } from "./Frame"
+import { eventos } from "@prisma/client"
+import { apiCreateEventResponse } from "../pages/api/create_event"
 
 export default function NavbarBot(props: {
   setChoosenView: React.SetStateAction<any>,
@@ -16,6 +18,7 @@ export default function NavbarBot(props: {
 
   const addEventFormData = useContext(frameContext)?.formContext
   const selectionContext = useContext(frameContext)?.eventSelectionContext
+  const eventsContext = useContext(frameContext)?.eventsContext
   const router = useRouter()
 
   const [confirmButtonState, setConfirmButtonState] = useState(
@@ -108,6 +111,7 @@ export default function NavbarBot(props: {
         </>)}
       </div>
     </div>
+
   )
 
 
@@ -133,32 +137,99 @@ export default function NavbarBot(props: {
       method: 'POST',
       body: JSON.stringify(formdata.processedForm)
     })
-    .then( res => res.json())
-    .then(data => {
+
+    .then( res => {
+      if (res.ok) {
+        return res.json() 
+      }
+
+      throw new Error('Houve um erro ao criar os dados, caso persista, contate o suporte.')
+    })
+
+    .then( (data: any) => {
+
+      console.log(data.writedEvents)
 
       if (props.choosenView == 'EditEvent') {
-        router.refresh()
-        props.setChoosenView('Update')
+        
+        let writedEvent = data.writedEvents[0].registeredEvent
+
+        eventsContext?.setState( (previousState) => {
+          return previousState?.map( (item) => {
+            if (item.dia == writedEvent?.dataEvento) {
+              return {
+                ...item,
+                eventos: item.eventos.map( (evento) => {
+                  if (evento.id == writedEvent?.id) {
+                    return writedEvent as frontEndEventos
+                  }
+                  return evento as frontEndEventos
+                } )
+              }
+            }
+            return item
+          }) as frontEndCalendarEventos[]
+        })
+        
+      } 
+
+      if (props.choosenView == 'AddEvent') {
+
+        console.log(data)
+
+        for (let writedEvent of data.writedEvents) {
+
+          eventsContext?.setState((prev) => {
+
+            return prev?.map(item => {
+
+              if (item.dia == writedEvent.registeredEvent?.dataEvento) {
+
+                console.log(writedEvent.registeredEvent)
+                console.log(`WILL DE ADD TO`)
+                console.log(item)
+
+                return {
+                  ...item,
+                  eventos: [...item.eventos, writedEvent.registeredEvent]
+                }
+              }
+              return item
+            })
+
+          })
+          console.log(`ADDED`)
+        }
+
       }
-  
+
+    
+      
       addEventFormData?.insertFormInputs({
         titulo: '',
         dataEvento: '',
         veiculo: '',
         responsavel: '',
         desc: '',
-        funcionarios: []
+        funcionarios: [],
+        propColor: '#BFD7D9',
+        proposta: ''
       })
       
       addEventFormData?.formRef.current?.reset()
-
+  
       setTimeout(() => {
       setConfirmButtonState({
         activated: true,
         styles: styles.button
       })}, 800)
-
+      
     })
+
+    .catch( (error) => alert(error) )
+
+
+
   }
 
   async function validateForm() {
@@ -174,7 +245,8 @@ export default function NavbarBot(props: {
       responsavel: formdata!.responsavel,
       funcionarios: formdata!.funcionarios,
       veiculo: formdata!.veiculo,
-      propColor: formdata?.propColor
+      propColor: formdata?.propColor,
+      proposta: formdata!.proposta
     }
     
     return new Promise<{passed: boolean, processedForm?: frontEndEventos}>((resolve, reject) => {
@@ -185,7 +257,7 @@ export default function NavbarBot(props: {
 
       for (let item of processedFormArr) {
 
-        if (item[1] == undefined || item[1].length < 4) {
+        if (item[1] == undefined || item[1].length < 1) {
 
           if (item[0] != 'desc' && item[0] != 'funcionarios') {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
@@ -222,7 +294,8 @@ export default function NavbarBot(props: {
         funcionarios: selectionContext.state.eventData?.funcionarios,
         desc: selectionContext.state.eventData?.desc,
         id: selectionContext.state.eventData.id,
-        propColor: selectionContext.state.eventData.propColor
+        propColor: selectionContext.state.eventData.propColor,
+        proposta: selectionContext.state.eventData.proposta
       })
     }
   
@@ -238,7 +311,9 @@ export default function NavbarBot(props: {
       veiculo: '',
       responsavel: '',
       desc: '',
-      funcionarios: []
+      funcionarios: [],
+      propColor: '#BFD7D9',
+      proposta: ''
     })
     props.setChoosenView('AddEvent')
   }
@@ -246,32 +321,57 @@ export default function NavbarBot(props: {
   async function deleteButton() {
 
     if (deleteButtonState.clickedOnce) {
+
       fetch('/api/delete_event', {
         method: 'POST',
         body: JSON.stringify({
           id: selectionContext?.state.eventData?.id
         })
       })
-      .then(res => res.json())
-      .then(data => {
-        selectionContext?.setState({selected: false})
-        router.refresh()
-        props.setChoosenView('Update')
-      })
+
+        .then(res => {
+          if (res.ok) {
+            return res.json()
+          }
+
+          throw new Error('Houve um erro ao executar a solicitação. Reinicie a página e caso continue, contate o suporte.')
+        })
+
+        .then( (data: {id: Number, dataEvento: String}) => {
+          eventsContext?.setState( (prev) => {
+
+            return prev?.map( item => {
+
+              if (item.dia == data.dataEvento) {
+                return {
+                  ...item,
+                  eventos: item.eventos.filter((item) => item.id != data.id)
+                }
+              }
+
+              return item
+            })
+          })
+        })
+
     } else {
+
       setDeleteButtonState({
         activated: true,
         clickedOnce: true,
         styles: styles.buttonDelete,
       })
+
     }
 
   }
 
   async function undoButton() {
+
     selectionContext?.setState({selected: false})
-    router.refresh()
-    props.setChoosenView('Update')
+    console.log(eventsContext?.state)    
+    props.setChoosenView('Calendar')
+
   }
 }
 

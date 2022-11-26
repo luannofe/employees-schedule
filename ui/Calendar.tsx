@@ -2,13 +2,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import React, { createContext, UIEventHandler, useContext, useRef, useState } from 'react'
+import React, { createContext, UIEventHandler, useContext, useEffect, useRef, useState } from 'react'
 import { calendarInterface, databaseEventInterface } from '../pages/api/calendar'
 import style from './calendar.module.scss'
 import Day from './Day'
 import { frameContext, frontEndCalendarEventos, frontEndEventos } from './Frame'
 
-//TODO: substituir esse sistema de scroll por um mais funcional, intersection observer
 
 export default  function Calendar( props: {
     data: frontEndCalendarEventos[]
@@ -16,9 +15,10 @@ export default  function Calendar( props: {
 }) {
     
 
-
-
-    const scrollState = useContext(frameContext)?.inViewportMonthContext
+    useEffect(() => {
+        console.log('CALENDAR RE-RENDERED')
+        console.log(props.data)
+    })
 
     return  (
         <motion.div className={style.calendar}>

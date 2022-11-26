@@ -1,13 +1,13 @@
 'use client'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { frameContext } from './Frame'
+import { frameContext, viewPortContext } from './Frame'
 import styles from './showmonth.module.scss'
 
 export default function ShowMonth() {
 
     //TODO: make div disappear after a while
 
-    const currentMonth = useContext(frameContext)?.inViewportMonthContext.state
+    const currentMonth = useContext(viewPortContext)?.state
     const currentView = useContext(frameContext)?.choosenViewContext.state
 
     const [isVisible, setIsVisible] = useState(false)
@@ -22,7 +22,7 @@ export default function ShowMonth() {
 
 
     return <div className={styles.container} >
-        <div className={isVisible? styles.innerContainerV : styles.innerContainerNV} >
+        <div className={ isVisible? styles.innerContainerV : styles.innerContainerNV} >
             <span>{currentMonth}</span>
         </div>
     </div>

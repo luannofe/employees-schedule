@@ -20,7 +20,7 @@ model eventos {
   dataEvento     String
   dataRegistrado String
   diaId          Int
-  diaOrdem       Int
+  proposta       String
   titulo         String
   funcionarios   String
   propColor      String    

@@ -22,11 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(422).json({message: `Missing or wrong id parameters.`})
     }
 
-    await updateDiaOrdem(body.id)
-
     const result = await deleteEvent(body.id)
     
-    return res.status(result.status).json({message: result.message})
+    return res.status(result.status).json(result.message)
 
 
     async function deleteEvent(id : number) {
@@ -44,50 +42,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!deletedEvent.id) {
             return {
-                status: 200,
+                status: 422,
                 message: `No event for id ${id}`
             }
         }
 
         return {
             status: 200,
-            message: `Deleted event from ${deletedEvent.dataEvento}, title: ${deletedEvent.titulo} and id ${deletedEvent.id}`
+            message: {
+                dataEvento: deletedEvent.dataEvento,
+                id: deletedEvent.id
+            }
         }
     }
 
-    async function updateDiaOrdem(id : number) {
-
-        console.log(`ID RECEIVED TO UPDATE: ${id}`)
-
-        let eventDate = await prisma.eventos.findFirst({
-            where: {
-                id: id
-            },
-            select: {
-                dataEvento: true
-            }
-        })
-
-        await prisma.eventos.updateMany({
-            where: {
-                dataEvento: eventDate?.dataEvento,
-            },
-            data: {
-                diaOrdem: {
-                    decrement: 1
-                } 
-            }
-        })
-
-        return await prisma.eventos.updateMany({
-            where: {
-                diaOrdem: 0
-            },
-            data: {
-                diaOrdem: 1
-            }
-        })
-
-
-    }
 }
