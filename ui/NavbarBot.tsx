@@ -78,9 +78,10 @@ export default function NavbarBot(props: {
   return (
     
     <div className={styles.navbarBot} >
+
       <div className={styles.buttonsContainer}>
         {props.choosenView == 'Calendar' && (<>
-          <MotionButton>
+          <MotionButton >
             <button className={styles.button}  onClick={() => { addButton() }}>
               
               <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
@@ -110,6 +111,14 @@ export default function NavbarBot(props: {
           </MotionButton>
         </>)}
       </div>
+
+
+      {props.choosenView == 'Calendar' && (<>
+          <motion.button className={styles.buttonRefresh} onClick={() => { refreshButton() }} animate={{ scale: [0, 1.05, 1]}} >  
+            <Image className={styles.icons} width={40} height={40} src='/iconRefresh.svg' alt='Recarregar'></Image>
+          </motion.button>
+      </>)}
+
     </div>
 
   )
@@ -373,11 +382,26 @@ export default function NavbarBot(props: {
     props.setChoosenView('Calendar')
 
   }
+
+  async function refreshButton() {
+    props.setChoosenView('Update')
+  }
 }
 
 
-export function MotionButton({children}: {children: React.ReactNode}) {
-  return <motion.div animate={{ scale: [0, 1.05, 1]} }>
-    {children}
+export function MotionButton(props: {posfix?: boolean, children: React.ReactNode}) {
+  
+  if (props.posfix) {
+    return <motion.div animate={{ scale: [0, 1.05, 1]}} layout={"size"}>
+      <motion.button>
+
+      </motion.button>
+    {props.children}
+  </motion.div>   
+  }
+
+
+  return <motion.div animate={{ scale: [0, 0, 1.05, 1]} }>
+    {props.children}
   </motion.div>
 }
