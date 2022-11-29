@@ -20,7 +20,6 @@ export const viewPortContext = createContext<{
 
 export default function Frame() {
     
-    //TODO: animate components mounting
     //TODO: check if user is admin 
 
     const [events, setEvents] = useState<frontEndCalendarEventos[]> ()

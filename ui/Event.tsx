@@ -41,7 +41,7 @@ export default function (props: { event: frontEndEventos }) {
     }, [selectionContext?.state])
 
     return (
-        <div className={style.eventDiv} style={{
+        <div className={style.eventDiv} draggable={true} onDragStart={(e) => {dragStart(e)}} style={{
             ...styles,
             backgroundColor: props.event.propColor
         }} onClick={() => {selectEvent()}} onDoubleClick={() => {handleDoubleClick()}}>
@@ -109,5 +109,10 @@ export default function (props: { event: frontEndEventos }) {
 
         choosenView?.setState('EditEvent')
         
+    }
+
+    function dragStart(e: React.DragEvent<HTMLDivElement>) {
+        e.dataTransfer.clearData()
+        e.dataTransfer.setData("text/plain", JSON.stringify(props.event))
     }
 }

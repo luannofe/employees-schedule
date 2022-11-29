@@ -7,7 +7,7 @@ import { METHODS } from "http"
 import { databaseEventInterface } from "../pages/api/calendar"
 import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { frameContext, frontEndCalendarEventos, frontEndEventos } from "./Frame"
+import { frameContext, frontEndCalendarEventos, frontEndEventos, viewPortContext } from "./Frame"
 import { eventos } from "@prisma/client"
 import { apiCreateEventResponse } from "../pages/api/create_event"
 
@@ -160,25 +160,37 @@ export default function NavbarBot(props: {
       console.log(data.writedEvents)
 
       if (props.choosenView == 'EditEvent') {
-        
+        let previousDate = new Date(selectionContext?.state.eventData?.dataEvento + ' 00:00:00').toString().slice(0,15)
         let writedEvent = data.writedEvents[0].registeredEvent
 
-        eventsContext?.setState( (previousState) => {
-          return previousState?.map( (item) => {
-            if (item.dia == writedEvent?.dataEvento) {
-              return {
-                ...item,
-                eventos: item.eventos.map( (evento) => {
-                  if (evento.id == writedEvent?.id) {
-                    return writedEvent as frontEndEventos
-                  }
-                  return evento as frontEndEventos
-                } )
-              }
-            }
-            return item
-          }) as frontEndCalendarEventos[]
+        eventsContext?.setState( (eventosArray) => {
+            return eventosArray?.map( item => {
+                if (item.dia == writedEvent.dataEvento) {
+                    return {
+                        ...item,
+                        eventos : [...item.eventos, {
+                            ...writedEvent
+                        }]
+                    }
+                }
+                if (item.dia == previousDate) {
+                    return {
+                        ...item,
+                        eventos: item.eventos.filter((item) => item.id != writedEvent.id)
+                    }
+                }
+                return item
+            })
         })
+
+
+        props.setChoosenView('Calendar')
+
+        return setTimeout(() => {
+          setConfirmButtonState({
+            activated: true,
+            styles: styles.button
+          })}, 800)
         
       } 
 
@@ -207,7 +219,6 @@ export default function NavbarBot(props: {
             })
 
           })
-          console.log(`ADDED`)
         }
 
       }
@@ -295,17 +306,7 @@ export default function NavbarBot(props: {
     }
 
     if (selectionContext?.state.eventData) {
-      addEventFormData?.insertFormInputs({
-        titulo: selectionContext.state.eventData.titulo,
-        responsavel: selectionContext.state.eventData.responsavel,
-        dataEvento: selectionContext.state.eventData.dataEvento,
-        veiculo: selectionContext.state.eventData.veiculo,
-        funcionarios: selectionContext.state.eventData?.funcionarios,
-        desc: selectionContext.state.eventData?.desc,
-        id: selectionContext.state.eventData.id,
-        propColor: selectionContext.state.eventData.propColor,
-        proposta: selectionContext.state.eventData.proposta
-      })
+      addEventFormData?.insertFormInputs(selectionContext.state.eventData)
     }
   
 

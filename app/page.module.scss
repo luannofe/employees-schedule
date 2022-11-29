@@ -6,7 +6,6 @@ $borderRadius: 15px;
 .body {
     background-color: $backgroundColor;
     height: 100vh;
-    min-width: 1100px;
     margin: 0;
 }
 
@@ -14,6 +13,5 @@ $borderRadius: 15px;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    min-width: 1100px;
 }
 

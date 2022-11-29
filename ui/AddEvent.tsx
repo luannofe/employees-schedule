@@ -23,7 +23,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
     //TODO: tentar arrastar os eventos
     //TODO: colaborador e carro devem ser checklists
     //TODO: MELHORAR SISTEMA DE CALENDARIO, TALVEZ ABRIR JÁ NO DIA ATUAL?
-    //TODO: REFRESH BUTTON
     //TODO: admin
 
 
@@ -77,7 +76,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
                         <form action="post" ref={FormContext?.formRef}>
                             <div style={{display: 'flex', width: '95%'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
-                                <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} onKeyDown={(e) => {validateSize(e, 8)}} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.titulo}></input>
+                                <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} onKeyDown={(e) => {validateSize(e, 8)}} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
                             <div style={{display: 'flex', width: '95%', justifyContent: 'space-around'}}> 
                                 <label htmlFor="" style={{flex: 1}}>
@@ -128,11 +127,18 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
     }
 
     function handleDate(event : React.ChangeEvent<HTMLInputElement>) {
-        console.log('HANDLED CHANGE ON DATE')
+
         const value = event.currentTarget.value;
+
+        if (viewContext?.state == ('EditEvent')) {
+            return setSelectedDates([value])
+        }
+
         let checkRepeated = new Set(selectedDates)
+
         checkRepeated.add(value)
-        setSelectedDates(Array.from(checkRepeated).sort())   
+
+        return setSelectedDates(Array.from(checkRepeated).sort())   
     }
 
     function validateSize(e: React.KeyboardEvent<HTMLInputElement>, maxLength : number) {
