@@ -2,14 +2,10 @@
 
 import Image from "next/image"
 import styles from './navbar.module.scss'
-import { useRouter } from 'next/navigation'
-import { METHODS } from "http"
-import { databaseEventInterface } from "../pages/api/calendar"
-import React, { ChangeEvent, FormEvent, PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react"
+import React, {  FormEvent, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { frameContext, frontEndCalendarEventos, frontEndEventos, viewPortContext } from "./Frame"
-import { eventos } from "@prisma/client"
-import { apiCreateEventResponse } from "../pages/api/create_event"
+import { frameContext, frontEndEventos } from "./Frame"
+
 
 export default function NavbarBot(props: {
   setChoosenView: React.SetStateAction<any>,
@@ -19,7 +15,6 @@ export default function NavbarBot(props: {
   const addEventFormData = useContext(frameContext)?.formContext
   const selectionContext = useContext(frameContext)?.eventSelectionContext
   const eventsContext = useContext(frameContext)?.eventsContext
-  const router = useRouter()
 
   const [confirmButtonState, setConfirmButtonState] = useState(
     {
@@ -76,47 +71,37 @@ export default function NavbarBot(props: {
 
 
   return (
-    
+
     <div className={styles.navbarBot} >
 
       <div className={styles.buttonsContainer}>
         {props.choosenView == 'Calendar' && (<>
-          <MotionButton >
-            <button className={styles.button}  onClick={() => { addButton() }}>
-              
-              <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
-            </button>
-          </MotionButton>
-          <MotionButton>
-          <button className={editButtonState.styles} onClick={() => {editButton()}} >
+          <motion.button className={styles.button} onClick={() => { addButton() }} animate={{ scale: [0, 1.05, 1] }}>
+            <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
+          </motion.button>
+          <motion.button className={editButtonState.styles} onClick={() => { editButton() }}animate={{ scale: [0, 1.05, 1] }} >
             <Image className={styles.icons} width={50} height={50} src='/iconEdit.svg' alt='Editar'></Image>
-          </button>
-          </MotionButton>
-          <MotionButton>
-          <button className={deleteButtonState.styles} onClick={() => {deleteButton()}}>
+          </motion.button>
+          <motion.button animate={{ scale: [0, 1.05, 1] }} className={deleteButtonState.styles} onClick={() => { deleteButton() }} >
             <Image className={styles.icons} width={50} height={50} src='/iconX.svg' alt='Apagar'></Image>
-          </button>
-          </MotionButton>
+          </motion.button>
+
         </>)}
         {(props.choosenView == 'AddEvent' || props.choosenView == 'EditEvent') && (<>
-          <MotionButton>
-          <button className={styles.buttonDelete} onClick={() => {undoButton()}}>
+          <motion.button className={styles.buttonDelete} onClick={() => { undoButton() }} animate={{ scale: [0, 1.05, 1] }}>
             <Image className={styles.icons} width={50} height={50} src='/iconUndo.svg' alt='Voltar'></Image>
-          </button>
-          </MotionButton>
-          <MotionButton>
-          <button className={confirmButtonState.styles}  >
-            <Image className={styles.icons} onClick={(e)=> {sendData(e)}} width={50} height={50} src='/iconConfirm.svg' alt='Confirmar'></Image>
-          </button>
-          </MotionButton>
+          </motion.button>
+          <motion.button className={confirmButtonState.styles}  animate={{ scale: [0, 1.05, 1] }}>
+            <Image className={styles.icons} onClick={(e) => { sendData(e) }} width={50} height={50} src='/iconConfirm.svg' alt='Confirmar'></Image>
+          </motion.button>
         </>)}
       </div>
 
 
       {props.choosenView == 'Calendar' && (<>
-          <motion.button className={styles.buttonRefresh} onClick={() => { refreshButton() }} animate={{ scale: [0, 1.05, 1]}} >  
-            <Image className={styles.icons} width={40} height={40} src='/iconRefresh.svg' alt='Recarregar'></Image>
-          </motion.button>
+        <motion.button className={styles.buttonRefresh} onClick={() => { refreshButton() }} animate={{ scale: [0, 1.05, 1] }} >
+          <Image className={styles.icons} width={40} height={40} src='/iconRefresh.svg' alt='Recarregar'></Image>
+        </motion.button>
       </>)}
 
     </div>
@@ -387,22 +372,4 @@ export default function NavbarBot(props: {
   async function refreshButton() {
     props.setChoosenView('Update')
   }
-}
-
-
-export function MotionButton(props: {posfix?: boolean, children: React.ReactNode}) {
-  
-  if (props.posfix) {
-    return <motion.div animate={{ scale: [0, 1.05, 1]}} layout={"size"}>
-      <motion.button>
-
-      </motion.button>
-    {props.children}
-  </motion.div>   
-  }
-
-
-  return <motion.div animate={{ scale: [0, 0, 1.05, 1]} }>
-    {props.children}
-  </motion.div>
 }
