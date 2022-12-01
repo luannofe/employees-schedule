@@ -7,7 +7,7 @@ import style from './event.module.scss'
 
 import React, {  useContext, useEffect, useRef, useState } from 'react';
 import { frameContext, frontEndEventos } from './Frame';
-import { useInView } from 'framer-motion';
+
 
 
 export default function (props: { event: frontEndEventos }) {
@@ -20,10 +20,12 @@ export default function (props: { event: frontEndEventos }) {
 
 
 
+
     const employeesArr = String(props.event?.funcionarios).split(',')
     const vehiclesArr =  String(props.event?.veiculo).split(',')
 
-    console.log(props.event)
+
+
 
 
     
@@ -40,11 +42,10 @@ export default function (props: { event: frontEndEventos }) {
             })
         }
 
-
     }, [selectionContext?.state])
 
     return (
-        <div className={style.eventDiv} draggable={true} onDragStart={(e) => {dragStart(e)}} style={{
+        <div className={style.eventDiv} draggable={true}  onDragStart={(e) => {dragStart(e)}} style={{
             ...styles,
             backgroundColor: props.event.propColor
         }} onClick={() => {selectEvent()}} onDoubleClick={() => {handleDoubleClick()}}>
@@ -120,4 +121,6 @@ export default function (props: { event: frontEndEventos }) {
         e.dataTransfer.clearData()
         e.dataTransfer.setData("text/plain", JSON.stringify(props.event))
     }
+
+
 }

@@ -60,16 +60,19 @@ export default function Frame() {
     }
     
     
-    
+
+
     useEffect(() => {
+
 
         if (choosenView == 'Update') {
             getCalendarData() 
             getData()
+            sessionStorage.setItem('initialScroll', 'false')
             setChoosenView('Calendar') 
-        } else {
-            return
-        }
+        } 
+        
+        return
 
     }, [choosenView])
 

@@ -1,17 +1,19 @@
 import { eventos } from '@prisma/client'
 import { useInView } from 'framer-motion'
-import { useContext, useEffect, useRef } from 'react'
 import style from './day.module.scss'
 import Event from './Event'
 import { frameContext, frontEndEventos, viewPortContext } from './Frame'
+import React, {  useContext, useEffect, useRef, useState } from 'react';
+import { calendarRef as cf } from './Calendar';
 
 export default function Day(props: {events: frontEndEventos[], day: string}) {
 
     let processedDate = dateProcess(props.day)
 
-    const ref = useRef(null)
+    const thisRef = React.createRef<HTMLDivElement>()
+    const calendarRef = useRef(cf)
 
-    const isInView = useInView(ref)
+    const isInView = useInView(thisRef)
 
     const inViewContext = useContext(viewPortContext)
     const eventsContext = useContext(frameContext)?.eventsContext
@@ -20,18 +22,28 @@ export default function Day(props: {events: frontEndEventos[], day: string}) {
     
 
     useEffect(() => {
+
+        return startScroll()
+
+    }, [])
+
+    useEffect(() => {
+
         if (isInView && inViewContext?.state !== thisMonth) {
             inViewContext?.setState(thisMonth.toUpperCase())
         }
+
     }, [isInView])
     
     return (
-        <div className={style.day} ref={ref} onDrop={(e) => {onDropHandler(e)}}  onDragOver={(e) => {onDragOver(e)}}>
+        <div className={style.day} style={{
+            color: isPastToday() ? 'rgb(160,160,160)' : 'black'
+        }} ref={thisRef} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
             <span className={style.title}>{processedDate.day}</span>
             <span className={style.subTitle}>{processedDate.weekDay}</span>
-            <div style={{minHeight: '650px', minWidth: '170px'}}>
+            <div style={{ minHeight: '650px', minWidth: '170px' }}>
                 {props.events?.map((event) => {
-                    return <Event event={event} key={`asdasdasd${event.id}`}/>
+                    return <Event event={event} key={`asdasdasd${event.id}`} />
                 })}
             </div>
         </div>
@@ -109,7 +121,27 @@ export default function Day(props: {events: frontEndEventos[], day: string}) {
         e.preventDefault()
     }
 
+    function startScroll() {
 
+        if (props.day == new Date(new Date().setHours(0,0,0,0)).toString().slice(0,15)) {
+
+            if (!calendarRef || !thisRef.current || sessionStorage.getItem('initialScroll') == 'true'){
+                return
+            }
+            
+            thisRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            })
+
+            setTimeout(() => sessionStorage.setItem('initialScroll', 'true'), 200)
+            
+        }
+    }
+
+    function isPastToday() {
+        return new Date(props.day + ' 00:00:00').getTime() < new Date(new Date().setHours(0,0,0,0)).getTime()
+    }
 
 }
 

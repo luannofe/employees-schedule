@@ -22,6 +22,8 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //TODO: MELHORAR SISTEMA DE CALENDARIO, TALVEZ ABRIR JÁ NO DIA ATUAL?
     //TODO: admin
     //TODO: edit event is duplicating
+    //TODO: lupa
+    //TODO: deletar dias passados
 
 
     let employeesArr : string[];

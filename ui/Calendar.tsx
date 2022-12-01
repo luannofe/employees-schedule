@@ -8,21 +8,22 @@ import Day from './Day'
 import { frontEndCalendarEventos } from './Frame'
 
 
+export const calendarRef = React.createRef<HTMLDivElement>()
+
 export default  function Calendar( props: {
     data: frontEndCalendarEventos[]
     
 }) {
     
-    const calendarRef = React.createRef<HTMLDivElement>()
+    
 
     useEffect(() => {
 
-        console.log('CALENDAR RE-RENDERED')
-        console.log(props.data)
 
         const scrollPos = sessionStorage.getItem('calendarScrlPos')
+        const initialScrolled = (sessionStorage.getItem('initialScroll') == 'true')
 
-        if (scrollPos) {
+        if (scrollPos && initialScrolled) {
             return calendarRef.current?.scrollTo(0, parseInt(scrollPos))
         }
         
@@ -30,6 +31,7 @@ export default  function Calendar( props: {
     })
 
     return  (
+
         <motion.div className={style.calendar} ref={calendarRef} onScroll={(e) => {sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop)); console.log(e.currentTarget.scrollTop)}}>
             <div className={style.calendarCapsule} >
                 {props.data.map((item, i) => {
@@ -42,6 +44,7 @@ export default  function Calendar( props: {
                 })}
             </div>
         </motion.div>
+
         )
     
 
