@@ -3,93 +3,112 @@
 import style from './selectinput.module.scss'
 import React, { useContext, useEffect, useState } from "react"
 import { frameContext } from '../Frame'
+import Select, { CSSObjectWithLabel } from 'react-select'
 
 
-export default function SelectInput(props : { insertedValues: string[], setInsertedValues: any, selectedEventTitle?: string}) {
+export default function SelectInput(props: {
+    propertyName: 'funcionarios' | 'veiculo',
+    propertyOptions: { id: number, nome: string }[],
+    placeholder: string,
+    inputLimit: number,
+    defaultValue: string[]
+}) {
 
-    let insertedValues = props.insertedValues
-    let setInsertedValues = props.setInsertedValues
-    let FormContext = useContext(frameContext)?.formContext
-    let selectedContext = useContext(frameContext)?.eventSelectionContext
+    const { propertyName, propertyOptions, inputLimit, defaultValue } = props
 
-    useEffect(() => {
-        FormContext?.insertFormInputs((values: any) => ({...values, ['funcionarios']: insertedValues}))
-    }, [insertedValues])
+    let defaultVal = defaultValue.map((item) => {return { value: item, label: item }})
 
-    return (
-        <div className={style.input} >
-            {insertedValues.map((item) => {
-                return <InsertedInput insertedValues={insertedValues} setInsertedValues={setInsertedValues} text={item} />
-            })}
-            <span className={style.span} contentEditable placeholder='Oi' onKeyDown={(e) => {insertValue(e)}}></span>
-        </div>
-    )
+    const selectOptions = propertyOptions.map((item) => { return { value: item.nome, label: item.nome } })
+
+    const FormContext = useContext(frameContext)?.formContext
 
 
-    async function insertValue(e :  React.KeyboardEvent<HTMLSpanElement>) {
 
-        let innerText = e.currentTarget.innerText
-        let el = e.currentTarget
+    return <Select
 
-        if (e.key === 'Enter') {
-            let validation = await validateValues(innerText)
-            e.preventDefault()
+        
 
-            if (validation) {
-                setInsertedValues(
-                    [...insertedValues, innerText]
-                )
-                el.innerText = ''
-            }
-            el.innerText = ''
+        closeMenuOnSelect={propertyName == 'funcionarios'? false : true}
+
+        options={selectOptions}
+
+        isClearable={true}
+
+        isOptionDisabled={() => checkLimit()}
+
+        isMulti 
+
+        defaultValue={defaultVal}
+
+        noOptionsMessage={({inputValue}) => !inputValue ? "Sem opções." : `Não foi encontrado nenhum ${propertyName}`} 
+
+        styles={{
+
+            container: (baseStyles, state) => ({
+                ...baseStyles,
+                width: '100%',
+            }),
+
+            control: (baseStyles, state) => ({
+                ...baseStyles,
+                padding: '8px 8px 8px 32px',
+                border: 0,
+                fontSize: '14px',
+                borderRadius: '8px',
+                boxShadow: state.isFocused ? '0 0 0 1px rgb(160, 160, 160)' : 'none'
+
+            }),
+
+            multiValue: (baseStyles, state) => ({
+                ...baseStyles,
+                height: '26px',
+                width: 'fit-content',
+                fontSize: '16px',
+                borderRadius: '4px',
+                verticalAlign: 'middle',
+                textAlign: 'center',
+                alignItems: 'center'
+            }),
+
+            placeholder: (baseStyles, state) => ({
+                ...baseStyles,
+                fontStyle: 'italic',
+                color: 'rgb(179,179,179)'
+            }),
+
+            valueContainer: (baseStyles, state) => ({
+                ...baseStyles,
+                padding: '0px'
+            }),
+
+
+
+        }}
+
+        onChange={(e: any) => { handleChange(e) }}
+
+        placeholder={props.placeholder}
+
+    />
+
+    function handleChange(e: { value: string, label: string }[]) {
+        FormContext?.insertFormInputs((values: any) => ({ ...values, [propertyName]: e.map(item => item.label) }))
+    }
+
+    function checkLimit() {
+
+        const count = FormContext?.formInputs[propertyName]?.length
+
+        if (!count) {
+            return false
         }
 
-        validateSize(innerText)
-
-        async function validateValues(val: string) {
-
-            if (insertedValues.length > 14) {
-                return false
-            }
-
-            let i = 0;
-            while (i < insertedValues.length) {
-
-                if (e.currentTarget.innerText.toLowerCase() === insertedValues[i].toLowerCase()) {
-                    return false
-                }
-                i++
-                
-            }
-
+        if (count >= inputLimit) {
             return true
-            
         }
 
-        function validateSize(val:string) {
-            if (el.innerText.length > 22 && e.key !== 'Backspace') {
-                e.preventDefault()
-            }
-        }
+        return false
     }
+
 }
 
-export function InsertedInput(props: {text:string, insertedValues: string[], setInsertedValues: React.Dispatch<React.SetStateAction<string[]>>}) {
-
-    return <div className={style.insertedInput}>
-        {props.text}
-        <button onClick={(e) => {
-            destroyItem(e, props.text)
-        }}>
-            X
-        </button>
-    </div>
-
-
-    async function destroyItem(e: React.MouseEvent<HTMLButtonElement>, string: string) {
-        e.preventDefault()
-        return props.setInsertedValues(props.insertedValues.filter((item) => {
-            return item.toLowerCase() != string.toLowerCase()
-        }))
-    }
-}

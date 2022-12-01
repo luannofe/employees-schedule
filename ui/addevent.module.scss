@@ -37,7 +37,8 @@ $font: 'Times-new-roman';
 
 .addEventDiv {
     width: 600px;
-    height: 600px;
+    min-height: 500px;
+    max-height: 650px;
     border-radius: $borderRadius;
     background-color: $navbarColor;
     padding: 16px;
@@ -78,6 +79,7 @@ $font: 'Times-new-roman';
     &:focus {
         border: none;
         outline: none;
+        box-shadow: 0 0 0 1px rgb(160, 160, 160);
     }
     
     &::placeholder {
@@ -92,4 +94,5 @@ $font: 'Times-new-roman';
     margin-left: 8px;
     width: 18px;
     height: 18px;
+    z-index: 1;
 }

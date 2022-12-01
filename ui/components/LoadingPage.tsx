@@ -21,7 +21,7 @@ export default function Loading(props: {size?: {}}) {
     }}>
         <motion.div animate={{
             rotate: [0, 0, 360],
-            scale: [0, 1.05, 1]
+            scale: [0, 0.7, 0.65]
         }} style={{visibility: isVisible? 'visible': 'hidden'}}>
             <Image alt='loading icon' className={style.icons} height={128} width={128} src='/iconLoading.svg'></Image>
         </motion.div>

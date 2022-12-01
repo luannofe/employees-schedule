@@ -6,6 +6,7 @@ import AddEvent from "./AddEvent";
 import NavbarBot from "./NavbarBot";
 import NavbarTop from "./NavbarTop";
 import Loading from "./components/LoadingPage";
+import { apiDataResponse } from "../pages/api/data";
 
 
 
@@ -23,6 +24,8 @@ export default function Frame() {
     //TODO: check if user is admin 
 
     const [events, setEvents] = useState<frontEndCalendarEventos[]> ()
+
+    const [data, setData] = useState<apiDataResponse>()
 
     const [choosenView, setChoosenView] = useState('Update')
 
@@ -62,6 +65,7 @@ export default function Frame() {
 
         if (choosenView == 'Update') {
             getCalendarData() 
+            getData()
             setChoosenView('Calendar') 
         } else {
             return
@@ -82,12 +86,12 @@ export default function Frame() {
         <viewPortContext.Provider value={{state: inViewportMonth, setState: setInViewportMonth}}>
             <NavbarTop/>
             {
-                events
+                events && data
                 ? 
                     <>
                         {choosenView == 'Calendar' && <Calendar data={events}/>}
-                        {choosenView == 'AddEvent' && <AddEvent/>}
-                        {choosenView == 'EditEvent' && <AddEvent selectedEvent={selectedEvent.eventData}/>}
+                        {choosenView == 'AddEvent' && <AddEvent cerData={data}/>}
+                        {choosenView == 'EditEvent' && <AddEvent cerData={data} selectedEvent={selectedEvent.eventData}/>}
                     </>
                 :
                     <Loading/>
@@ -104,6 +108,11 @@ export default function Frame() {
         let data = await fetch('/api/calendar').then( data => data.json()) as frontEndCalendarEventos[]
         setEvents(data)
     }
+
+    async function getData() {
+        const data = await fetch('/api/data').then( data => data.json()) as apiDataResponse
+        return setData(data)
+    }
     
 }
 
@@ -115,7 +124,7 @@ export default function Frame() {
 
 
 export interface frontEndEventos  {
-    veiculo: string,
+    veiculo: string[],
     titulo: string,
     responsavel: string,
     dataEvento: string[] | string,

@@ -4,26 +4,24 @@ import styles from './addevent.module.scss'
 import iconPersonWorker from '../public/iconPersonWorker.svg'
 import iconVehicle from '../public/iconVehicle.svg'
 import Image from 'next/image'
-import SelectInput from './components/SelectInput'
 import { useContext, useEffect, useRef, useState } from 'react'
 import Event from './Event'
 import { frameContext, frontEndEventos } from './Frame'
-import { eventos } from '@prisma/client'
 import ColorsBoxInput from './components/ColorsBoxInput'
 import { createContext } from 'react'
 import SelectedDates from './components/SelectedDates'
+import SelectInput from './components/SelectInput'
+import { apiDataResponse } from '../pages/api/data'
 
 
 export const addEventContext = createContext<addEventContext | null>(null)
 
-export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
+export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerData: apiDataResponse}) {
 
-    //TODO: select more than one car
     //TODO: !! NÃO PODEM: mesmo dia carro / colaborador !!
-    //TODO: tentar arrastar os eventos
-    //TODO: colaborador e carro devem ser checklists
     //TODO: MELHORAR SISTEMA DE CALENDARIO, TALVEZ ABRIR JÁ NO DIA ATUAL?
     //TODO: admin
+    //TODO: edit event is duplicating
 
 
     let employeesArr : string[];
@@ -32,13 +30,20 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
     } else {
         employeesArr = []
     }
+
+    let vehiclesArr : string[];
+    if (props.selectedEvent?.veiculo) {
+        vehiclesArr = String(props.selectedEvent?.veiculo).split(',')
+    } else {
+        vehiclesArr = []
+    }
      
     const [selectedDates, setSelectedDates] = useState<string[]>([])
-    const [inputInsertedValues, setInputInsertedValues] = useState<string[]>(employeesArr)
 
     const FormContext = useContext(frameContext)?.formContext
     const viewContext = useContext(frameContext)?.choosenViewContext
     
+
     const addEventContextValues : addEventContext = {
 
         dateSelection: {
@@ -69,12 +74,12 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
 
     return  (
         <addEventContext.Provider value={addEventContextValues}>
-            <div className={styles.addEventContainer} >
+            <div className={styles.addEventContainer}  >
                 <div className={styles.addEventWraperContainer}>  
                     <SelectedDates/>
                     <div className={styles.addEventDiv}>
                         <form action="post" ref={FormContext?.formRef}>
-                            <div style={{display: 'flex', width: '95%'}}>
+                            <div style={{display: 'flex', width: '95%', alignItems: 'flex-end'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
                                 <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} onKeyDown={(e) => {validateSize(e, 8)}} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
@@ -86,22 +91,22 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos}) {
                                     <input className={styles.inputBase}  onChange={(e)=>{handleDate(e)}} style={{width:'110px', paddingLeft: '8px'}} name="dataEvento" type="date" placeholder='Data do evento' defaultValue={props.selectedEvent?.dataEvento} min={new Date().toISOString().split("T")[0]}/>
                                 </label>
                             </div>
-                            <div style={{display: 'flex', justifyContent: 'space-between', gap:'64px', width: '95%'}}>
-                                <label htmlFor="">
+                            <div style={{display: 'flex', justifyContent: 'space-between', gap:'16px', width: '95%'}}>
+                                <label htmlFor="" style={{width: '220px'}}>
                                     <Image className={styles.inputIcon} src={iconPersonWorker} alt=''/>
-                                    <input className={styles.inputBase}  onKeyDown={(e) => {validateSize(e, 16)}} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
+                                    <input className={styles.inputBase} style={{width: '230px'}} onKeyDown={(e) => {validateSize(e, 16)}} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
                                 </label>
                                 <label htmlFor="">
                                     <Image className={styles.inputIcon} src={iconVehicle} alt=''/>
-                                    <input className={styles.inputBase}  onKeyDown={(e) => {validateSize(e, 16)}} onChange={(e)=>{handleChange(e)}} name="veiculo" type="text" placeholder='Carro' defaultValue={props.selectedEvent?.veiculo} />
+                                    <SelectInput propertyName='veiculo' defaultValue={vehiclesArr} placeholder='Selecione...' inputLimit={2} propertyOptions={props.cerData.carros}/>
                                 </label>
                             </div>
                             <label htmlFor="">
                                 <textarea className={styles.inputBase}  onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Colaboradores:</span>
-                            <label htmlFor="">                           
-                                <SelectInput  insertedValues={inputInsertedValues} setInsertedValues={setInputInsertedValues}/>
+                            <label htmlFor="">
+                                <SelectInput propertyName='funcionarios' defaultValue={employeesArr} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
                             </label>
                             <ColorsBoxInput/>
                         </form>

@@ -48,6 +48,7 @@ async function validateDates(eventDates : string[]) {
     console.log(`PARSING DATES ${eventDates}`)
 
     while (i < eventDates.length) {
+
         await prisma.dias.upsert({
             where: {dia: eventDates[i]},
             update: {dia: eventDates[i]},
@@ -63,9 +64,7 @@ async function validateDates(eventDates : string[]) {
     }
 
     console.log(`ENDED PARSING DATES TO ${dateArr}`)
-    return  dateArr as {id: number, dia: string}[]
-
-    
+    return  dateArr as {id: number, dia: string}[]    
 }
 
 async function writeEvent(body : eventos, eventDates: {id: number, dia: string}) {
@@ -81,7 +80,8 @@ async function writeEvent(body : eventos, eventDates: {id: number, dia: string})
                 dataRegistrado: new Date().toString().slice(0,15),
                 diaId: eventDates.id,
                 dataEvento: eventDates.dia,
-                propColor: String(propColor)
+                propColor: String(propColor),
+                veiculo: String(body.veiculo)
             }
         })
     } else {
@@ -92,7 +92,8 @@ async function writeEvent(body : eventos, eventDates: {id: number, dia: string})
             data: {
                 ...body,
                 funcionarios: String(body.funcionarios),
-                dataEvento: eventDates.dia
+                dataEvento: eventDates.dia,
+                veiculo: String(body.veiculo)
             }
         })
     }

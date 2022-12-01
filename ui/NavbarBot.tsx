@@ -228,7 +228,7 @@ export default function NavbarBot(props: {
       addEventFormData?.insertFormInputs({
         titulo: '',
         dataEvento: '',
-        veiculo: '',
+        veiculo: [],
         responsavel: '',
         desc: '',
         funcionarios: [],
@@ -318,7 +318,7 @@ export default function NavbarBot(props: {
     addEventFormData?.insertFormInputs({
       titulo: '',
       dataEvento: '',
-      veiculo: '',
+      veiculo: [],
       responsavel: '',
       desc: '',
       funcionarios: [],

@@ -3,10 +3,9 @@
 
 import { motion } from 'framer-motion'
 import React, { createContext, UIEventHandler, useContext, useEffect, useRef, useState } from 'react'
-import { calendarInterface, databaseEventInterface } from '../pages/api/calendar'
 import style from './calendar.module.scss'
 import Day from './Day'
-import { frameContext, frontEndCalendarEventos, frontEndEventos } from './Frame'
+import { frontEndCalendarEventos } from './Frame'
 
 
 export default  function Calendar( props: {
@@ -14,14 +13,24 @@ export default  function Calendar( props: {
     
 }) {
     
+    const calendarRef = React.createRef<HTMLDivElement>()
 
     useEffect(() => {
+
         console.log('CALENDAR RE-RENDERED')
         console.log(props.data)
+
+        const scrollPos = sessionStorage.getItem('calendarScrlPos')
+
+        if (scrollPos) {
+            return calendarRef.current?.scrollTo(0, parseInt(scrollPos))
+        }
+        
+        return
     })
 
     return  (
-        <motion.div className={style.calendar}>
+        <motion.div className={style.calendar} ref={calendarRef} onScroll={(e) => {sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop)); console.log(e.currentTarget.scrollTop)}}>
             <div className={style.calendarCapsule} >
                 {props.data.map((item, i) => {
                     return(
