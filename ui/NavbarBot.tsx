@@ -214,15 +214,21 @@ export default function NavbarBot(props: {
 
     
       
-      addEventFormData?.insertFormInputs({
-        titulo: '',
-        dataEvento: '',
-        veiculo: [],
-        responsavel: '',
-        desc: '',
-        funcionarios: [],
-        propColor: '#BFD7D9',
-        proposta: ''
+      addEventFormData?.insertFormInputs((prev) => { 
+
+        return {
+
+          ...prev,
+          titulo: '',
+          dataEvento: '',
+          veiculo: [],
+          responsavel: '',
+          desc: '',
+          funcionarios: [],
+          propColor: '#BFD7D9',
+          proposta: '',
+
+        }
       })
       
       addEventFormData?.formRef.current?.reset()
@@ -258,7 +264,7 @@ export default function NavbarBot(props: {
       proposta: formdata!.proposta
     }
     
-    return new Promise<{passed: boolean, processedForm?: frontEndEventos}>((resolve, reject) => {
+    return new Promise<{passed: boolean, processedForm?: {}}>((resolve, reject) => {
 
       let processedFormArr = Object.entries(processedForm)
 
@@ -312,7 +318,8 @@ export default function NavbarBot(props: {
       desc: '',
       funcionarios: [],
       propColor: '#BFD7D9',
-      proposta: ''
+      proposta: '',
+      thisRef: React.createRef<HTMLDivElement>()
     })
     props.setChoosenView('AddEvent')
   }

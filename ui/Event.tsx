@@ -124,7 +124,7 @@ export default function (props: { event: frontEndEventos }) {
 
     function dragStart(e: React.DragEvent<HTMLDivElement>) {
         e.dataTransfer.clearData()
-        e.dataTransfer.setData("text/plain", JSON.stringify(props.event))
+        e.dataTransfer.setData("text/plain", JSON.stringify(Object.assign({}, {...props.event, thisRef: undefined})))
     }
 
 

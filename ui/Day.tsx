@@ -91,7 +91,8 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
                                     ...item,
                                     eventos : [...item.eventos, {
                                         ...propsData,
-                                        dataEvento: props.day
+                                        dataEvento: props.day,
+                                        thisRef: React.createRef<HTMLDivElement>()
                                     }]
                                 }
                             }

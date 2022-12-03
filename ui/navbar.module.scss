@@ -29,7 +29,7 @@ $borderRadius: 15px;
     align-items: center;
     background-color: $navbarColor;
     height: 56px;
-    min-width: 1000px;
+    min-width: 1400px;
 
     span {
 
@@ -52,13 +52,14 @@ $borderRadius: 15px;
 
 
 .navbarBot {
+    left: 30px;
     position: absolute;
-    height: 120px;
-    width: 100vw;
+    height: 90px;
+    width: calc(100vw - 60px);
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 0;
+    bottom: 15px;
 }
 
 .icons {
@@ -104,7 +105,7 @@ $borderRadius: 15px;
     height: 60px;
     font-size: 1.5em;
     position: absolute;
-    right: 50px;
+    right: 20px;
     bottom: 30px;
 
 
