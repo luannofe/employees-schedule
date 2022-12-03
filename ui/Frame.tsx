@@ -17,6 +17,8 @@ export const viewPortContext = createContext<{
     setState: React.Dispatch<React.SetStateAction<string>>
 } | null >(null)
 
+export const frameRef = React.createRef()
+
 
 
 export default function Frame() {
@@ -85,7 +87,7 @@ export default function Frame() {
     }, [selectedEvent.eventData])
     
     
-    return <frameContext.Provider value={contextProviders}>
+    return <frameContext.Provider value={contextProviders} >
         <viewPortContext.Provider value={{state: inViewportMonth, setState: setInViewportMonth}}>
             <NavbarTop/>
             {
@@ -109,7 +111,18 @@ export default function Frame() {
     
     async function getCalendarData() {
         let data = await fetch('/api/calendar').then( data => data.json()) as frontEndCalendarEventos[]
-        setEvents(data)
+        setEvents(data.map((item) => {
+            return {
+                ...item,
+                searchedEventsRef: [],
+                eventos: item.eventos.map((item) => {
+                    return {
+                        ...item,
+                        thisRef: React.createRef<HTMLDivElement>()
+                    }
+                })
+            }
+        }))
     }
 
     async function getData() {
@@ -137,10 +150,13 @@ export interface frontEndEventos  {
     proposta: string,
     funcionarios?: string[],
     dataRegistrado?: string,
-    propColor?: string
+    propColor?: string,
+    thisRef: React.RefObject<HTMLDivElement>
 } 
 
 export interface frontEndCalendarEventos {
+    isSearched?: boolean,
+    searchedEventsRef: React.RefObject<HTMLDivElement>[],
     dia: string,
     eventos: frontEndEventos[]
 }[]

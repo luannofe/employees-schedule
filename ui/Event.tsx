@@ -25,7 +25,11 @@ export default function (props: { event: frontEndEventos }) {
     const vehiclesArr =  String(props.event?.veiculo).split(',')
 
 
-
+    useEffect(() => {
+        if (props.event.thisRef) {
+            console.log(props.event.thisRef)
+        }
+    }, [props.event.thisRef])
 
 
     
@@ -45,7 +49,7 @@ export default function (props: { event: frontEndEventos }) {
     }, [selectionContext?.state])
 
     return (
-        <div className={style.eventDiv} draggable={true}  onDragStart={(e) => {dragStart(e)}} style={{
+        <div className={style.eventDiv} draggable={true} ref={props.event.thisRef}  onDragStart={(e) => {dragStart(e)}} style={{
             ...styles,
             backgroundColor: props.event.propColor
         }} onClick={() => {selectEvent()}} onDoubleClick={() => {handleDoubleClick()}}>
@@ -109,7 +113,8 @@ export default function (props: { event: frontEndEventos }) {
               desc: selectionContext.state.eventData?.desc,
               id: selectionContext.state.eventData.id,
               propColor: selectionContext.state.eventData.propColor,
-              proposta: selectionContext.state.eventData.proposta
+              proposta: selectionContext.state.eventData.proposta,
+              thisRef: selectionContext.state.eventData.thisRef
             })
         }
 

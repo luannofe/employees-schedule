@@ -5,6 +5,7 @@ import styles from './navbar.module.scss'
 import React, {  FormEvent, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { frameContext, frontEndEventos } from "./Frame"
+import Searchbutton from "./components/SearchButton"
 
 
 export default function NavbarBot(props: {
@@ -73,6 +74,9 @@ export default function NavbarBot(props: {
   return (
 
     <div className={styles.navbarBot} >
+
+
+      {props.choosenView == 'Calendar' && <Searchbutton/>}
 
       <div className={styles.buttonsContainer}>
         {props.choosenView == 'Calendar' && (<>

@@ -6,7 +6,7 @@ import { frameContext, frontEndEventos, viewPortContext } from './Frame'
 import React, {  useContext, useEffect, useRef, useState } from 'react';
 import { calendarRef as cf } from './Calendar';
 
-export default function Day(props: {events: frontEndEventos[], day: string}) {
+export default function Day(props: {events: frontEndEventos[], day: string, isSearched?: boolean}) {
 
     let processedDate = dateProcess(props.day)
 
@@ -30,22 +30,30 @@ export default function Day(props: {events: frontEndEventos[], day: string}) {
     useEffect(() => {
 
         if (isInView && inViewContext?.state !== thisMonth) {
-            inViewContext?.setState(thisMonth.toUpperCase())
+            //inViewContext?.setState(thisMonth.toUpperCase())
         }
 
     }, [isInView])
     
     return (
-        <div className={style.day} style={{
-            color: isPastToday() ? 'rgb(160,160,160)' : 'black'
-        }} ref={thisRef} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
-            <span className={style.title}>{processedDate.day}</span>
-            <span className={style.subTitle}>{processedDate.weekDay}</span>
-            <div style={{ minHeight: '650px', minWidth: '170px' }}>
-                {props.events?.map((event) => {
-                    return <Event event={event} key={`asdasdasd${event.id}`} />
-                })}
-            </div>
+        <div className={style.day}
+
+            style={{
+
+                color: isPastToday() ? 'rgb(160,160,160)' : 'black',
+                borderRadius: '4px',
+                outline: props.isSearched? '2px dotted grey' : 'none'
+            }} ref={thisRef} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
+
+                <span className={style.title}>{processedDate.day}</span>
+
+                <span className={style.subTitle}>{processedDate.weekDay}</span>
+
+                <div style={{ minHeight: '650px', minWidth: '170px' }}>
+                    {props.events?.map((event) => {
+                        return <Event event={event} key={`asdasdasd${event.id}`} />
+                    })}
+                </div>
         </div>
     )
 

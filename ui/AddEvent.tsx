@@ -19,11 +19,11 @@ export const addEventContext = createContext<addEventContext | null>(null)
 export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerData: apiDataResponse}) {
 
     //TODO: !! NÃO PODEM: mesmo dia carro / colaborador !!
-    //TODO: MELHORAR SISTEMA DE CALENDARIO, TALVEZ ABRIR JÁ NO DIA ATUAL?
     //TODO: admin
     //TODO: edit event is duplicating
     //TODO: lupa
     //TODO: deletar dias passados
+    //TODO: navbar bot está sobrepondo a barra de rolagem
 
 
     let employeesArr : string[];

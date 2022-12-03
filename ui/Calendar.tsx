@@ -37,7 +37,7 @@ export default  function Calendar( props: {
                 {props.data.map((item, i) => {
                     return(
                         <React.Fragment key={`daykey${i}`}>
-                            <Day events={item.eventos} day={item.dia} />
+                            <Day events={item.eventos} day={item.dia} isSearched={item.isSearched}/>
                             <div className={style.bar} ></div>
                         </React.Fragment>
                     )
