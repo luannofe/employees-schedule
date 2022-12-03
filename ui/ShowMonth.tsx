@@ -1,13 +1,16 @@
 'use client'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { frameContext, viewPortContext } from './Frame'
+
+import React from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { frameContext} from './Frame'
 import styles from './showmonth.module.scss'
+
+export const showMonthRef = React.createRef<HTMLDivElement>()
 
 export default function ShowMonth() {
 
     //TODO: make div disappear after a while
 
-    const currentMonth = useContext(viewPortContext)?.state
     const currentView = useContext(frameContext)?.choosenViewContext.state
 
     const [isVisible, setIsVisible] = useState(false)
@@ -23,7 +26,7 @@ export default function ShowMonth() {
 
     return <div className={styles.container} >
         <div className={ isVisible? styles.innerContainerV : styles.innerContainerNV} >
-            <span>{currentMonth}</span>
+            <span ref={showMonthRef} >a</span>
         </div>
     </div>
 

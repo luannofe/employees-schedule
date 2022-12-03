@@ -12,11 +12,6 @@ import { apiDataResponse } from "../pages/api/data";
 
 export const frameContext = createContext<frameContext | null>(null)
 
-export const viewPortContext = createContext<{
-    state: string,
-    setState: React.Dispatch<React.SetStateAction<string>>
-} | null >(null)
-
 export const frameRef = React.createRef()
 
 
@@ -36,8 +31,6 @@ export default function Frame() {
     const [selectedEvent, setSelectedEvent] = useState<eventSelectionState>({
         selected : false
     })
-
-    const [inViewportMonth, setInViewportMonth] = useState('none')
 
     const contextProviders : frameContext = {
         
@@ -88,7 +81,6 @@ export default function Frame() {
     
     
     return <frameContext.Provider value={contextProviders} >
-        <viewPortContext.Provider value={{state: inViewportMonth, setState: setInViewportMonth}}>
             <NavbarTop/>
             {
                 events && data
@@ -102,7 +94,6 @@ export default function Frame() {
                     <Loading/>
             }
             <NavbarBot choosenView={choosenView} setChoosenView={setChoosenView}/>
-        </viewPortContext.Provider>
     </frameContext.Provider>   
     
     
@@ -114,7 +105,7 @@ export default function Frame() {
         setEvents(data.map((item) => {
             return {
                 ...item,
-                searchedEventsRef: [],
+                thisRef: React.createRef<HTMLDivElement>(),
                 eventos: item.eventos.map((item) => {
                     return {
                         ...item,
@@ -155,9 +146,8 @@ export interface frontEndEventos  {
 } 
 
 export interface frontEndCalendarEventos {
-    isSearched?: boolean,
-    searchedEventsRef: React.RefObject<HTMLDivElement>[],
     dia: string,
+    thisRef: React.RefObject<HTMLDivElement>,
     eventos: frontEndEventos[]
 }[]
 

@@ -2,25 +2,26 @@ import { eventos } from '@prisma/client'
 import { useInView } from 'framer-motion'
 import style from './day.module.scss'
 import Event from './Event'
-import { frameContext, frontEndEventos, viewPortContext } from './Frame'
+import { frameContext, frontEndEventos } from './Frame'
 import React, {  useContext, useEffect, useRef, useState } from 'react';
 import { calendarRef as cf } from './Calendar';
+import { showMonthRef as sf } from './ShowMonth'
 
-export default function Day(props: {events: frontEndEventos[], day: string, isSearched?: boolean}) {
+export default function Day(props: {events: frontEndEventos[], day: string, thisRef: React.RefObject<HTMLDivElement>}) {
 
     let processedDate = dateProcess(props.day)
 
-    const thisRef = React.createRef<HTMLDivElement>()
+    const {thisRef} = props
+
     const calendarRef = useRef(cf)
+    const showMonthRef = useRef(sf).current.current
 
     const isInView = useInView(thisRef)
 
-    const inViewContext = useContext(viewPortContext)
     const eventsContext = useContext(frameContext)?.eventsContext
-
-    const thisMonth = new Date(props.day).toLocaleString('default', {month: 'long'})
     
-
+    const thisMonth = new Date(props.day).toLocaleString('default', {month: 'long'}).toUpperCase()
+    
     useEffect(() => {
 
         return startScroll()
@@ -29,21 +30,21 @@ export default function Day(props: {events: frontEndEventos[], day: string, isSe
 
     useEffect(() => {
 
-        if (isInView && inViewContext?.state !== thisMonth) {
-            //inViewContext?.setState(thisMonth.toUpperCase())
+        if ( isInView && showMonthRef && showMonthRef.innerText != thisMonth) {
+            showMonthRef.innerText = thisMonth
         }
 
     }, [isInView])
     
     return (
-        <div className={style.day}
+        <div className={style.day} ref={thisRef}
 
             style={{
 
                 color: isPastToday() ? 'rgb(160,160,160)' : 'black',
                 borderRadius: '4px',
-                outline: props.isSearched? '2px dotted grey' : 'none'
-            }} ref={thisRef} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
+
+            }}  onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
 
                 <span className={style.title}>{processedDate.day}</span>
 

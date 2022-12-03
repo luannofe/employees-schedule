@@ -10,15 +10,11 @@ import { frontEndCalendarEventos } from './Frame'
 
 export const calendarRef = React.createRef<HTMLDivElement>()
 
-export default  function Calendar( props: {
-    data: frontEndCalendarEventos[]
-    
-}) {
+export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) {
     
     
 
     useEffect(() => {
-
 
         const scrollPos = sessionStorage.getItem('calendarScrlPos')
         const initialScrolled = (sessionStorage.getItem('initialScroll') == 'true')
@@ -28,7 +24,8 @@ export default  function Calendar( props: {
         }
         
         return
-    })
+
+    }, [])
 
     return  (
 
@@ -37,7 +34,7 @@ export default  function Calendar( props: {
                 {props.data.map((item, i) => {
                     return(
                         <React.Fragment key={`daykey${i}`}>
-                            <Day events={item.eventos} day={item.dia} isSearched={item.isSearched}/>
+                            <Day events={item.eventos} day={item.dia} thisRef={item.thisRef}/>
                             <div className={style.bar} ></div>
                         </React.Fragment>
                     )
