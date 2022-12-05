@@ -4,7 +4,7 @@ import styles from './addevent.module.scss'
 import iconPersonWorker from '../public/iconPersonWorker.svg'
 import iconVehicle from '../public/iconVehicle.svg'
 import Image from 'next/image'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Event from './Event'
 import { frameContext, frontEndEventos } from './Frame'
 import ColorsBoxInput from './components/ColorsBoxInput'
@@ -19,15 +19,16 @@ export const addEventContext = createContext<addEventContext | null>(null)
 export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerData: apiDataResponse}) {
 
 
-    //TODO: !! NÃO PODEM: mesmo dia carro / colaborador !!
     //TODO: admin
     //TODO: deletar dias passados
+    //TODO: retornar q nao foi encontrado ninguem
 
     //FIXME: edit event is duplicating
-
+    //FIXME: popup não sai do input de carro
 
 
     let employeesArr : string[];
+
     if (props.selectedEvent?.funcionarios) {
         employeesArr = String(props.selectedEvent?.funcionarios).split(',')
     } else {
@@ -35,6 +36,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     }
 
     let vehiclesArr : string[];
+
     if (props.selectedEvent?.veiculo) {
         vehiclesArr = String(props.selectedEvent?.veiculo).split(',')
     } else {
@@ -108,7 +110,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                                 <textarea className={styles.inputBase}  onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Colaboradores:</span>
-                            <label htmlFor="">
+                            <label htmlFor="" >
                                 <SelectInput propertyName='funcionarios' defaultValue={employeesArr} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
                             </label>
                             <ColorsBoxInput/>
