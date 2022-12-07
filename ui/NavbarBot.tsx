@@ -6,6 +6,7 @@ import React, {  FormEvent, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { frameContext, frontEndEventos } from "./Frame"
 import Searchbutton from "./components/SearchButton"
+import { write } from "fs"
 
 
 export default function NavbarBot(props: {
@@ -151,29 +152,80 @@ export default function NavbarBot(props: {
       if (props.choosenView == 'EditEvent') {
         let previousDate = new Date(selectionContext?.state.eventData?.dataEvento + ' 00:00:00').toString().slice(0,15)
         let writedEvent = data.writedEvents[0].registeredEvent
+        const isPastPreviousDate = (new Date(writedEvent.dataEvento).getTime() > new Date(previousDate).getTime())
 
-        eventsContext?.setState( (eventosArray) => {
-            return eventosArray?.map( item => {
-                if (item.dia == writedEvent.dataEvento) {
-                    return {
-                        ...item,
-                        eventos : [...item.eventos, {
-                            ...writedEvent
-                        }]
-                    }
+        const arrWithNewEvent = eventsContext!.state!.map( item => {
+
+          if (isPastPreviousDate) {
+
+            if (item.dia == writedEvent.dataEvento) {
+              return {
+                ...item,
+                eventos: [...item.eventos, {...writedEvent}]
+              }
+            }
+
+            if (item.dia == previousDate) {
+              return {
+                ...item,
+                eventos: item.eventos.filter( (ev) => ev.id != writedEvent.id)
+              }
+            }
+
+          } else {
+
+            if (previousDate == writedEvent.dataEvento && item.dia == writedEvent.dataEvento) {
+
+              return {
+
+                ...item,
+                eventos: item.eventos.map((ev) => {
+
+                  if (ev.id == writedEvent.id) {
+
+                    return {...writedEvent}
+
+                  } 
+
+                  return ev
+                })
+              }
+
+            } 
+
+            if (previousDate != writedEvent.dataEvento) {
+
+              if (item.dia == previousDate) {
+                return {
+                  ...item,
+                  eventos: item.eventos.filter( (ev) => ev.id != writedEvent.id)
                 }
-                if (item.dia == previousDate) {
-                    return {
-                        ...item,
-                        eventos: item.eventos.filter((item) => item.id != writedEvent.id)
-                    }
+              }
+
+              if (item.dia == writedEvent.dataEvento) {
+                return {
+                  ...item,
+                  eventos: [...item.eventos, {...writedEvent}]
                 }
-                return item
-            })
+              }
+
+            }
+
+            
+
+          }
+
+
+          return item
         })
+
+        eventsContext?.setState(arrWithNewEvent)
+
+        
 
 
         props.setChoosenView('Calendar')
+        selectionContext?.setState({selected: false})
 
         return setTimeout(() => {
           setConfirmButtonState({
