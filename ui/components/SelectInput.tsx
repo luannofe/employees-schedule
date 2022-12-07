@@ -249,6 +249,10 @@ export default function SelectInput(props: {
             let i = 0
             for (let evento of day.eventos) {
 
+                if (evento.id == FormContext.formInputs.id) {
+                    break
+                }
+
                 const eventoPropertyName = String(evento[propertyName]).split(',')
 
                 //console.log(`entering evento loop ${i} of ${day.eventos.length}`)
@@ -312,7 +316,7 @@ export default function SelectInput(props: {
         }
 
 
-        if (parsedRepeated.length > 0) {
+        if (parsedRepeated.length > 0 ) {
             //console.log('MORE THAN ONE REPEATED EVENT:')
             //console.log(parsedRepeated)
             //console.log('/////////////////////////////////////////////////////////////')
