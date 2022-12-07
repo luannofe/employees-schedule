@@ -22,8 +22,8 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //TODO: admin
     //TODO: deletar dias passados
 
-    //FIXME: edit event is duplicating
     //FIXME: popup não sai do input de carro
+    //FIXME: popup de repetido em eventos editados não deveria ser possivel
 
 
     let employeesArr : string[];

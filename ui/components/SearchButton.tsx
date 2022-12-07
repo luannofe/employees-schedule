@@ -148,6 +148,7 @@ export default function Searchbutton() {
             setClicked(false)
             setHovering(false)
             setSearchedEvents([])
+            setSearchIcon(iconSearch)
 
             return eventsCtx?.setState((prevState) => {
                 return prevState?.map((item) => {
