@@ -25,11 +25,6 @@ export default function (props: { event: frontEndEventos }) {
     const vehiclesArr =  String(props.event?.veiculo).split(',')
 
 
-    useEffect(() => {
-        if (props.event.thisRef) {
-            console.log(props.event.thisRef)
-        }
-    }, [props.event.thisRef])
 
 
     

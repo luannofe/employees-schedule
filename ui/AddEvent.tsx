@@ -21,7 +21,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     //TODO: admin
     //TODO: deletar dias passados
-    //TODO: retornar q nao foi encontrado ninguem
 
     //FIXME: edit event is duplicating
     //FIXME: popup não sai do input de carro

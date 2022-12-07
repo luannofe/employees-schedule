@@ -29,7 +29,7 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
 
     return  (
 
-        <motion.div className={style.calendar} ref={calendarRef} onScroll={(e) => {sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop)); console.log(e.currentTarget.scrollTop)}}>
+        <motion.div className={style.calendar} ref={calendarRef} onScroll={(e) => {sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop))}}>
             <div className={style.calendarCapsule} >
                 {props.data.map((item, i) => {
                     return(
