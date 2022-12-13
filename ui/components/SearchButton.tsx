@@ -17,6 +17,7 @@ export default function Searchbutton() {
     const [searchedEvents, setSearchedEvents] = useState<frontEndEventos[]>([])
     const [searchInput, setSearchInput] = useState<string>()
     const [searchIcon, setSearchIcon] = useState(iconSearch)
+    const [selectedItem, setSelectedItem] = useState(0)
 
     const eventsCtx = useContext(frameContext)?.eventsContext
     const selectionCtx = useContext(frameContext)?.eventSelectionContext
@@ -24,6 +25,7 @@ export default function Searchbutton() {
     const thisRef = React.createRef<HTMLDivElement>()
 
     let iconStyle: React.CSSProperties = {}
+
 
 
     useEffect(() => {
@@ -54,14 +56,14 @@ export default function Searchbutton() {
 
             selectionCtx?.setState({
                 selected: true,
-                eventData: searchedEvents[0]
+                eventData: searchedEvents[selectedItem]
             })
 
             console.log(searchedEvents)
 
             setTimeout(() => {
 
-                searchedEvents[0].thisRef.current?.scrollIntoView({
+                searchedEvents[selectedItem].thisRef.current?.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center'
                 })
@@ -73,13 +75,11 @@ export default function Searchbutton() {
             }
         }
 
-    }, [searchedEvents])
+    }, [selectedItem])
 
     useEffect(() => {
-        if (searchIcon == iconLoading) {
-
-        }
-    }, [searchIcon])
+        console.log(`SELECTED ITEM IS ${selectedItem}`)
+    }, [selectedItem])
 
     return (
 
@@ -122,7 +122,9 @@ export default function Searchbutton() {
 
 
             {
-                isHovering && <input className={styles.input}
+                isHovering && <input className={styles.input} 
+                
+                    onKeyDown={e => handleEnter(e)}
 
                     onChange={(e) => { setSearchInput(e.currentTarget.value) }}
 
@@ -136,6 +138,23 @@ export default function Searchbutton() {
         </motion.div>
     )
 
+
+    function handleEnter(e: React.KeyboardEvent<HTMLInputElement>) {
+
+            if (e.key == 'Enter') {
+
+                e.preventDefault()
+
+                console.log('asdasd')
+    
+                if (selectedItem + 1 >= searchedEvents.length) {
+                    return setSelectedItem(0)
+                }
+    
+                return setSelectedItem((prev) => prev+1)
+
+            }
+    }
 
     function checkClickedOut(e: any) {
 
