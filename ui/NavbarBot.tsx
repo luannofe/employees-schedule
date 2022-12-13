@@ -224,14 +224,7 @@ export default function NavbarBot(props: {
         
 
 
-        props.setChoosenView('Calendar')
-        selectionContext?.setState({selected: false})
 
-        return setTimeout(() => {
-          setConfirmButtonState({
-            activated: true,
-            styles: styles.button
-          })}, 800)
         
       } 
 
@@ -265,6 +258,8 @@ export default function NavbarBot(props: {
       }
 
     
+      props.setChoosenView('Calendar')
+      selectionContext?.setState({selected: false})
       
       addEventFormData?.insertFormInputs((prev) => { 
 
@@ -285,7 +280,7 @@ export default function NavbarBot(props: {
       
       addEventFormData?.formRef.current?.reset()
   
-      setTimeout(() => {
+      return setTimeout(() => {
       setConfirmButtonState({
         activated: true,
         styles: styles.button

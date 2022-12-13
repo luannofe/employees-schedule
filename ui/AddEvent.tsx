@@ -21,8 +21,22 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     //TODO: admin
     //TODO: deletar dias passados
+    //TODO: range de visualização
+    //TODO: avisar no calendário caso esteja repetido
+    //TODO: pesquisar proximo ao apertar enter na barra de pesquisa
+    //TODO: VISÃO RECOLHIDA: proposta titulo responsavel
+    
 
     //FIXME: popup não sai do input de carro
+    //FIXME: melhor transição de meses
+    //FIXME: liberar para apertar mais de 1 botao no input
+    //FIXME: corrigir onchange da data
+    //FIXME: qd abrir evento ja aparecer repetidos
+    //FIXME: pesquisa nao scrollando pra eventos criados
+
+
+    //FIXME: simbolo da oi
+
 
 
 
@@ -112,6 +126,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                             <label htmlFor="" >
                                 <SelectInput propertyName='funcionarios' defaultValue={employeesArr} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
                             </label>
+                            <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Selecione uma cor:</span>
                             <ColorsBoxInput/>
                         </form>
                     </div>

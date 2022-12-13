@@ -5,7 +5,7 @@ import iconVehicle from '../public/iconVehicle.svg'
 import Image from 'next/image';
 import style from './event.module.scss'
 
-import React, {  useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { frameContext, frontEndEventos } from './Frame';
 
 
@@ -22,20 +22,20 @@ export default function (props: { event: frontEndEventos }) {
 
 
     const employeesArr = String(props.event?.funcionarios).split(',')
-    const vehiclesArr =  String(props.event?.veiculo).split(',')
+    const vehiclesArr = String(props.event?.veiculo).split(',')
 
 
 
 
-    
+
     useEffect(() => {
 
         if (selectionContext?.state.eventData?.id != props.event.id) {
 
-            return setStyles({}) 
+            return setStyles({})
 
-        } else if (choosenView?.state == 'Calendar' ) {
-            
+        } else if (choosenView?.state == 'Calendar') {
+
             return setStyles({
                 outline: '3px solid grey',
             })
@@ -44,10 +44,10 @@ export default function (props: { event: frontEndEventos }) {
     }, [selectionContext?.state])
 
     return (
-        <div className={style.eventDiv} draggable={true} ref={props.event.thisRef}  onDragStart={(e) => {dragStart(e)}} style={{
+        <div className={style.eventDiv} draggable={true} ref={props.event.thisRef} onDragStart={(e) => { dragStart(e) }} style={{
             ...styles,
             backgroundColor: props.event.propColor
-        }} onClick={() => {selectEvent()}} onDoubleClick={() => {handleDoubleClick()}}>
+        }} onClick={() => { selectEvent() }} onDoubleClick={() => { handleDoubleClick() }}>
             <div className={style.eventID}>
                 <span>{props.event?.proposta}</span>
             </div>
@@ -100,26 +100,26 @@ export default function (props: { event: frontEndEventos }) {
         if (selectionContext?.state.eventData) {
 
             addEventFormData?.insertFormInputs({
-              titulo: selectionContext.state.eventData.titulo,
-              responsavel: selectionContext.state.eventData.responsavel,
-              dataEvento: selectionContext.state.eventData.dataEvento,
-              veiculo: selectionContext.state.eventData.veiculo,
-              funcionarios: selectionContext.state.eventData?.funcionarios,
-              desc: selectionContext.state.eventData?.desc,
-              id: selectionContext.state.eventData.id,
-              propColor: selectionContext.state.eventData.propColor,
-              proposta: selectionContext.state.eventData.proposta,
-              thisRef: selectionContext.state.eventData.thisRef
+                titulo: selectionContext.state.eventData.titulo,
+                responsavel: selectionContext.state.eventData.responsavel,
+                dataEvento: selectionContext.state.eventData.dataEvento,
+                veiculo: selectionContext.state.eventData.veiculo,
+                funcionarios: selectionContext.state.eventData?.funcionarios,
+                desc: selectionContext.state.eventData?.desc,
+                id: selectionContext.state.eventData.id,
+                propColor: selectionContext.state.eventData.propColor,
+                proposta: selectionContext.state.eventData.proposta,
+                thisRef: selectionContext.state.eventData.thisRef
             })
         }
 
         choosenView?.setState('EditEvent')
-        
+
     }
 
     function dragStart(e: React.DragEvent<HTMLDivElement>) {
         e.dataTransfer.clearData()
-        e.dataTransfer.setData("text/plain", JSON.stringify(Object.assign({}, {...props.event, thisRef: undefined})))
+        e.dataTransfer.setData("text/plain", JSON.stringify(Object.assign({}, { ...props.event, thisRef: undefined })))
     }
 
 

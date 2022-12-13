@@ -3,15 +3,15 @@ import { useInView } from 'framer-motion'
 import style from './day.module.scss'
 import Event from './Event'
 import { frameContext, frontEndEventos } from './Frame'
-import React, {  useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { calendarRef as cf } from './Calendar';
 import { showMonthRef as sf } from './ShowMonth'
 
-export default function Day(props: {events: frontEndEventos[], day: string, thisRef: React.RefObject<HTMLDivElement>}) {
+export default function Day(props: { events: frontEndEventos[], day: string, thisRef: React.RefObject<HTMLDivElement> }) {
 
     let processedDate = dateProcess(props.day)
 
-    const {thisRef} = props
+    const { thisRef } = props
 
     const calendarRef = useRef(cf)
     const showMonthRef = useRef(sf).current.current
@@ -19,9 +19,9 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
     const isInView = useInView(thisRef)
 
     const eventsContext = useContext(frameContext)?.eventsContext
-    
-    const thisMonth = new Date(props.day).toLocaleString('default', {month: 'long'}).toUpperCase()
-    
+
+    const thisMonth = new Date(props.day).toLocaleString('default', { month: 'long' }).toUpperCase()
+
     useEffect(() => {
 
         return startScroll()
@@ -30,12 +30,12 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
 
     useEffect(() => {
 
-        if ( isInView && showMonthRef && showMonthRef.innerText != thisMonth) {
+        if (isInView && showMonthRef && showMonthRef.innerText != thisMonth) {
             showMonthRef.innerText = thisMonth
         }
 
     }, [isInView])
-    
+
     return (
         <div className={style.day} ref={thisRef}
 
@@ -44,17 +44,17 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
                 color: isPastToday() ? 'rgb(160,160,160)' : 'black',
                 borderRadius: '4px',
 
-            }}  onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
+            }} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
 
-                <span className={style.title}>{processedDate.day}</span>
+            <span className={style.title}>{processedDate.day}</span>
 
-                <span className={style.subTitle}>{processedDate.weekDay}</span>
+            <span className={style.subTitle}>{processedDate.weekDay}</span>
 
-                <div style={{ minHeight: '650px', minWidth: '170px' }}>
-                    {props.events?.map((event) => {
-                        return <Event event={event} key={`asdasdasd${event.id}`} />
-                    })}
-                </div>
+            <div style={{ minHeight: '650px', minWidth: '170px' }}>
+                {props.events?.map((event) => {
+                    return <Event event={event} key={`asdasdasd${event.id}`} />
+                })}
+            </div>
         </div>
     )
 
@@ -62,10 +62,10 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
     async function onDropHandler(e: React.DragEvent<HTMLDivElement>) {
 
         let propsData = JSON.parse(e.dataTransfer.getData('text/plain')) as frontEndEventos
-        
+
         if (propsData.dataEvento == props.day) {
             let i = 0
-            while(i < props.events.length) {
+            while (i < props.events.length) {
                 if (props.events[i].id == propsData.id) {
                     return
                 }
@@ -73,23 +73,64 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
             }
         }
 
-        fetch('/api/create_event', {
+
+        if (e.ctrlKey) {
+
+            return fetch('/api/create_event', {
+                method: 'POST',
+                body: JSON.stringify({
+                    ...Object.fromEntries(Object.entries(propsData).filter((e) => e[0] != 'id')),
+                    dataEvento: [props.day]
+                } as frontEndEventos)
+            })
+
+                .then(res => {
+                    if (res.ok) {
+
+                        return eventsContext?.setState((eventosArray) => {
+                            return eventosArray?.map(item => {
+                                if (item.dia == props.day) {
+                                    return {
+                                        ...item,
+                                        eventos: [...item.eventos, {
+                                            ...propsData,
+                                            dataEvento: props.day,
+                                            thisRef: React.createRef<HTMLDivElement>()
+                                        }]
+                                    }
+                                }
+                                return item
+                            })
+                        })
+
+                    }
+
+                    throw new Error('Houve um erro ao editar, caso persista, contate o suporte.')
+                })
+
+                .catch(err => {
+                    alert(err)
+                })
+        }
+
+
+        return fetch('/api/create_event', {
             method: 'POST',
             body: JSON.stringify({
                 ...propsData,
                 dataEvento: [props.day]
-            }) 
+            })
         })
 
             .then(res => {
                 if (res.ok) {
 
-                    return eventsContext?.setState( (eventosArray) => {
-                        return eventosArray?.map( item => {
+                    return eventsContext?.setState((eventosArray) => {
+                        return eventosArray?.map(item => {
                             if (item.dia == props.day) {
                                 return {
                                     ...item,
-                                    eventos : [...item.eventos, {
+                                    eventos: [...item.eventos, {
                                         ...propsData,
                                         dataEvento: props.day,
                                         thisRef: React.createRef<HTMLDivElement>()
@@ -113,19 +154,18 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
 
             .catch(err => {
                 alert(err)
-            }) 
+            })
 
 
     }
 
     function onDragOver(e: React.DragEvent<HTMLDivElement>) {
 
-        if (new Date(props.day).getTime() < new Date(new Date().setHours(-1,0,0,0)).getTime()) {
+        if (new Date(props.day).getTime() < new Date(new Date().setHours(-1, 0, 0, 0)).getTime()) {
             return
         }
 
-        if (e.dataTransfer.types[0] != 'text/plain' || e.dataTransfer.types.length != 1 )
-        {
+        if (e.dataTransfer.types[0] != 'text/plain' || e.dataTransfer.types.length != 1) {
             return
         }
         e.preventDefault()
@@ -133,24 +173,23 @@ export default function Day(props: {events: frontEndEventos[], day: string, this
 
     function startScroll() {
 
-        if (props.day == new Date(new Date().setHours(0,0,0,0)).toString().slice(0,15)) {
+        if (props.day == new Date(new Date().setHours(0, 0, 0, 0)).toString().slice(0, 15)) {
 
-            if (!calendarRef || !thisRef.current || sessionStorage.getItem('initialScroll') == 'true'){
+            if (!calendarRef || !thisRef.current || sessionStorage.getItem('initialScroll') == 'true') {
                 return
             }
-            
+
             thisRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
+                behavior: 'smooth'
             })
 
             setTimeout(() => sessionStorage.setItem('initialScroll', 'true'), 200)
-            
+
         }
     }
 
     function isPastToday() {
-        return new Date(props.day + ' 00:00:00').getTime() < new Date(new Date().setHours(0,0,0,0)).getTime()
+        return new Date(props.day + ' 00:00:00').getTime() < new Date(new Date().setHours(0, 0, 0, 0)).getTime()
     }
 
 }
@@ -161,7 +200,7 @@ function dateProcess(date: string) {
     let weekDaysPTBR = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
 
     return {
-        day: thisDate.getDate(), 
+        day: thisDate.getDate(),
         weekDay: weekDaysPTBR[thisDate.getDay()]
     }
 }

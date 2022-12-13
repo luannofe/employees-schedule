@@ -133,12 +133,6 @@ export default function SelectInput(props: {
         placeholder={props.placeholder}
 
     />
-
-        {repeatedInfo.length > 0 &&
-            <div style={{ backgroundColor: 'red', color: 'yellow', width: '12px', height: '12px', borderRadius: '50%', position: 'absolute', right: '-24px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            </div>
-        }
-
         {repeatedInfo.length > 0 && <>
                 <div style={{
                     position: 'absolute',

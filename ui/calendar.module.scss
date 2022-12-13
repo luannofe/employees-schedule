@@ -5,7 +5,22 @@
     overflow-y: scroll;
     padding-top: 32px;
     justify-content: center;
-    min-width: 1400px;
+    min-width: 1300px;
+    overflow-x: hidden;
+}
+
+
+
+@media (max-width: 1420px) {
+    .calendarCapsule {
+        transform: scale(0.95);
+    }
+}
+
+@media (max-width: 1359px) {
+    .calendar {
+        overflow-x: scroll;
+    }    
 }
 
 .calendarCapsule {
@@ -13,6 +28,7 @@
     gap: 12px; 
     flex-wrap: wrap;
     align-items: flex-start;
+    min-width: 1380px;
     max-width: 1380px;
 }
 
