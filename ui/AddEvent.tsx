@@ -23,7 +23,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //TODO: deletar dias passados
     //TODO: range de visualização
     //TODO: avisar no calendário caso esteja repetido
-    //TODO: pesquisar proximo ao apertar enter na barra de pesquisa
     //TODO: VISÃO RECOLHIDA: proposta titulo responsavel
     
 
@@ -33,7 +32,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //FIXME: corrigir onchange da data
     //FIXME: qd abrir evento ja aparecer repetidos
     //FIXME: pesquisa nao scrollando pra eventos criados
-
+    //FIXME: "a" no showmonth qd ta carregando
 
     //FIXME: simbolo da oi
 

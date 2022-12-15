@@ -9,7 +9,6 @@ export const showMonthRef = React.createRef<HTMLDivElement>()
 
 export default function ShowMonth() {
 
-    //TODO: make div disappear after a while
 
     const currentView = useContext(frameContext)?.choosenViewContext.state
 
@@ -24,11 +23,10 @@ export default function ShowMonth() {
     }, [currentView])
 
 
-    return <div className={styles.container} >
-        <div className={ isVisible? styles.innerContainerV : styles.innerContainerNV} >
+    return <div className={ isVisible? styles.innerContainerV : styles.innerContainerNV} >
             <span ref={showMonthRef} >a</span>
         </div>
-    </div>
+  
 
 
 }

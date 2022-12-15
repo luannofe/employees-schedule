@@ -16,11 +16,17 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
     const calendarRef = useRef(cf)
     const showMonthRef = useRef(sf).current.current
 
-    const isInView = useInView(thisRef)
+    const isInView = useInView(thisRef, {
+        root: calendarRef.current,
+        margin: '-320px 0px -320px 0px'
+    })
+
 
     const eventsContext = useContext(frameContext)?.eventsContext
+    const zoomContext = useContext(frameContext)?.zoomContext
 
     const thisMonth = new Date(props.day).toLocaleString('default', { month: 'long' }).toUpperCase()
+    const thisDay = new Date(props.day).getDate()
 
     useEffect(() => {
 
@@ -30,7 +36,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
 
     useEffect(() => {
 
-        if (isInView && showMonthRef && showMonthRef.innerText != thisMonth) {
+        if (isInView  && showMonthRef &&  showMonthRef.innerText != thisMonth) {
             showMonthRef.innerText = thisMonth
         }
 
@@ -50,7 +56,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
 
             <span className={style.subTitle}>{processedDate.weekDay}</span>
 
-            <div style={{ minHeight: '650px', minWidth: '170px' }}>
+            <div style={{ minHeight: zoomContext?.state? '' : '650px', minWidth: '170px' }}>
                 {props.events?.map((event) => {
                     return <Event event={event} key={`asdasdasd${event.id}`} />
                 })}

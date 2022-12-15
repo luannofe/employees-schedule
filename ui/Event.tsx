@@ -15,6 +15,7 @@ export default function (props: { event: frontEndEventos }) {
     const selectionContext = useContext(frameContext)?.eventSelectionContext
     const choosenView = useContext(frameContext)?.choosenViewContext
     const addEventFormData = useContext(frameContext)?.formContext
+    const zoomContext = useContext(frameContext)?.zoomContext
 
     const [styles, setStyles] = useState({})
 
@@ -52,26 +53,42 @@ export default function (props: { event: frontEndEventos }) {
                 <span>{props.event?.proposta}</span>
             </div>
             <span className={style.eventTitle}>{props.event?.titulo}</span>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span className={style.eventCoord}>
+
+            {!zoomContext?.state? 
+
+                (<>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span className={style.eventCoord}>
+                            <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
+                            {props.event?.responsavel}
+                        </span>
+                        {vehiclesArr.map((item) => {
+                            return <span className={style.eventCoord}>
+                                <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
+                                {item}
+                            </span>
+                        })}
+                    </div>
+                    <span className={style.eventDesc}>{props.event?.desc}</span>
+                    <div className={style.eventUL}>
+                        {employeesArr.map((item) => {
+                            return <li>
+                                <span className={style.eventDesc}>{item}</span>
+                            </li>
+                        })}
+                    </div>
+
+                </>) 
+            
+            :
+
+                (<span className={style.eventCoord}>
                     <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
                     {props.event?.responsavel}
-                </span>
-                {vehiclesArr.map((item) => {
-                    return <span className={style.eventCoord}>
-                        <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
-                        {item}
-                    </span>
-                })}
-            </div>
-            <span className={style.eventDesc}>{props.event?.desc}</span>
-            <div className={style.eventUL}>
-                {employeesArr.map((item) => {
-                    return <li>
-                        <span className={style.eventDesc}>{item}</span>
-                    </li>
-                })}
-            </div>
+                </span>)
+
+            }
         </div>
     )
 

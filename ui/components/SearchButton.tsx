@@ -78,8 +78,35 @@ export default function Searchbutton() {
     }, [selectedItem])
 
     useEffect(() => {
-        console.log(`SELECTED ITEM IS ${selectedItem}`)
-    }, [selectedItem])
+
+        if (searchedEvents.length > 0 && selectedItem == 0) {
+
+            selectionCtx?.setState({
+                selected: true,
+                eventData: searchedEvents[0]
+            })
+
+            console.log(searchedEvents)
+
+            setTimeout(() => {
+
+                searchedEvents[0].thisRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                })
+
+            }, 200)
+
+            return () => {
+                selectionCtx?.setState({ selected: false })
+            }
+        } 
+
+        return () => {
+            setSelectedItem(0)
+        }
+
+    }, [searchedEvents])
 
     return (
 

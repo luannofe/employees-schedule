@@ -27,10 +27,14 @@ export default function Frame() {
     const [choosenView, setChoosenView] = useState('Update')
 
     const [addEventFormInputs, setAddEventFormInputs] = useState({} as any)
+
+    const [isZoomedOut, setZoomedOut] = useState(false)
     
     const [selectedEvent, setSelectedEvent] = useState<eventSelectionState>({
         selected : false
     })
+
+
 
     const contextProviders : frameContext = {
         
@@ -50,6 +54,10 @@ export default function Frame() {
         eventsContext: {
             state: events,
             setState: setEvents
+        }, 
+        zoomContext: {
+            state: isZoomedOut,
+            setState: setZoomedOut
         }
         
     }
@@ -179,5 +187,10 @@ interface frameContext  {
     eventsContext: {
         state: frontEndCalendarEventos[] | undefined,
         setState: React.Dispatch<React.SetStateAction<frontEndCalendarEventos[] | undefined>>
+    },
+
+    zoomContext: {
+        state: boolean,
+        setState: React.Dispatch<React.SetStateAction<boolean>>
     }
 } 
