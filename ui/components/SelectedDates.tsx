@@ -14,7 +14,7 @@ export default function SelectedDates() {
         
         {
             selectedDates?.state.map((date, i) => (
-                <div className={styles.date} style={{backgroundColor: `rgb(${228 + i }, ${228 + i }, ${228 + i })`}}>
+                <div className={styles.date} style={{backgroundColor: `rgb(${228 + i }, ${228 + i }, ${228 + i })`}} key={`${date} ${i}`}> 
                     {new Date(date + ' 00:00:00').toLocaleDateString()}
                     <button onClick={ () => deleteDate(date)} className={styles.buttonDate}>X</button>
                 </div>
