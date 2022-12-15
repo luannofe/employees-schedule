@@ -10,6 +10,8 @@ export const showMonthRef = React.createRef<HTMLDivElement>()
 export default function ShowMonth() {
 
 
+    const initialDate = new Date().toLocaleString('default', { month: 'long' }).toUpperCase()
+
     const currentView = useContext(frameContext)?.choosenViewContext.state
 
     const [isVisible, setIsVisible] = useState(false)
@@ -24,7 +26,7 @@ export default function ShowMonth() {
 
 
     return <div className={ isVisible? styles.innerContainerV : styles.innerContainerNV} >
-            <span ref={showMonthRef} >a</span>
+            <span ref={showMonthRef} >{initialDate}</span>
         </div>
   
 

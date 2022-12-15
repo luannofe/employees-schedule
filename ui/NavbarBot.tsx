@@ -246,7 +246,10 @@ export default function NavbarBot(props: {
 
                 return {
                   ...item,
-                  eventos: [...item.eventos, writedEvent.registeredEvent]
+                  eventos: [...item.eventos, {
+                    ...writedEvent.registeredEvent,
+                    thisRef: React.createRef()
+                  }]
                 }
               }
               return item

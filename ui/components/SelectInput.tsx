@@ -6,8 +6,8 @@ import { frameContext, frontEndCalendarEventos } from '../Frame'
 import Select, { CSSObjectWithLabel, SelectInstance } from 'react-select'
 import { transform } from 'typescript'
 
-
-//FIXME: BROKE BROKE BORKRE REFAZER TUDO QUE TEM A VER COM POPUP DE REPETIDO
+//a função checkifrepeated pega direto da FormInputs, portanto, ao carregar, ele n recebe nada. Tenho que fazer com que, ao abrir, ja mande para FormInputs o que esse input receber, ou fazer com q ele leia algo alem da forminputs
+// ao editar um evento tb tem um limite sendo aplicado atoa, resolver isso antes
 
 type repeatedInfo = {
     day: string,
@@ -34,6 +34,11 @@ export default function SelectInput(props: {
     const FormContext = useContext(frameContext)?.formContext
     const eventosContext = useContext(frameContext)?.eventsContext
 
+
+    useEffect(() => {
+        console.log('ran')
+        checkIfRepeated()
+    }, [])
 
 
     useEffect(() => {
@@ -209,11 +214,12 @@ export default function SelectInput(props: {
 
     function checkIfRepeated() {
 
-        //console.log('/////////////////////////////////////////////////////////////')
-        //console.log(`/////////PROPERTY NAME ${propertyName}//////////////////////`)
+        console.log('/////////////////////////////////////////////////////////////')
+        console.log(`/////////PROPERTY NAME ${propertyName}//////////////////////`)
 
 
         if (!FormContext?.formInputs.dataEvento) {
+            console.log('No Data Evento, returning early')
             return false
         }
 
@@ -227,7 +233,7 @@ export default function SelectInput(props: {
 
         const toCompareInputs = FormContext?.formInputs[propertyName] as string[]
 
-        //console.log(inputedDates)
+        console.log(inputedDates)
 
         const daysInputed = getDaysThatAreInputed()
 
@@ -236,7 +242,7 @@ export default function SelectInput(props: {
         for (let day of daysInputed) {
 
             if (!day) {
-                //console.log('breaking...')
+                console.log('breaking...')
                 break
             }
 
@@ -249,24 +255,24 @@ export default function SelectInput(props: {
 
                 const eventoPropertyName = String(evento[propertyName]).split(',')
 
-                //console.log(`entering evento loop ${i} of ${day.eventos.length}`)
+                console.log(`entering evento loop ${i} of ${day.eventos.length}`)
                 i++
 
                 if (!evento[propertyName] || !eventoPropertyName) {
-                    //console.log('breaking...')
+                    console.log('breaking...')
                     break
                 }
 
                 let j = 0;
                 for (let item of eventoPropertyName) {
 
-                    //console.log(`entering item loop ${j} of ${eventoPropertyName.length}`)
+                    console.log(`entering item loop ${j} of ${eventoPropertyName.length}`)
                     j++
 
                     for (let input of toCompareInputs) {
 
                         if (input == item) {
-                            //console.log(`found repeated ${input}`)
+                            console.log(`found repeated ${input}`)
                             eventsRepeated = [...eventsRepeated, { day: day.dia, repeated: input }]
 
 
@@ -311,14 +317,14 @@ export default function SelectInput(props: {
 
 
         if (parsedRepeated.length > 0 ) {
-            //console.log('MORE THAN ONE REPEATED EVENT:')
-            //console.log(parsedRepeated)
-            //console.log('/////////////////////////////////////////////////////////////')
+            console.log('MORE THAN ONE REPEATED EVENT:')
+            console.log(parsedRepeated)
+            console.log('/////////////////////////////////////////////////////////////')
             return setRepeatedInfo(parsedRepeated)
         }
 
-        //console.log('NO REPEATED PROPERTY ON EVENT, RETURNING FALSE.')
-        //console.log('/////////////////////////////////////////////////////////////')
+        console.log('NO REPEATED PROPERTY ON EVENT, RETURNING FALSE.')
+        console.log('/////////////////////////////////////////////////////////////')
         return
 
 

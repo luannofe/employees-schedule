@@ -22,7 +22,7 @@ export default function (props: { event: frontEndEventos }) {
 
 
 
-    const employeesArr = String(props.event?.funcionarios).split(',')
+    const employeesArr = String(props.event?.funcionarios).split(',').filter(i => i != '')
     const vehiclesArr = String(props.event?.veiculo).split(',')
 
 
@@ -64,20 +64,22 @@ export default function (props: { event: frontEndEventos }) {
                             {props.event?.responsavel}
                         </span>
                         {vehiclesArr.map((item) => {
-                            return <span className={style.eventCoord}>
+                            return <span className={style.eventCoord} key={`${props.event.id} ${item}`}>
                                 <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
                                 {item}
                             </span>
                         })}
                     </div>
                     <span className={style.eventDesc}>{props.event?.desc}</span>
-                    <div className={style.eventUL}>
-                        {employeesArr.map((item) => {
-                            return <li>
-                                <span className={style.eventDesc}>{item}</span>
-                            </li>
-                        })}
-                    </div>
+                    {employeesArr.length > 0 && 
+                        <div className={style.eventUL}>
+                            {employeesArr.map((item) => {
+                                return <li key={`${props.event.id} ${item}`}>
+                                    <span className={style.eventDesc}>{item}</span>
+                                </li>
+                            })}
+                        </div>
+                    }
 
                 </>) 
             

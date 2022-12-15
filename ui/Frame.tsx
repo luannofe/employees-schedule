@@ -80,11 +80,13 @@ export default function Frame() {
     }, [choosenView])
 
     useEffect(()=> {
-        return console.log(addEventFormInputs)
+        console.log('FORM INPUT:')
+        console.log(addEventFormInputs)
     }, [addEventFormInputs])
     
     useEffect(() => {
-        return console.log(selectedEvent.eventData)
+        console.log('SELECTED EVENT:')
+        console.log(selectedEvent.eventData)
     }, [selectedEvent.eventData])
     
     

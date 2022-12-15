@@ -23,16 +23,10 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //TODO: deletar dias passados
     //TODO: range de visualização
     //TODO: avisar no calendário caso esteja repetido
-    //TODO: VISÃO RECOLHIDA: proposta titulo responsavel
     
 
     //FIXME: popup não sai do input de carro
-    //FIXME: melhor transição de meses
-    //FIXME: liberar para apertar mais de 1 botao no input
-    //FIXME: corrigir onchange da data
     //FIXME: qd abrir evento ja aparecer repetidos
-    //FIXME: pesquisa nao scrollando pra eventos criados
-    //FIXME: "a" no showmonth qd ta carregando
 
     //FIXME: simbolo da oi
 
@@ -98,20 +92,20 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                         <form action="post" ref={FormContext?.formRef}>
                             <div style={{display: 'flex', width: '95%', alignItems: 'flex-end'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
-                                <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} onKeyDown={(e) => {validateSize(e, 8)}} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
+                                <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
                             <div style={{display: 'flex', width: '95%', justifyContent: 'space-around'}}> 
                                 <label htmlFor="" style={{flex: 1}}>
-                                    <input className={styles.inputBase} onKeyDown={(e) => {validateSize(e, 40)}} onChange={(e)=>{handleChange(e)}} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo}/>
+                                    <input className={styles.inputBase} maxLength={40} onChange={(e)=>{handleChange(e)}} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo}/>
                                 </label>
                                 <label htmlFor="" style={{width: '150px', height: '100%', justifyContent: 'flex-end'}}>
-                                    <input className={styles.inputBase}  onChange={(e)=>{handleDate(e)}} style={{width:'110px', paddingLeft: '8px'}} name="dataEvento" type="date" placeholder='Data do evento' defaultValue={props.selectedEvent?.dataEvento} min={new Date().toISOString().split("T")[0]}/>
+                                    <input className={styles.inputBase} onBlur={e => handleDate(e)} onKeyDown={e => handleDateEnter(e)} style={{width:'110px', paddingLeft: '8px'}} name="dataEvento" type="date" placeholder='Data do evento' defaultValue={props.selectedEvent?.dataEvento} min={new Date().toISOString().split("T")[0]}/>
                                 </label>
                             </div>
                             <div style={{display: 'flex', justifyContent: 'space-between', gap:'16px', width: '95%'}}>
                                 <label htmlFor="" style={{width: '220px'}}>
                                     <Image className={styles.inputIcon} src={iconPersonWorker} alt=''/>
-                                    <input className={styles.inputBase} style={{width: '230px'}} onKeyDown={(e) => {validateSize(e, 16)}} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
+                                    <input className={styles.inputBase} style={{width: '230px'}} maxLength={16} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
                                 </label>
                                 <label htmlFor="">
                                     <Image className={styles.inputIcon} src={iconVehicle} alt=''/>
@@ -149,9 +143,13 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     }
 
-    function handleDate(event : React.ChangeEvent<HTMLInputElement>) {
+    function handleDate(event : React.FormEvent<HTMLInputElement>) {
 
         const value = event.currentTarget.value;
+
+        if (new Date(value + ' 00:00:00').toLocaleDateString() == 'Invalid Date') {
+            return
+        }
 
         if (viewContext?.state == ('EditEvent')) {
             return setSelectedDates([value])
@@ -164,14 +162,29 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
         return setSelectedDates(Array.from(checkRepeated).sort())   
     }
 
-    function validateSize(e: React.KeyboardEvent<HTMLInputElement>, maxLength : number) {
+    function handleDateEnter(event : React.KeyboardEvent<HTMLInputElement>) {
 
-        let el = e.currentTarget
+        if (event.key == 'Enter') {
 
-        console.log(el.value.length)
+            
+            const value = event.currentTarget.value;
+            
+            if (new Date(value + ' 00:00:00').toLocaleDateString() == 'Invalid Date') {
+                return
+            }
 
-        if (el.value.length > maxLength && e.key !== 'Backspace' ) {
-            e.preventDefault()
+            event.preventDefault()
+            
+            if (viewContext?.state == ('EditEvent')) {
+                return setSelectedDates([value])
+            }
+    
+            let checkRepeated = new Set(selectedDates)
+    
+            checkRepeated.add(value)
+    
+            return setSelectedDates(Array.from(checkRepeated).sort())   
+
         }
 
     }
