@@ -1,0 +1,68 @@
+$navbarColor: rgb(228, 228, 228);
+$backgroundColor: rgb(255, 255, 255);
+$borderRadius: 15px;
+
+
+
+
+.userCircle {
+    
+    background-color: $backgroundColor;
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    transition: 0.5s;
+    margin-left: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+
+
+    &:hover {
+        background-color: rgb(243, 236, 236);
+        cursor: pointer;
+    }
+}
+
+.input {
+    border-radius: 12px;
+    width: 40%;
+    margin-right: 8px;
+    border: none;
+    height: 75%;
+    font-size: 1.3em;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+
+    &:focus-visible {
+        border: none;
+                outline: none;
+    }
+}
+
+.button {
+    border-radius: 8px;
+    border: none;
+    background-color: white;
+    transition: 0.4s;
+
+    &:hover{
+        cursor: pointer;
+        background-color: rgb(238, 238, 238);
+    }
+}
+
+.icons {
+    
+    vertical-align: middle;
+    filter: invert(50%);
+    
+}

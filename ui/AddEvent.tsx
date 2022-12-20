@@ -21,15 +21,13 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     //TODO: admin
     //TODO: deletar dias passados
-    //TODO: range de visualização
-    //TODO: avisar no calendário caso esteja repetido
     
 
     //FIXME: popup não sai do input de carro
-    //FIXME: qd dá zoomout, a ultima fileira some
     //FIXME: simbolo da oi
     //FIXME: editing the first repeated event doesnt shows it as a repeated
     //FIXME: databsae opening everly
+    //FIXME: sistema de desselecionar
 
 
 

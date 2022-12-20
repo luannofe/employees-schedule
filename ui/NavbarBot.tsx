@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import styles from './navbar.module.scss'
-import React, {  FormEvent, useContext, useEffect, useState } from "react"
+import React, { FormEvent, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { frameContext, frontEndEventos } from "./Frame"
 import Searchbutton from "./components/SearchButton"
@@ -17,10 +17,18 @@ export default function NavbarBot(props: {
   const addEventFormData = useContext(frameContext)?.formContext
   const selectionContext = useContext(frameContext)?.eventSelectionContext
   const eventsContext = useContext(frameContext)?.eventsContext
+  const isAdmin = useContext(frameContext)?.adminContext.state
+
+  const [addButonState, setAddButonState] = useState(
+    {
+      activated: isAdmin,
+      styles: isAdmin ? styles.button : styles.deactivatedButton
+    }
+  )
 
   const [confirmButtonState, setConfirmButtonState] = useState(
     {
-      activated: true,
+      activated: false,
       styles: styles.button
     }
   )
@@ -43,7 +51,24 @@ export default function NavbarBot(props: {
 
   useEffect(() => {
 
-    if (selectionContext?.state.selected) {
+    if (isAdmin) {
+      setAddButonState({
+        activated: true,
+        styles: styles.button
+      })
+    } else {
+      setAddButonState({
+        activated: false,
+        styles: styles.deactivatedButton
+      })
+    }
+
+  }, [isAdmin])
+
+  useEffect(() => {
+
+
+    if (selectionContext?.state.selected && isAdmin) {
       setEditButtonState({
         activated: true,
         styles: styles.button
@@ -60,7 +85,7 @@ export default function NavbarBot(props: {
       activated: false,
       clickedOnce: false,
       styles: styles.deactivatedButton
-    }) 
+    })
 
 
     return setEditButtonState({
@@ -77,14 +102,14 @@ export default function NavbarBot(props: {
     <div className={styles.navbarBot} >
 
 
-      {props.choosenView == 'Calendar' && <Searchbutton/>}
+      {props.choosenView == 'Calendar' && <Searchbutton />}
 
       <div className={styles.buttonsContainer}>
         {props.choosenView == 'Calendar' && (<>
-          <motion.button className={styles.button} onClick={() => { addButton() }} animate={{ scale: [0, 1.05, 1] }}>
+          <motion.button className={addButonState.styles} onClick={() => { addButton() }} animate={{ scale: [0, 1.05, 1] }}>
             <Image className={styles.icons} width={50} height={50} src='/iconPlus.svg' alt='Cadastrar'></Image>
           </motion.button>
-          <motion.button className={editButtonState.styles} onClick={() => { editButton() }}animate={{ scale: [0, 1.05, 1] }} >
+          <motion.button className={editButtonState.styles} onClick={() => { editButton() }} animate={{ scale: [0, 1.05, 1] }} >
             <Image className={styles.icons} width={50} height={50} src='/iconEdit.svg' alt='Editar'></Image>
           </motion.button>
           <motion.button animate={{ scale: [0, 1.05, 1] }} className={deleteButtonState.styles} onClick={() => { deleteButton() }} >
@@ -96,7 +121,7 @@ export default function NavbarBot(props: {
           <motion.button className={styles.buttonDelete} onClick={() => { undoButton() }} animate={{ scale: [0, 1.05, 1] }}>
             <Image className={styles.icons} width={50} height={50} src='/iconUndo.svg' alt='Voltar'></Image>
           </motion.button>
-          <motion.button className={confirmButtonState.styles}  animate={{ scale: [0, 1.05, 1] }}>
+          <motion.button className={confirmButtonState.styles} animate={{ scale: [0, 1.05, 1] }}>
             <Image className={styles.icons} onClick={(e) => { sendData(e) }} width={50} height={50} src='/iconConfirm.svg' alt='Confirmar'></Image>
           </motion.button>
         </>)}
@@ -137,161 +162,162 @@ export default function NavbarBot(props: {
       body: JSON.stringify(formdata.processedForm)
     })
 
-    .then( res => {
-      if (res.ok) {
-        return res.json() 
-      }
+      .then(res => {
+        if (res.ok) {
+          return res.json()
+        }
 
-      throw new Error('Houve um erro ao criar os dados, caso persista, contate o suporte.')
-    })
+        throw new Error('Houve um erro ao criar os dados, caso persista, contate o suporte.')
+      })
 
-    .then( (data: any) => {
+      .then((data: any) => {
 
-      console.log(data.writedEvents)
+        console.log(data.writedEvents)
 
-      if (props.choosenView == 'EditEvent') {
-        let previousDate = new Date(selectionContext?.state.eventData?.dataEvento + ' 00:00:00').toString().slice(0,15)
-        let writedEvent = data.writedEvents[0].registeredEvent
-        const isPastPreviousDate = (new Date(writedEvent.dataEvento).getTime() > new Date(previousDate).getTime())
+        if (props.choosenView == 'EditEvent') {
+          let previousDate = new Date(selectionContext?.state.eventData?.dataEvento + ' 00:00:00').toString().slice(0, 15)
+          let writedEvent = data.writedEvents[0].registeredEvent
+          const isPastPreviousDate = (new Date(writedEvent.dataEvento).getTime() > new Date(previousDate).getTime())
 
-        const arrWithNewEvent = eventsContext!.state!.map( item => {
+          const arrWithNewEvent = eventsContext!.state!.map(item => {
 
-          if (isPastPreviousDate) {
-
-            if (item.dia == writedEvent.dataEvento) {
-              return {
-                ...item,
-                eventos: [...item.eventos, {...writedEvent}]
-              }
-            }
-
-            if (item.dia == previousDate) {
-              return {
-                ...item,
-                eventos: item.eventos.filter( (ev) => ev.id != writedEvent.id)
-              }
-            }
-
-          } else {
-
-            if (previousDate == writedEvent.dataEvento && item.dia == writedEvent.dataEvento) {
-
-              return {
-
-                ...item,
-                eventos: item.eventos.map((ev) => {
-
-                  if (ev.id == writedEvent.id) {
-
-                    return {...writedEvent}
-
-                  } 
-
-                  return ev
-                })
-              }
-
-            } 
-
-            if (previousDate != writedEvent.dataEvento) {
-
-              if (item.dia == previousDate) {
-                return {
-                  ...item,
-                  eventos: item.eventos.filter( (ev) => ev.id != writedEvent.id)
-                }
-              }
+            if (isPastPreviousDate) {
 
               if (item.dia == writedEvent.dataEvento) {
                 return {
                   ...item,
-                  eventos: [...item.eventos, {...writedEvent}]
+                  eventos: [...item.eventos, { ...writedEvent }]
                 }
               }
+
+              if (item.dia == previousDate) {
+                return {
+                  ...item,
+                  eventos: item.eventos.filter((ev) => ev.id != writedEvent.id)
+                }
+              }
+
+            } else {
+
+              if (previousDate == writedEvent.dataEvento && item.dia == writedEvent.dataEvento) {
+
+                return {
+
+                  ...item,
+                  eventos: item.eventos.map((ev) => {
+
+                    if (ev.id == writedEvent.id) {
+
+                      return { ...writedEvent }
+
+                    }
+
+                    return ev
+                  })
+                }
+
+              }
+
+              if (previousDate != writedEvent.dataEvento) {
+
+                if (item.dia == previousDate) {
+                  return {
+                    ...item,
+                    eventos: item.eventos.filter((ev) => ev.id != writedEvent.id)
+                  }
+                }
+
+                if (item.dia == writedEvent.dataEvento) {
+                  return {
+                    ...item,
+                    eventos: [...item.eventos, { ...writedEvent }]
+                  }
+                }
+
+              }
+
+
 
             }
 
-            
 
+            return item
+          })
+
+          eventsContext?.setState(arrWithNewEvent)
+
+
+
+
+
+
+        }
+
+        if (props.choosenView == 'AddEvent') {
+
+          console.log(data)
+
+          for (let writedEvent of data.writedEvents) {
+
+            eventsContext?.setState((prev) => {
+
+              return prev?.map(item => {
+
+                if (item.dia == writedEvent.registeredEvent?.dataEvento) {
+
+                  console.log(writedEvent.registeredEvent)
+                  console.log(`WILL DE ADD TO`)
+                  console.log(item)
+
+                  return {
+                    ...item,
+                    eventos: [...item.eventos, {
+                      ...writedEvent.registeredEvent,
+                      thisRef: React.createRef()
+                    }]
+                  }
+                }
+                return item
+              })
+
+            })
           }
 
+        }
 
-          return item
+
+        props.setChoosenView('Calendar')
+        selectionContext?.setState({ selected: false })
+
+        addEventFormData?.insertFormInputs((prev) => {
+
+          return {
+
+            ...prev,
+            titulo: '',
+            dataEvento: '',
+            veiculo: [],
+            responsavel: '',
+            desc: '',
+            funcionarios: [],
+            propColor: '#BFD7D9',
+            proposta: '',
+
+          }
         })
 
-        eventsContext?.setState(arrWithNewEvent)
+        addEventFormData?.formRef.current?.reset()
 
-        
-
-
-
-        
-      } 
-
-      if (props.choosenView == 'AddEvent') {
-
-        console.log(data)
-
-        for (let writedEvent of data.writedEvents) {
-
-          eventsContext?.setState((prev) => {
-
-            return prev?.map(item => {
-
-              if (item.dia == writedEvent.registeredEvent?.dataEvento) {
-
-                console.log(writedEvent.registeredEvent)
-                console.log(`WILL DE ADD TO`)
-                console.log(item)
-
-                return {
-                  ...item,
-                  eventos: [...item.eventos, {
-                    ...writedEvent.registeredEvent,
-                    thisRef: React.createRef()
-                  }]
-                }
-              }
-              return item
-            })
-
+        return setTimeout(() => {
+          setConfirmButtonState({
+            activated: true,
+            styles: styles.button
           })
-        }
+        }, 800)
 
-      }
-
-    
-      props.setChoosenView('Calendar')
-      selectionContext?.setState({selected: false})
-      
-      addEventFormData?.insertFormInputs((prev) => { 
-
-        return {
-
-          ...prev,
-          titulo: '',
-          dataEvento: '',
-          veiculo: [],
-          responsavel: '',
-          desc: '',
-          funcionarios: [],
-          propColor: '#BFD7D9',
-          proposta: '',
-
-        }
       })
-      
-      addEventFormData?.formRef.current?.reset()
-  
-      return setTimeout(() => {
-      setConfirmButtonState({
-        activated: true,
-        styles: styles.button
-      })}, 800)
-      
-    })
 
-    .catch( (error) => alert(error) )
+      .catch((error) => alert(error))
 
 
 
@@ -303,7 +329,7 @@ export default function NavbarBot(props: {
     let formdata = addEventFormData?.formInputs
 
 
-    let  processedForm = {
+    let processedForm = {
       dataEvento: formdata!.dataEvento,
       titulo: formdata!.titulo,
       desc: formdata!.desc,
@@ -313,8 +339,8 @@ export default function NavbarBot(props: {
       propColor: formdata?.propColor,
       proposta: formdata!.proposta
     }
-    
-    return new Promise<{passed: boolean, processedForm?: {}}>((resolve, reject) => {
+
+    return new Promise<{ passed: boolean, processedForm?: {} }>((resolve, reject) => {
 
       let processedFormArr = Object.entries(processedForm)
 
@@ -326,19 +352,21 @@ export default function NavbarBot(props: {
 
           if (item[0] != 'desc' && item[0] != 'funcionarios') {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
-            resolve({passed: false})
+            resolve({ passed: false })
           } else if (item[0] == 'desc') {
-              processedForm.desc = 'Sem descrição.'
+            processedForm.desc = 'Sem descrição.'
           }
         }
 
         if (i == processedFormArr.length) {
-          resolve({passed: true, processedForm: {
-            ...processedForm,
-            id: formdata?.id
-          }})
+          resolve({
+            passed: true, processedForm: {
+              ...processedForm,
+              id: formdata?.id
+            }
+          })
         }
-        i ++
+        i++
       }
     })
 
@@ -353,16 +381,20 @@ export default function NavbarBot(props: {
     if (selectionContext?.state.eventData) {
       addEventFormData?.insertFormInputs({
         ...selectionContext.state.eventData,
-        veiculo: String(selectionContext.state.eventData.veiculo).split(',').filter( i => i != ''),
-        funcionarios: String(selectionContext.state.eventData.funcionarios).split(',').filter( i => i != '')
+        veiculo: String(selectionContext.state.eventData.veiculo).split(',').filter(i => i != ''),
+        funcionarios: String(selectionContext.state.eventData.funcionarios).split(',').filter(i => i != '')
       })
     }
-  
+
 
     return props.setChoosenView('EditEvent')
   }
 
   async function addButton() {
+
+    if (!addButonState.activated) {
+      return
+    }
 
     addEventFormData?.insertFormInputs({
       titulo: '',
@@ -379,6 +411,10 @@ export default function NavbarBot(props: {
   }
 
   async function deleteButton() {
+
+    if (!isAdmin) {
+      return
+    }
 
     if (deleteButtonState.clickedOnce) {
 
@@ -397,10 +433,10 @@ export default function NavbarBot(props: {
           throw new Error('Houve um erro ao executar a solicitação. Reinicie a página e caso continue, contate o suporte.')
         })
 
-        .then( (data: {id: Number, dataEvento: String}) => {
-          eventsContext?.setState( (prev) => {
+        .then((data: { id: Number, dataEvento: String }) => {
+          eventsContext?.setState((prev) => {
 
-            return prev?.map( item => {
+            return prev?.map(item => {
 
               if (item.dia == data.dataEvento) {
                 return {
@@ -428,8 +464,8 @@ export default function NavbarBot(props: {
 
   async function undoButton() {
 
-    selectionContext?.setState({selected: false})
-    console.log(eventsContext?.state)    
+    selectionContext?.setState({ selected: false })
+    console.log(eventsContext?.state)
     props.setChoosenView('Calendar')
 
   }

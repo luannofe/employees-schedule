@@ -7,6 +7,7 @@ import style from './event.module.scss'
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { frameContext, frontEndEventos } from './Frame';
+import { calendarRef as cref} from './Calendar';
 
 
 
@@ -16,6 +17,8 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
     const choosenView = useContext(frameContext)?.choosenViewContext
     const addEventFormData = useContext(frameContext)?.formContext
     const zoomContext = useContext(frameContext)?.zoomContext
+    const isAdmin = useContext(frameContext)?.adminContext.state
+    const calendarRef = useRef(cref)
 
     const [styles, setStyles] = useState({})
 
@@ -26,26 +29,34 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
     const vehiclesArr = String(props.event?.veiculo).split(',')
 
 
+    useEffect(() => {
 
+
+    }, [])
 
 
     useEffect(() => {
 
-        if (selectionContext?.state.eventData?.id != props.event.id) {
+        const imSelected = selectionContext?.state.eventData?.id == props.event.id
 
-            return setStyles({})
 
-        } else if (choosenView?.state == 'Calendar') {
+        if (imSelected && choosenView?.state == 'Calendar') {
 
             return setStyles({
                 outline: '3px solid grey',
             })
+
+        } else {
+
+            return setStyles({})
+
         }
+
 
     }, [selectionContext?.state])
 
     return (
-        <div className={style.eventDiv} draggable={true} ref={props.event.thisRef} onDragStart={(e) => { dragStart(e) }} style={{
+        <div className={style.eventDiv} draggable={isAdmin} ref={props.event.thisRef} onDragStart={(e) => { dragStart(e) }} style={{
             ...styles,
             backgroundColor: props.event.propColor
         }} onClick={() => { selectEvent() }} onDoubleClick={() => { handleDoubleClick() }}>
@@ -114,6 +125,10 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
 
     function handleDoubleClick() {
 
+        if (!isAdmin) {
+            return
+        }
+
         console.log(props)
 
         if (selectionContext?.state.eventData) {
@@ -140,6 +155,8 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
         e.dataTransfer.clearData()
         e.dataTransfer.setData("text/plain", JSON.stringify(Object.assign({}, { ...props.event, thisRef: undefined })))
     }
+
+
 
 
 }

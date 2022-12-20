@@ -70,9 +70,6 @@ export default function Searchbutton() {
 
             }, 200)
 
-            return () => {
-                selectionCtx?.setState({ selected: false })
-            }
         }
 
     }, [selectedItem])
@@ -97,9 +94,6 @@ export default function Searchbutton() {
 
             }, 200)
 
-            return () => {
-                selectionCtx?.setState({ selected: false })
-            }
         } 
 
         return () => {
@@ -195,15 +189,6 @@ export default function Searchbutton() {
             setHovering(false)
             setSearchedEvents([])
             setSearchIcon(iconSearch)
-
-            return eventsCtx?.setState((prevState) => {
-                return prevState?.map((item) => {
-                    return {
-                        ...item,
-                        isSearched: false
-                    }
-                })
-            })
         } 
     }
 

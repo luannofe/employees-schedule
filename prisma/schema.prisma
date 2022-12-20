@@ -40,3 +40,4 @@ model responsaveis {
   id   Int    @id @default(autoincrement())
   nome String
 }
+

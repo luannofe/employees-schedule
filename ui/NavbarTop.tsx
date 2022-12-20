@@ -10,6 +10,7 @@ import { frameContext as fc } from './Frame'
 import iconZoom from '../public/iconFullscreen.svg'
 import dayjs from 'dayjs'
 import React from 'react'
+import UserCircle from './components/UserCircle'
 
 
 export default function NavbarTop(props: {
@@ -95,9 +96,7 @@ export default function NavbarTop(props: {
             </div>
 
             <div className={styles.navbarTop}>
-                <div className={styles.userCircle}>
-                    <Image className={styles.icons} alt='User' width={32} height={32} src='/iconUser.svg'></Image>
-                </div>
+                <UserCircle/>
                 <span className={styles.logoPWD}>power<span>diamond</span></span>
             </div>
 
@@ -152,3 +151,6 @@ export default function NavbarTop(props: {
     }
 }
 
+
+
+  

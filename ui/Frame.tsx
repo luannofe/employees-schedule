@@ -19,8 +19,6 @@ export const frameRef = React.createRef()
 
 
 export default function Frame() {
-    
-    //TODO: check if user is admin 
 
     const [events, setEvents] = useState<frontEndCalendarEventos[]> ()
 
@@ -35,6 +33,8 @@ export default function Frame() {
     const [selectedEvent, setSelectedEvent] = useState<eventSelectionState>({
         selected : false
     })
+
+    const [isAdmin, setAdmin] = useState(false)
 
     const [datesRange, setDatesRange] = useState([dayjs().format('YYYY-MM-DD'), dayjs().add(84, 'day').format('YYYY-MM-DD')])
 
@@ -62,6 +62,10 @@ export default function Frame() {
         zoomContext: {
             state: isZoomedOut,
             setState: setZoomedOut
+        },
+        adminContext: {
+            state: isAdmin,
+            setState: setAdmin
         }
         
     }
@@ -212,5 +216,10 @@ interface frameContext  {
     zoomContext: {
         state: boolean,
         setState: React.Dispatch<React.SetStateAction<boolean>>
+    },
+
+    adminContext: {
+        state: boolean,
+        setState: React.Dispatch<React.SetStateAction<boolean>>    
     }
 } 
