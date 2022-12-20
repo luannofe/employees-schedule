@@ -33,7 +33,7 @@ $borderRadius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 64px;
+    gap: 60px;
 }
 
 .navbarTop {
@@ -63,9 +63,35 @@ $borderRadius: 15px;
 }
 
 
+.undoButton {
+
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+
+
+    &:hover {
+       background-color: rgb(255, 255, 255); 
+       cursor: pointer;
+    }
+}
+
 .icons {
     
     vertical-align: middle;
     filter: invert(50%);
     
+}
+
+.dateInput {
+    border-radius: 8px;
+    min-height: 24px;
+    border: none;
+    font-weight: 600;
+    text-align: center;
 }

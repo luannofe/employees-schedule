@@ -26,9 +26,10 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     
 
     //FIXME: popup não sai do input de carro
-    //FIXME: qd abrir evento ja aparecer repetidos
-
+    //FIXME: qd dá zoomout, a ultima fileira some
     //FIXME: simbolo da oi
+    //FIXME: editing the first repeated event doesnt shows it as a repeated
+    //FIXME: databsae opening everly
 
 
 
@@ -49,6 +50,8 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
         vehiclesArr = []
     }
      
+    console.log(employeesArr)
+
     const [selectedDates, setSelectedDates] = useState<string[]>([])
 
     const FormContext = useContext(frameContext)?.formContext

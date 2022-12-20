@@ -6,7 +6,8 @@ import { frameContext, frontEndCalendarEventos } from '../Frame'
 import Select, { CSSObjectWithLabel, SelectInstance } from 'react-select'
 import { transform } from 'typescript'
 
-//a função checkifrepeated pega direto da FormInputs, portanto, ao carregar, ele n recebe nada. Tenho que fazer com que, ao abrir, ja mande para FormInputs o que esse input receber, ou fazer com q ele leia algo alem da forminputs
+//a função checkifrepeated pega direto da FormInputs, portanto, ao carregar, ele n recebe nada. Tenho que fazer com que, ao abrir, 
+//ja mande para FormInputs o que esse input receber, ou fazer com q ele leia algo alem da forminputs
 // ao editar um evento tb tem um limite sendo aplicado atoa, resolver isso antes
 
 type repeatedInfo = {
@@ -19,13 +20,17 @@ export default function SelectInput(props: {
     propertyOptions: { id: number, nome: string }[],
     placeholder: string,
     inputLimit: number,
-    defaultValue: string[]
+    defaultValue: string[],
+    defaultRepeatedInfo?: repeatedInfo
 }) {
 
-    const [repeatedInfo, setRepeatedInfo] = useState<repeatedInfo>([])
+    
+    const { propertyName, propertyOptions, inputLimit, defaultValue, defaultRepeatedInfo } = props
+
+    const [repeatedInfo, setRepeatedInfo] = useState<repeatedInfo>(defaultRepeatedInfo || [])
+
     const [isHovering, setHovering] = useState(false)
 
-    const { propertyName, propertyOptions, inputLimit, defaultValue } = props
 
     let defaultVal = defaultValue.map((item) => { return { value: item, label: item } })
 

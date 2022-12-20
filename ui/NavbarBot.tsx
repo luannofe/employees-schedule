@@ -351,7 +351,11 @@ export default function NavbarBot(props: {
     }
 
     if (selectionContext?.state.eventData) {
-      addEventFormData?.insertFormInputs(selectionContext.state.eventData)
+      addEventFormData?.insertFormInputs({
+        ...selectionContext.state.eventData,
+        veiculo: String(selectionContext.state.eventData.veiculo).split(',').filter( i => i != ''),
+        funcionarios: String(selectionContext.state.eventData.funcionarios).split(',').filter( i => i != '')
+      })
     }
   
 

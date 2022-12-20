@@ -13,17 +13,21 @@ export const calendarRef = React.createRef<HTMLDivElement>()
 export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) {
     
     const isZoomed = useContext(frameContext)?.zoomContext.state
+    const eventsCtx = useContext(frameContext)?.eventsContext
 
     useEffect(() => {
 
+
         const scrollPos = sessionStorage.getItem('calendarScrlPos')
+
         const initialScrolled = (sessionStorage.getItem('initialScroll') == 'true')
 
         if (scrollPos && initialScrolled) {
-            return calendarRef.current?.scrollTo(0, parseInt(scrollPos))
+            calendarRef.current?.scrollTo(0, parseInt(scrollPos))
         }
+
+
         
-        return
 
     }, [])
 
@@ -56,6 +60,7 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
 
         )
     
+
 
 }
 

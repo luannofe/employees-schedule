@@ -7,6 +7,8 @@ import NavbarBot from "./NavbarBot";
 import NavbarTop from "./NavbarTop";
 import Loading from "./components/LoadingPage";
 import { apiDataResponse } from "../pages/api/data";
+import dayjs from "dayjs";
+import { json } from "stream/consumers";
 
 
 
@@ -33,6 +35,8 @@ export default function Frame() {
     const [selectedEvent, setSelectedEvent] = useState<eventSelectionState>({
         selected : false
     })
+
+    const [datesRange, setDatesRange] = useState([dayjs().format('YYYY-MM-DD'), dayjs().add(84, 'day').format('YYYY-MM-DD')])
 
 
 
@@ -79,6 +83,10 @@ export default function Frame() {
 
     }, [choosenView])
 
+    useEffect(() => {
+        console.log(events)
+    }, [events])
+
     useEffect(()=> {
         console.log('FORM INPUT:')
         console.log(addEventFormInputs)
@@ -91,7 +99,7 @@ export default function Frame() {
     
     
     return <frameContext.Provider value={contextProviders} >
-            <NavbarTop/>
+            <NavbarTop datesRange={{state: datesRange, setState: setDatesRange}}/>
             {
                 events && data
                 ? 
@@ -111,7 +119,13 @@ export default function Frame() {
 
     
     async function getCalendarData() {
-        let data = await fetch('/api/calendar').then( data => data.json()) as frontEndCalendarEventos[]
+        let data = await fetch('/api/calendar', {
+            method: 'POST',
+            body: JSON.stringify({
+                firstDate: datesRange[0],
+                secondDate: datesRange[1]
+            })
+        }).then( data => data.json()) as frontEndCalendarEventos[]
         setEvents(data.map((item) => {
             return {
                 ...item,
@@ -152,7 +166,11 @@ export interface frontEndEventos  {
     funcionarios?: string[],
     dataRegistrado?: string,
     propColor?: string,
-    thisRef: React.RefObject<HTMLDivElement>
+    thisRef: React.RefObject<HTMLDivElement>,
+    repeatedInfo?: {
+        day: string,
+        repeated: string[]
+    }[]
 } 
 
 export interface frontEndCalendarEventos {

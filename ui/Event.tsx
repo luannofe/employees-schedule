@@ -10,7 +10,7 @@ import { frameContext, frontEndEventos } from './Frame';
 
 
 
-export default function (props: { event: frontEndEventos }) {
+export default function (props: { event: frontEndEventos, repeated?: string[] }) {
 
     const selectionContext = useContext(frameContext)?.eventSelectionContext
     const choosenView = useContext(frameContext)?.choosenViewContext
@@ -64,7 +64,7 @@ export default function (props: { event: frontEndEventos }) {
                             {props.event?.responsavel}
                         </span>
                         {vehiclesArr.map((item) => {
-                            return <span className={style.eventCoord} key={`${props.event.id} ${item}`}>
+                            return <span className={style.eventCoord} key={`${props.event.id} ${item}`} id={`${props.event.id}_vehicles_div`}>
                                 <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
                                 {item}
                             </span>
@@ -72,10 +72,10 @@ export default function (props: { event: frontEndEventos }) {
                     </div>
                     <span className={style.eventDesc}>{props.event?.desc}</span>
                     {employeesArr.length > 0 && 
-                        <div className={style.eventUL}>
+                        <div className={style.eventUL} id={`${props.event.id}_employees_div`}>
                             {employeesArr.map((item) => {
-                                return <li key={`${props.event.id} ${item}`}>
-                                    <span className={style.eventDesc}>{item}</span>
+                                return <li key={`${props.event.id} ${item}`} id={`${props.event.id}_employees_div_${item}`}>
+                                    <span className={style.eventDesc} id={`${props.event.id}${item}`}>{item}</span>
                                 </li>
                             })}
                         </div>
