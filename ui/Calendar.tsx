@@ -83,7 +83,7 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
             return
         }
 
-        if (!eventRef.contains(e.target)) {
+        if (!eventRef!.contains(e.target)) {
             
             selectionContext?.setState({
                 selected: false
