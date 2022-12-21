@@ -28,6 +28,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //FIXME: editing the first repeated event doesnt shows it as a repeated
     //FIXME: databsae opening everly
     //FIXME: sistema de desselecionar
+    //FIXME: mudar fontes
 
 
 
@@ -93,7 +94,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                         <form action="post" ref={FormContext?.formRef}>
                             <div style={{display: 'flex', width: '95%', alignItems: 'flex-end'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
-                                <input className={styles.inputBase} style={{width: '100px', fontSize: '16px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
+                                <input className={styles.inputBase} style={{width: '100px', fontSize: '14px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
                             <div style={{display: 'flex', width: '95%', justifyContent: 'space-around'}}> 
                                 <label htmlFor="" style={{flex: 1}}>

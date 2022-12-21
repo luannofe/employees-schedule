@@ -97,7 +97,15 @@ export default function NavbarTop(props: {
 
             <div className={styles.navbarTop}>
                 <UserCircle/>
-                <span className={styles.logoPWD}>power<span>diamond</span></span>
+                <Image src={'/oiIcon.png'} width={100} height={100} style={{
+                    width: '32px',
+                    height: '32px',
+                    marginRight: '11px',
+                    marginLeft: 'auto'
+                }} alt='logo'></Image>
+                {
+                //<span className={styles.logoPWD}>power<span>diamond</span></span>
+                }
             </div>
 
         </>

@@ -28,7 +28,7 @@ export default function NavbarBot(props: {
 
   const [confirmButtonState, setConfirmButtonState] = useState(
     {
-      activated: false,
+      activated: true,
       styles: styles.button
     }
   )

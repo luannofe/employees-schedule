@@ -272,9 +272,13 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
                         const eventUl = document.getElementById(`${event.id}_employees_div`)
                         const eventVehicles = document.getElementById(`${event.id}_vehicles_div`)
 
+                        const isPast = new Date(event.dataEvento + ' 00:00:00').getTime() < new Date(new Date().setHours(0, 0, 0, 0)).getTime()
+                        const color = isPast? 'rgb(160,160,160)' : 'black'
+
+
                         if (eventUl && eventVehicles) {
-                            eventUl.style.color = 'black'
-                            eventVehicles.style.color = 'black'
+                            eventUl.style.color = color
+                            eventVehicles.style.color = color
                         }
                     }
     

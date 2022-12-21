@@ -2,7 +2,8 @@
 $navbarColor: rgb(228, 228, 228);
 $backgroundColor: rgb(255, 255, 255);
 $borderRadius: 15px;
-$font: 'Times-new-roman';
+$font: 'Roboto';
+$font2: 'Roboto';
 
 
 .addEventContainer {
@@ -27,7 +28,7 @@ $font: 'Times-new-roman';
 }
 
 .addEventTitle {
-    font-size: 44px;
+    font-size: 34px;
     font-family: $font;
     text-align: left;
     width: 550px;
@@ -75,6 +76,7 @@ $font: 'Times-new-roman';
     text-align: left;
     min-height: 32px;
     padding: 8px 8px 8px 32px;
+    font-family: $font2;
 
     &:focus {
         border: none;
@@ -83,7 +85,7 @@ $font: 'Times-new-roman';
     }
     
     &::placeholder {
-        font-family: $font;
+        font-family: $font2;
         font-style: italic;
         color: rgb(179, 179, 179);
     }

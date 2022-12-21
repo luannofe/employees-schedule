@@ -99,6 +99,7 @@ export default function SelectInput(props: {
             container: (baseStyles, state) => ({
                 ...baseStyles,
                 width: '100%',
+                fontFamily: 'Roboto'
             }),
 
             control: (baseStyles, state) => ({
@@ -120,11 +121,13 @@ export default function SelectInput(props: {
                 borderRadius: '4px',
                 verticalAlign: 'middle',
                 textAlign: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                fontFamily: 'Roboto'
             }),
 
             placeholder: (baseStyles, state) => ({
                 ...baseStyles,
+                fontFamily: 'Roboto',
                 fontStyle: 'italic',
                 color: 'rgb(179,179,179)'
             }),

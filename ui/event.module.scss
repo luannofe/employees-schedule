@@ -1,8 +1,9 @@
-$fontFamily: sans-serif;
+$fontFamily: 'Roboto';
 
 
 .eventDiv {
 
+    font-family: 'Roboto';
     min-width: 170px;
     max-width: 170px;
     background-color: #BFD7D9;
@@ -20,9 +21,8 @@ $fontFamily: sans-serif;
 
 .eventTitle {
 
-    font-family: $fontFamily;
-    font-style: normal;
-    font-weight: 700;
+
+    font-weight: bold;
     font-size: 14px;
     text-align: center;  
     overflow-wrap: break-word;
@@ -30,9 +30,7 @@ $fontFamily: sans-serif;
 }
 
 .eventDesc {
-    font-family: $fontFamily;
-    font-style: normal;
-    font-weight: 500;
+
     font-size: 13px;
     text-align: center;
     overflow-wrap: break-word;
@@ -40,9 +38,9 @@ $fontFamily: sans-serif;
 }
 
 .eventCoord {
-    font-family: $fontFamily;
+
     font-style: italic;
-    font-weight: 700;
+    font-weight: bold;
     font-size: 13px;
     border-radius: 4px;
     padding-left: 4px;
@@ -60,12 +58,13 @@ $fontFamily: sans-serif;
 
     span {
         font-style: italic;
-        font-weight: 600;
+        font-weight: bold;
     }
 
 }
 
 .eventID {
+
     width: 80px;
     height: 28px;
     background-color: white;
@@ -75,10 +74,9 @@ $fontFamily: sans-serif;
     justify-content: center;
 
     span {
-        font-family: $fontFamily;
+
         font-size: 12px;
-        font-weight: 700;
+        font-weight: bold;
         text-align: center;
-        color: black;
     }
 }
