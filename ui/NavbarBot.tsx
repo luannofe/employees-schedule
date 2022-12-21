@@ -434,6 +434,11 @@ export default function NavbarBot(props: {
         })
 
         .then((data: { id: Number, dataEvento: String }) => {
+
+          selectionContext?.setState({
+            selected:false
+          })
+
           eventsContext?.setState((prev) => {
 
             return prev?.map(item => {
