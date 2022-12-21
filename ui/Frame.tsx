@@ -34,7 +34,7 @@ export default function Frame() {
         selected : false
     })
 
-    const [isAdmin, setAdmin] = useState(true)
+    const [isAdmin, setAdmin] = useState(false)
 
     const [datesRange, setDatesRange] = useState([dayjs().format('YYYY-MM-DD'), dayjs().add(84, 'day').format('YYYY-MM-DD')])
 
