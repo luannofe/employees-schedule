@@ -89,6 +89,10 @@ $font2: 'Roboto';
         font-style: italic;
         color: rgb(179, 179, 179);
     }
+
+    &:disabled {
+        background-color: hsl(0, 0%, 95%);
+    }
 }
 
 .inputIcon {
@@ -98,3 +102,4 @@ $font2: 'Roboto';
     height: 18px;
     z-index: 1;
 }
+

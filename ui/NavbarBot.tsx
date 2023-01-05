@@ -328,6 +328,13 @@ export default function NavbarBot(props: {
 
     let formdata = addEventFormData?.formInputs
 
+    let processedType : number;
+
+    if (!formdata?.type) {
+      processedType = 0
+    } else {
+      processedType = formdata.type
+    }
 
     let processedForm = {
       dataEvento: formdata!.dataEvento,
@@ -337,7 +344,8 @@ export default function NavbarBot(props: {
       funcionarios: formdata!.funcionarios,
       veiculo: formdata!.veiculo,
       propColor: formdata?.propColor,
-      proposta: formdata!.proposta
+      proposta: formdata!.proposta,
+
     }
 
     return new Promise<{ passed: boolean, processedForm?: {} }>((resolve, reject) => {
@@ -350,7 +358,7 @@ export default function NavbarBot(props: {
 
         if (item[1] == undefined || item[1].length < 1) {
 
-          if (item[0] != 'desc' && item[0] != 'funcionarios') {
+          if (item[0] != 'desc' && item[0] != 'funcionarios' && processedType == 0) {
             console.log(`missing item ${item[0]}, received ${item[1]}`)
             resolve({ passed: false })
           } else if (item[0] == 'desc') {
@@ -362,7 +370,8 @@ export default function NavbarBot(props: {
           resolve({
             passed: true, processedForm: {
               ...processedForm,
-              id: formdata?.id
+              id: formdata?.id,
+              type: processedType
             }
           })
         }
@@ -478,4 +487,6 @@ export default function NavbarBot(props: {
   async function refreshButton() {
     props.setChoosenView('Update')
   }
+
+
 }

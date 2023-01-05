@@ -18,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(422).json({ message: 'Body is empty.'})
     }
 
+
     const body = JSON.parse(req.body) 
     console.log('BODY IS')
     console.log(body)

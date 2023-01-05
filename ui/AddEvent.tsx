@@ -12,6 +12,7 @@ import { createContext } from 'react'
 import SelectedDates from './components/SelectedDates'
 import SelectInput from './components/SelectInput'
 import { apiDataResponse } from '../pages/api/data'
+import SpecialEventButtons from './components/SpecialEventButtons'
 
 
 export const addEventContext = createContext<addEventContext | null>(null)
@@ -19,19 +20,25 @@ export const addEventContext = createContext<addEventContext | null>(null)
 export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerData: apiDataResponse}) {
 
 
-    //TODO: admin
     //TODO: deletar dias passados
+    //TODO: eventos especiais
+    //TODO: traço pra diferenciar meses
     
 
     //FIXME: popup não sai do input de carro
-    //FIXME: simbolo da oi
     //FIXME: editing the first repeated event doesnt shows it as a repeated
     //FIXME: databsae opening everly
     //FIXME: sistema de desselecionar
     //FIXME: mudar fontes
+    //FIXME: zoom no addevent
+    //FIXME: mais clareza no range de datas
+    //FIXME: datas bugadas
+    //FIXME: zoom out errado
+
+    //FIXME: evento especial deve ser o primeiro do dia
 
 
-
+    const [eventType, setEventType] = useState(props.selectedEvent?.type || 0)
 
     let employeesArr : string[];
 
@@ -94,11 +101,11 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                         <form action="post" ref={FormContext?.formRef}>
                             <div style={{display: 'flex', width: '95%', alignItems: 'flex-end'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
-                                <input className={styles.inputBase} style={{width: '100px', fontSize: '14px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
+                                <input className={styles.inputBase} style={{width: '100px', fontSize: '14px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} disabled={eventType != 0} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
                             <div style={{display: 'flex', width: '95%', justifyContent: 'space-around'}}> 
                                 <label htmlFor="" style={{flex: 1}}>
-                                    <input className={styles.inputBase} maxLength={40} onChange={(e)=>{handleChange(e)}} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo}/>
+                                    <input className={styles.inputBase} maxLength={40} onChange={(e)=>{handleChange(e)}} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo || FormContext?.formInputs.titulo}/>
                                 </label>
                                 <label htmlFor="" style={{width: '150px', height: '100%', justifyContent: 'flex-end'}}>
                                     <input className={styles.inputBase} onBlur={e => handleDate(e)} onKeyDown={e => handleDateEnter(e)} style={{width:'110px', paddingLeft: '8px'}} name="dataEvento" type="date" placeholder='Data do evento' defaultValue={props.selectedEvent?.dataEvento} min={new Date().toISOString().split("T")[0]}/>
@@ -107,22 +114,23 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                             <div style={{display: 'flex', justifyContent: 'space-between', gap:'16px', width: '95%'}}>
                                 <label htmlFor="" style={{width: '220px'}}>
                                     <Image className={styles.inputIcon} src={iconPersonWorker} alt=''/>
-                                    <input className={styles.inputBase} style={{width: '230px'}} maxLength={16} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
+                                    <input className={styles.inputBase} style={{width: '230px'}} maxLength={16} disabled={eventType != 0} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
                                 </label>
                                 <label htmlFor="">
                                     <Image className={styles.inputIcon} src={iconVehicle} alt=''/>
-                                    <SelectInput propertyName='veiculo' defaultValue={vehiclesArr} placeholder='Selecione...' inputLimit={2} propertyOptions={props.cerData.carros}/>
+                                    <SelectInput propertyName='veiculo' defaultValue={vehiclesArr} disabled={eventType != 0} placeholder='Selecione...' inputLimit={2} propertyOptions={props.cerData.carros}/>
                                 </label>
                             </div>
                             <label htmlFor="">
-                                <textarea className={styles.inputBase}  onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
+                                <textarea className={styles.inputBase} disabled={eventType != 0} onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Colaboradores:</span>
                             <label htmlFor="" >
-                                <SelectInput propertyName='funcionarios' defaultValue={employeesArr} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
+                                <SelectInput propertyName='funcionarios' disabled={(eventType != 0 && eventType != 2)}  defaultValue={employeesArr || FormContext?.formInputs.funcionarios} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Selecione uma cor:</span>
                             <ColorsBoxInput/>
+                            <SpecialEventButtons eventTypeState={{state: eventType, set: setEventType}}/>
                         </form>
                     </div>
                     <div style={{position: 'absolute', right: '120px'}}>

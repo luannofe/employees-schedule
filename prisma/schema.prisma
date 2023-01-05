@@ -23,7 +23,8 @@ model eventos {
   proposta       String
   titulo         String
   funcionarios   String
-  propColor      String    
+  propColor      String 
+  type           Int   
 }
 
 model carros {

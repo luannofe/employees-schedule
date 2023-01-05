@@ -1,0 +1,21 @@
+
+.container {
+    display: flex;
+    gap: 8px;
+}
+
+.specialButton {
+    
+    font-family: 'Roboto';
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    outline: 2px solid rgb(228, 228, 228);
+    background-color: rgb(255, 255, 255);
+    font-weight: 700;
+    transition: 0.5s;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

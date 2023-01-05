@@ -21,11 +21,12 @@ export default function SelectInput(props: {
     placeholder: string,
     inputLimit: number,
     defaultValue: string[],
-    defaultRepeatedInfo?: repeatedInfo
+    defaultRepeatedInfo?: repeatedInfo,
+    disabled?: boolean
 }) {
 
     
-    const { propertyName, propertyOptions, inputLimit, defaultValue, defaultRepeatedInfo } = props
+    const { propertyName, propertyOptions, inputLimit, defaultValue, defaultRepeatedInfo, disabled } = props
 
     const [repeatedInfo, setRepeatedInfo] = useState<repeatedInfo>(defaultRepeatedInfo || [])
 
@@ -33,6 +34,12 @@ export default function SelectInput(props: {
 
 
     let defaultVal = defaultValue.map((item) => { return { value: item, label: item } })
+
+    console.log(defaultVal)
+
+    const [value, setValue] = useState(defaultVal)
+
+    console.log(value)
 
     const selectOptions = propertyOptions.map((item) => { return { value: item.nome, label: item.nome } })
 
@@ -49,6 +56,13 @@ export default function SelectInput(props: {
     useEffect(() => {
 
         checkIfRepeated()
+
+        const formValues = FormContext?.formInputs[propertyName]
+
+        if (formValues) {
+            setValue(formValues.map( item => { return { value: item, label: item } } ))
+        }
+
 
         return () => {
             setRepeatedInfo([])
@@ -93,6 +107,10 @@ export default function SelectInput(props: {
         defaultValue={defaultVal}
 
         noOptionsMessage={({ inputValue }) => !inputValue ? "Sem opções." : `Não foi encontrado nenhum ${propertyName}`}
+
+        isDisabled={disabled == undefined? false : disabled}
+
+        value={value}
 
         styles={{
 

@@ -7,7 +7,7 @@ import style from './event.module.scss'
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { frameContext, frontEndEventos } from './Frame';
-import { calendarRef as cref} from './Calendar';
+import { calendarRef as cref } from './Calendar';
 
 
 
@@ -22,7 +22,32 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
 
     const [styles, setStyles] = useState({})
 
+    let typeStyles: React.CSSProperties = {}
 
+    switch (props.event.type) {
+        case 0:
+            typeStyles = {
+                backgroundColor: props.event.propColor,
+                height: 'fit-content'
+            }
+            break;
+        case 1:
+            typeStyles = {
+                backgroundColor: '#383838',
+                color: 'white',
+                borderRadius: 6,
+                minHeight: zoomContext?.state? '0px' : '120px'
+
+            }
+            break;
+        case 2:
+            typeStyles = {
+                backgroundColor: '#ff3232',
+                color: 'white',
+                borderRadius: 6,
+                minHeight: zoomContext?.state? '0px' : '120px'
+            }
+    }
 
 
     const employeesArr = String(props.event?.funcionarios).split(',').filter(i => i != '')
@@ -58,31 +83,35 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
     return (
         <div className={style.eventDiv} draggable={isAdmin} ref={props.event.thisRef} onDragStart={(e) => { dragStart(e) }} style={{
             ...styles,
-            backgroundColor: props.event.propColor
+            ...typeStyles
         }} onClick={() => { selectEvent() }} onDoubleClick={() => { handleDoubleClick() }}>
             <div className={style.eventID}>
                 <span>{props.event?.proposta}</span>
             </div>
             <span className={style.eventTitle}>{props.event?.titulo}</span>
 
-            {!zoomContext?.state? 
+            {!zoomContext?.state || choosenView?.state != 'Calendar' ?
 
                 (<>
+                    {!props.event.type ? 
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span className={style.eventCoord}>
-                            <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
-                            {props.event?.responsavel}
-                        </span>
-                        {vehiclesArr.map((item) => {
-                            return <span className={style.eventCoord} key={`${props.event.id} ${item}`} id={`${props.event.id}_vehicles_div`}>
-                                <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
-                                {item}
+                    (<>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span className={style.eventCoord}>
+                                <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
+                                {props.event?.responsavel}
                             </span>
-                        })}
-                    </div>
-                    <span className={style.eventDesc}>{props.event?.desc}</span>
-                    {employeesArr.length > 0 && 
+                            {vehiclesArr.map((item) => {
+                                return <span className={style.eventCoord} key={`${props.event.id} ${item}`} id={`${props.event.id}_vehicles_div`}>
+                                    <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
+                                    {item}
+                                </span>
+                            })}
+                        </div>
+                        <span className={style.eventDesc}>{props.event?.desc}</span>
+                    </>) : <></>}
+
+                    {employeesArr.length > 0 &&
                         <div className={style.eventUL} id={`${props.event.id}_employees_div`}>
                             {employeesArr.map((item) => {
                                 return <li key={`${props.event.id} ${item}`} id={`${props.event.id}_employees_div_${item}`}>
@@ -92,14 +121,18 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
                         </div>
                     }
 
-                </>) 
-            
-            :
+                </>)
 
-                (<span className={style.eventCoord}>
-                    <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
-                    {props.event?.responsavel}
-                </span>)
+                :
+
+                    !props.event.type?  
+
+                        (<span className={style.eventCoord}>
+                            <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
+                            {props.event?.responsavel}
+                        </span>)
+
+                    : ''
 
             }
         </div>
@@ -107,6 +140,10 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
 
     function selectEvent() {
 
+
+        if (choosenView?.state != 'Calendar') {
+            return
+        }
 
         console.log('SELECTED EVENT:')
         console.log(props)

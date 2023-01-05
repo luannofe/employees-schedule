@@ -34,7 +34,7 @@ export default function Frame() {
         selected : false
     })
 
-    const [isAdmin, setAdmin] = useState(false)
+    const [isAdmin, setAdmin] = useState(true)
 
     const [datesRange, setDatesRange] = useState([dayjs().format('YYYY-MM-DD'), dayjs().add(84, 'day').format('YYYY-MM-DD')])
 
@@ -171,6 +171,7 @@ export interface frontEndEventos  {
     dataRegistrado?: string,
     propColor?: string,
     thisRef: React.RefObject<HTMLDivElement>,
+    type?: number,
     repeatedInfo?: {
         day: string,
         repeated: string[]
