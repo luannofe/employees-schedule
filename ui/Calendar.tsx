@@ -13,8 +13,6 @@ export const calendarRef = React.createRef<HTMLDivElement>()
 export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) {
     
     const isZoomed = useContext(frameContext)?.zoomContext.state
-    const eventsCtx = useContext(frameContext)?.eventsContext
-    const selectionContext = useContext(frameContext)?.eventSelectionContext
 
     useEffect(() => {
 
@@ -25,20 +23,37 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
 
         if (scrollPos && initialScrolled) {
             calendarRef.current?.scrollTo(0, parseInt(scrollPos))
-        }
-
-
-        
+        }  
 
     }, [])
+
+    useEffect(() =>{
+
+        if (!calendarRef.current) {
+            return
+        }
+
+        if (isZoomed) {
+            console.log('is zoomed')
+            const beforeZoomScrollYPos = sessionStorage.getItem('beforeZoomScrollYPos')
+            calendarRef.current.scrollTo(0, (parseInt(String(beforeZoomScrollYPos || 0)) ) * 0.22)
+        }
+
+        if (!isZoomed) {
+            const beforeZoomScrollYPos = sessionStorage.getItem('beforeZoomScrollYPos')
+            calendarRef.current.scrollTo(0, (parseInt(String(beforeZoomScrollYPos || 0)) ) / 0.22)
+        }
+
+    }, [isZoomed])
 
     return  (
 
         <motion.div className={style.calendar} ref={calendarRef} 
-
-        onClick={(e) => {checkClickedOut(e)}}
         
-        onScroll={(e) => {sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop))}}>
+        onScroll={(e) => {
+            sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop))
+            console.log(e.currentTarget.scrollTop)
+        }}>
 
             <div className={style.calendarCapsule} 
 
@@ -65,32 +80,7 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
         </motion.div>
 
         )
-    
 
-    function checkClickedOut(e: any) {
-
-        return 
-        console.log('i ran')
-
-
-        if (!selectionContext?.state.selected) {
-            return
-        }
-
-        const eventRef = selectionContext?.state.eventData?.thisRef.current
-
-        if (!eventRef) {
-            return
-        }
-
-        if (!eventRef!.contains(e.target)) {
-            
-            selectionContext?.setState({
-                selected: false
-            })
-
-        } 
-    }
 
 
 }
