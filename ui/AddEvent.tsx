@@ -30,10 +30,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //FIXME: databsae opening everly
     //FIXME: sistema de desselecionar
     //FIXME: mudar fontes
-    //FIXME: zoom no addevent
-    //FIXME: mais clareza no range de datas
     //FIXME: datas bugadas
-    //FIXME: zoom out errado
 
     //FIXME: evento especial deve ser o primeiro do dia
 
