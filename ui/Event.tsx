@@ -171,16 +171,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
         if (selectionContext?.state.eventData) {
 
             addEventFormData?.insertFormInputs({
-                titulo: selectionContext.state.eventData.titulo,
-                responsavel: selectionContext.state.eventData.responsavel,
-                dataEvento: selectionContext.state.eventData.dataEvento,
-                veiculo: selectionContext.state.eventData.veiculo,
-                funcionarios: selectionContext.state.eventData?.funcionarios,
-                desc: selectionContext.state.eventData?.desc,
-                id: selectionContext.state.eventData.id,
-                propColor: selectionContext.state.eventData.propColor,
-                proposta: selectionContext.state.eventData.proposta,
-                thisRef: selectionContext.state.eventData.thisRef
+                ...selectionContext.state.eventData
             })
         }
 

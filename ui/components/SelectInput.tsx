@@ -60,7 +60,19 @@ export default function SelectInput(props: {
         const formValues = FormContext?.formInputs[propertyName]
 
         if (formValues) {
-            setValue(formValues.map( item => { return { value: item, label: item } } ))
+
+            if (typeof formValues == 'string') {
+
+                console.log(`formValues is ${formValues}`)
+                setValue(String(formValues).split(',').map( item => { return { value: item, label: item } } ))
+
+            } else {
+
+                console.log(`formValues is ${formValues}`)
+                setValue(formValues.map( item => { return { value: item, label: item } } ))
+
+            }
+
         }
 
 
