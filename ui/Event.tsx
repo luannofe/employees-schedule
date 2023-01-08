@@ -33,7 +33,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
             break;
         case 1:
             typeStyles = {
-                backgroundColor: '#383838',
+                backgroundColor: props.event.propColor,
                 color: 'white',
                 borderRadius: 6,
                 minHeight: zoomContext?.state? '0px' : '120px'
@@ -42,7 +42,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
             break;
         case 2:
             typeStyles = {
-                backgroundColor: '#ff3232',
+                backgroundColor: props.event.propColor,
                 color: 'white',
                 borderRadius: 6,
                 minHeight: zoomContext?.state? '0px' : '120px'

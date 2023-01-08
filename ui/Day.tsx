@@ -25,6 +25,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
     const eventsContext = useContext(frameContext)?.eventsContext
     const zoomContext = useContext(frameContext)?.zoomContext
 
+    const colors = ['#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf']
     const thisMonth = new Date(props.day).toLocaleString('default', { month: 'long' }).toUpperCase()
     const thisDay = new Date(props.day).getDate()
 
@@ -42,6 +43,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
 
         if (isInView  && showMonthRef &&  showMonthRef.innerText != thisMonth) {
             showMonthRef.innerText = thisMonth
+            //showMonthRef.style.webkitTextStroke = `1px ${colors[new Date(props.day).getMonth()]}`
         }
 
     }, [isInView])
@@ -55,6 +57,20 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
                 borderRadius: '4px',
 
             }} onDrop={(e) => { onDropHandler(e) }} onDragOver={(e) => { onDragOver(e) }}>
+
+            {thisDay < 5 &&
+        
+                <div style={{
+                    height: 3,
+                    minWidth: '197px',
+                    backgroundColor: colors[new Date(props.day).getMonth()],
+                    opacity: 1 - (0.25 * (thisDay - 1)),
+                    position: 'absolute',
+                    top: -25,
+                    left: -12
+                }}></div>
+
+            }
 
             <span className={style.title}>{processedDate.day}</span>
 

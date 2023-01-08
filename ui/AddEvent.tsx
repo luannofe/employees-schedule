@@ -21,7 +21,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
 
     //TODO: deletar dias passados
-    //TODO: eventos especiais
     //TODO: traço pra diferenciar meses
     
 
@@ -98,11 +97,11 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                         <form action="post" ref={FormContext?.formRef}>
                             <div style={{display: 'flex', width: '95%', alignItems: 'flex-end'}}>
                                 <span className={styles.addEventTitle} style={{flex: 1}}>Inserir evento...</span>
-                                <input className={styles.inputBase} style={{width: '100px', fontSize: '14px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} disabled={eventType != 0} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
+                                <input className={styles.inputBase} style={{width: '100px', fontSize: '14px', padding: '4px 4px 4px 4px', height: 'fit-content', textAlign: 'center'}} disabled={eventType != 0} value={FormContext?.formInputs.proposta} maxLength={9} onChange={(e)=>{handleChange(e)}} name="proposta" type="text" placeholder='2677_22_M'  defaultValue={props.selectedEvent?.proposta}></input>
                             </div>
                             <div style={{display: 'flex', width: '95%', justifyContent: 'space-around'}}> 
                                 <label htmlFor="" style={{flex: 1}}>
-                                    <input className={styles.inputBase} maxLength={40} onChange={(e)=>{handleChange(e)}} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo || FormContext?.formInputs.titulo}/>
+                                    <input className={styles.inputBase} maxLength={40} onChange={(e)=>{handleChange(e)}} value={FormContext?.formInputs.titulo} name="titulo" type="text" placeholder='Titulo'  defaultValue={props.selectedEvent?.titulo || FormContext?.formInputs.titulo}/>
                                 </label>
                                 <label htmlFor="" style={{width: '150px', height: '100%', justifyContent: 'flex-end'}}>
                                     <input className={styles.inputBase} onBlur={e => handleDate(e)} onKeyDown={e => handleDateEnter(e)} style={{width:'110px', paddingLeft: '8px'}} name="dataEvento" type="date" placeholder='Data do evento' defaultValue={props.selectedEvent?.dataEvento} min={new Date().toISOString().split("T")[0]}/>
@@ -111,7 +110,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                             <div style={{display: 'flex', justifyContent: 'space-between', gap:'16px', width: '95%'}}>
                                 <label htmlFor="" style={{width: '220px'}}>
                                     <Image className={styles.inputIcon} src={iconPersonWorker} alt=''/>
-                                    <input className={styles.inputBase} style={{width: '230px'}} maxLength={16} disabled={eventType != 0} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={props.selectedEvent?.responsavel}/>
+                                    <input className={styles.inputBase} style={{width: '230px'}} maxLength={16} disabled={eventType != 0} value={FormContext?.formInputs.responsavel} onChange={(e)=>{handleChange(e)}} name="responsavel" type="text" placeholder='Supervisor' defaultValue={FormContext?.formInputs.titulo || props.selectedEvent?.responsavel}/>
                                 </label>
                                 <label htmlFor="">
                                     <Image className={styles.inputIcon} src={iconVehicle} alt=''/>
@@ -119,14 +118,14 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
                                 </label>
                             </div>
                             <label htmlFor="">
-                                <textarea className={styles.inputBase} disabled={eventType != 0} onChange={(e)=>{handleChange(e)}} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
+                                <textarea className={styles.inputBase} disabled={eventType != 0} onChange={(e)=>{handleChange(e)}} value={FormContext?.formInputs.desc} style={{width: '100%', resize:'none'}} name="desc" maxLength={260} rows={4} placeholder='Descrição do evento (max: 280 carácteres.)' defaultValue={props.selectedEvent?.desc}/>
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Colaboradores:</span>
                             <label htmlFor="" >
                                 <SelectInput propertyName='funcionarios' disabled={(eventType != 0 && eventType != 2)}  defaultValue={employeesArr || FormContext?.formInputs.funcionarios} placeholder='Selecione ou digite...' inputLimit={99} propertyOptions={props.cerData.funcionarios} />                        
                             </label>
                             <span className={styles.addEventTitle}  style={{fontSize: '22px'}}>Selecione uma cor:</span>
-                            <ColorsBoxInput/>
+                            <ColorsBoxInput eventTypeState={{state: eventType, set: setEventType}}/>
                             <SpecialEventButtons eventTypeState={{state: eventType, set: setEventType}}/>
                         </form>
                     </div>

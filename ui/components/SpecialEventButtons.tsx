@@ -18,13 +18,6 @@ export default function SpecialEventButtons(
     return <div className={styles.container}>
 
         <button className={styles.specialButton} type={'button'} style={{
-            backgroundColor: eventTypeState.state == 0? 'white' : 'rgb(182, 182, 182)',
-            outline: eventTypeState.state == 0? 'solid 2px rgb(182, 182, 182)' : '2px solid rgb(228, 228, 228)'
-        }}
-            onClick={(e)=>{handleClick(e,0)}}
-        >PADRÃO</button>
-
-        <button className={styles.specialButton} type={'button'} style={{
             backgroundColor: eventTypeState.state == 1? 'white' : 'rgb(182, 182, 182)',
             outline: eventTypeState.state == 1? 'solid 2px rgb(182, 182, 182)' : '2px solid rgb(228, 228, 228)'
         }}
@@ -57,11 +50,13 @@ export default function SpecialEventButtons(
             },
             {
                 proposta: 'FERIADO',
-                type: typeNumber
+                type: typeNumber,
+                propColor: '#383838'
             },
             {
                 proposta: 'ATESTADO',
-                type: typeNumber
+                type: typeNumber,
+                propColor: '#ff3232'
             }
         ]
 
@@ -81,23 +76,22 @@ export default function SpecialEventButtons(
 
             }
         })
-
-
  
     }
 
 
-    function getClearedFormData() {
-        return {
-            titulo: '',
-            dataEvento: '',
-            veiculo: [],
-            responsavel: '',
-            desc: '',
-            funcionarios: [],
-            propColor: '#BFD7D9',
-            proposta: '',
-            thisRef: React.createRef<HTMLDivElement>()
-        }
+}
+
+export function getClearedFormData() {
+    return {
+        titulo: '',
+        dataEvento: '',
+        veiculo: [],
+        responsavel: '',
+        desc: '',
+        funcionarios: [],
+        propColor: '#BFD7D9',
+        proposta: '',
+        thisRef: React.createRef<HTMLDivElement>()
     }
 }
