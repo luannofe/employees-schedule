@@ -25,7 +25,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
     const eventsContext = useContext(frameContext)?.eventsContext
     const zoomContext = useContext(frameContext)?.zoomContext
 
-    const colors = ['#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf']
+    const colors = ['#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf', '#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf']
     const thisMonth = new Date(props.day).toLocaleString('default', { month: 'long' }).toUpperCase()
     const thisDay = new Date(props.day).getDate()
 

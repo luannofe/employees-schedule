@@ -2,6 +2,8 @@
 
 import iconPersonWorker from '../public/iconPersonWorker.svg'
 import iconVehicle from '../public/iconVehicle.svg'
+import iconHoliday from '../public/iconHoliday.svg'
+import iconHealth from '../public/iconHealth.svg'
 import Image from 'next/image';
 import style from './event.module.scss'
 
@@ -23,6 +25,8 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
     const [styles, setStyles] = useState({})
 
     let typeStyles: React.CSSProperties = {}
+
+    const typeIcons = [iconHoliday, iconHealth]
 
     switch (props.event.type) {
         case 0:
@@ -68,7 +72,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
         if (imSelected && choosenView?.state == 'Calendar') {
 
             return setStyles({
-                outline: '3px solid grey',
+                outline: '3px solid rgb(213, 213, 213)',
             })
 
         } else {
@@ -85,8 +89,14 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
             ...styles,
             ...typeStyles
         }} onClick={() => { selectEvent() }} onDoubleClick={() => { handleDoubleClick() }}>
-            <div className={style.eventID}>
-                <span>{props.event?.proposta}</span>
+            <div className={style.eventID} style={{
+                width: !props.event.type? 80 : 40
+            }}>
+                {!props.event.type? 
+                    <span>{props.event?.proposta}</span>
+                    :
+                    <Image src={typeIcons[props.event.type - 1]} width={20} height={20} alt=''/>
+                }
             </div>
             <span className={style.eventTitle}>{props.event?.titulo}</span>
 

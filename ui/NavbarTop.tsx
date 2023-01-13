@@ -28,6 +28,8 @@ export default function NavbarTop(props: {
 
     useEffect(() => {
 
+        console.log(datesRange)
+
         datesRefs.forEach((dateRef, i) => {
             if (dateRef.current) {
                 dateRef.current.value = datesRange.state[i]
@@ -35,6 +37,7 @@ export default function NavbarTop(props: {
         })
 
     }, [datesRange])
+
 
     // useEffect(()=> {
     //     if (frameContext?.eventSelectionContext.state.selected) {
@@ -108,17 +111,16 @@ export default function NavbarTop(props: {
 
             <div className={styles.navbarTop}>
                 <UserCircle />
-                <Image src={'/oiIcon.png'} width={100} height={100} style={{
+                {/* <Image src={'/oiIcon.png'} width={100} height={100} style={{
 
                     width: '32px',
                     height: '32px',
                     marginRight: '11px',
                     marginLeft: 'auto'
 
-                }} alt='logo'></Image>
-                {
-                    //<span className={styles.logoPWD}>power<span>diamond</span></span>
-                }
+                }} alt='logo'></Image> */}
+                <span className={styles.logoPWD}>PW<span>D</span></span>
+
             </div>
 
         </>
@@ -131,13 +133,20 @@ export default function NavbarTop(props: {
     function handleDate(event: React.FormEvent<HTMLInputElement>, index: number) {
 
         const value = event.currentTarget.value;
-
+        
         if (new Date(value + ' 00:00:00').toLocaleDateString() == 'Invalid Date') {
             return
         }
-
+        
+        
         index == 0 ?
-            datesRange.setState(prev => [value, prev[1]])
+        datesRange.setState(prev => {
+            
+                const weekLater = dayjs(value + ' 00:00:00').add(7, 'day').format('YYYY-MM-DD')
+                const value2 = dayjs(prev[1]).diff(value, 'week') > 0? prev[1] : weekLater
+
+                return [value, value2]
+            })
             :
             datesRange.setState(prev => [prev[0], value])
     }

@@ -21,7 +21,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
 
     //TODO: deletar dias passados
-    //TODO: traço pra diferenciar meses
     
 
     //FIXME: popup não sai do input de carro
@@ -29,7 +28,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //FIXME: databsae opening everly
     //FIXME: sistema de desselecionar
     //FIXME: mudar fontes
-    //FIXME: datas bugadas
 
     //FIXME: evento especial deve ser o primeiro do dia
 
