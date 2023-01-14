@@ -17,6 +17,8 @@ $borderRadius: 15px;
 }
 
 .navbarTop {
+    font-family: 'Times New Roman', Times, serif;
+    padding-right: 16px;
     display: flex;
     align-items: center;
     background-color: $navbarColor;
@@ -35,7 +37,6 @@ $borderRadius: 15px;
     margin-right: 11px;
     text-shadow: 1px 1px 2px rgb(95, 95, 95);
     margin-left: auto;
-    margin-right: 12;
 
     span {
         color: rgb(12, 12, 87);

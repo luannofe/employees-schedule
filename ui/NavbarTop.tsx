@@ -68,7 +68,8 @@ export default function NavbarTop(props: {
                         <span style={{
                             textAlign: 'center',
                             verticalAlign: 'middle',
-                            fontWeight: '800'
+                            fontWeight: '800',
+                            fontFamily: 'Times New Roman'
                         }}>{' à '}</span>
 
                         <input type="date" name="" id="" ref={datesRefs[1]} min={dayjs(datesRange.state[0]).add(1, 'week').format('YYYY-MM-DD')} max={dayjs().add(3, 'month').format('YYYY-MM-DD')} defaultValue={datesRange.state[1]} onBlur={(e) => handleDate(e, 1)} onKeyDown={(e) => handleDateEnter(e, 1)} className={styles.dateInput} />
