@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import {Roboto} from '@next/font/google'
 
-const roboto = Roboto({
+export const roboto = Roboto({
   subsets: ['latin'],
   display: 'optional',
   weight: ['400', '500', '700', '900'],

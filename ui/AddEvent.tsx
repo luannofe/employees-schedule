@@ -13,6 +13,7 @@ import SelectedDates from './components/SelectedDates'
 import SelectInput from './components/SelectInput'
 import { apiDataResponse } from '../pages/api/data'
 import SpecialEventButtons from './components/SpecialEventButtons'
+import { roboto } from '../app/layout'
 
 
 export const addEventContext = createContext<addEventContext | null>(null)
@@ -88,7 +89,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     return  (
         <addEventContext.Provider value={addEventContextValues}>
-            <div className={styles.addEventContainer}  >
+            <div className={`${styles.addEventContainer} ${roboto.className}`}  >
                 <div className={styles.addEventWraperContainer}>  
                     <SelectedDates/>
                     <div className={styles.addEventDiv}>

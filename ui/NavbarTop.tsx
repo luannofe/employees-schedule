@@ -63,7 +63,7 @@ export default function NavbarTop(props: {
                         gap: '6px'
                     }}>
 
-                        <input type="date" name="" id="" ref={datesRefs[0]} min={dayjs().subtract(3, 'month').format('YYYY-MM-DD')} defaultValue={datesRange.state[0]} max={dayjs().add(3, 'month').subtract(1, 'week').format('YYYY-MM-DD')} onBlur={(e) => handleDate(e, 0)} onKeyDown={(e) => handleDateEnter(e, 0)} className={styles.dateInput} />
+                        <input type="date" name="" id="" ref={datesRefs[0]} min={dayjs().subtract(3, 'month').format('YYYY-MM-DD')} defaultValue={datesRange.state[0]} max={dayjs().add(8, 'month').subtract(1, 'week').format('YYYY-MM-DD')} onBlur={(e) => handleDate(e, 0)} onKeyDown={(e) => handleDateEnter(e, 0)} className={styles.dateInput} />
 
                         <span style={{
                             textAlign: 'center',
@@ -72,7 +72,7 @@ export default function NavbarTop(props: {
                             fontFamily: 'Times New Roman'
                         }}>{' à '}</span>
 
-                        <input type="date" name="" id="" ref={datesRefs[1]} min={dayjs(datesRange.state[0]).add(1, 'week').format('YYYY-MM-DD')} max={dayjs().add(3, 'month').format('YYYY-MM-DD')} defaultValue={datesRange.state[1]} onBlur={(e) => handleDate(e, 1)} onKeyDown={(e) => handleDateEnter(e, 1)} className={styles.dateInput} />
+                        <input type="date" name="" id="" ref={datesRefs[1]} min={dayjs(datesRange.state[0]).add(1, 'week').format('YYYY-MM-DD')} max={dayjs().add(8, 'month').format('YYYY-MM-DD')} defaultValue={datesRange.state[1]} onBlur={(e) => handleDate(e, 1)} onKeyDown={(e) => handleDateEnter(e, 1)} className={styles.dateInput} />
 
 
                         <button className={styles.undoButton} onClick={(e) => handleUndoDateChanges(e)}>

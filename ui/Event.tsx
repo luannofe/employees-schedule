@@ -90,12 +90,21 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
             ...typeStyles
         }} onClick={() => { selectEvent() }} onDoubleClick={() => { handleDoubleClick() }}>
             <div className={style.eventID} style={{
-                width: !props.event.type? 80 : 40
+                width: !props.event.type? 80 : props.event.type == 1? 100 : 140
             }}>
                 {!props.event.type? 
+
                     <span>{props.event?.proposta}</span>
                     :
-                    <Image src={typeIcons[props.event.type - 1]} width={20} height={20} alt=''/>
+                    <div style={{
+                        display: 'flex',
+                        gap: 8,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Image src={typeIcons[props.event.type - 1]} width={20} height={20} alt=''/>
+                        <span style={{color: props.event.type == 2? '#8C0000' : 'black'}}>{props.event.proposta}</span>
+                    </div>
                 }
             </div>
             <span className={style.eventTitle}>{props.event?.titulo}</span>

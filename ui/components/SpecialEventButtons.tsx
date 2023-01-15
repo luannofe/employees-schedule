@@ -33,6 +33,9 @@ export default function SpecialEventButtons(
         </button>
 
         <button className={styles.specialButton} type={'button'} style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: eventTypeState.state == 2? 'white' : 'rgb(200, 200, 200)',
             outline: eventTypeState.state == 2? 'solid 2px rgb(200, 200, 200)' : '2px solid rgb(228, 228, 228)',
             color: 'rgb(140, 0, 0)'
@@ -68,7 +71,7 @@ export default function SpecialEventButtons(
                 propColor: '#383838'
             },
             {
-                proposta: 'AFAST.',
+                proposta: 'AFAST. MÉDICO',
                 type: typeNumber,
                 propColor: '#8C0000'
             }
