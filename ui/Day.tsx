@@ -37,7 +37,7 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
 
     useEffect(()=> {
         checkIfRepeated()
-    }, [eventsContext?.state])
+    }, [eventsContext?.state, zoomContext?.state])
 
     useEffect(() => {
 
