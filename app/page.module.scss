@@ -21,28 +21,28 @@ $borderRadius: 15px;
 
 @font-face {
     font-family: 'Roboto';
-    src: url('/public/fonts/Roboto-Regular.ttf') format("truetype");
+    src: url('../public/fonts/Roboto-Regular.ttf') format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('/public/fonts/Roboto-RegularItalic.ttf') format("truetype");
+    src: url('../public/fonts/Roboto-RegularItalic.ttf') format("truetype");
     font-weight: normal;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('/public/fonts/Roboto-Bold.ttf') format("truetype");
+    src: url('../public/fonts/Roboto-Bold.ttf') format("truetype");
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('/public/fonts/Roboto-BoldItalic.ttf') format("truetype");
+    src: url('../public/fonts/Roboto-BoldItalic.ttf') format("truetype");
     font-weight: bold;
     font-style: italic;
 }
