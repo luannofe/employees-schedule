@@ -13,7 +13,7 @@ import SelectedDates from './components/SelectedDates'
 import SelectInput from './components/SelectInput'
 import { apiDataResponse } from '../pages/api/data'
 import SpecialEventButtons from './components/SpecialEventButtons'
-import { roboto } from '../app/layout'
+import { roboto } from '../lib/fonts'
 
 
 export const addEventContext = createContext<addEventContext | null>(null)

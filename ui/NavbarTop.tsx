@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import UserCircle from './components/UserCircle'
 import { calendarRef } from './Calendar'
+import { roboto } from '../lib/fonts'
 
 
 export default function NavbarTop(props: {
@@ -50,6 +51,8 @@ export default function NavbarTop(props: {
     return (
 
         <>
+            <span style={{position: 'absolute', top: -50}} className={roboto.className}>a</span>
+
             <div className={styles.middleContainer}>
 
                 <div style={{ width: '340px', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
