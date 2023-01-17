@@ -20,7 +20,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
     const addEventFormData = useContext(frameContext)?.formContext
     const zoomContext = useContext(frameContext)?.zoomContext
     const isAdmin = useContext(frameContext)?.adminContext.state
-    const calendarRef = useRef(cref)
+    const calendarRef = useRef(cref) 
 
     const [styles, setStyles] = useState({})
 

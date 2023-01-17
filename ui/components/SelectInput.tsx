@@ -287,7 +287,7 @@ export default function SelectInput(props: {
             let i = 0
             for (let evento of day.eventos) {
 
-                if (evento.id == FormContext.formInputs.id) {
+                if (day.eventos.length == 1 ) {
                     break
                 }
 

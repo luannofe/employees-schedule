@@ -31,8 +31,6 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
     //FIXME: sistema de desselecionar
     //FIXME: mudar fontes
 
-    //FIXME: checkar repetido nao esta funcionando
-    //FIXME: escurecer seleção
     //FIXME: drag and drop melhorado
     //FIXME: aumentar o dia 
 

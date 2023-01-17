@@ -13,7 +13,7 @@ export default function ColorsBoxInput(
     }
 ) {
 
-    const colors = ['#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf']
+    const colors = ['#BFD7D9', '#d9bfbf', '#d7bfd9', '#c2d9bf', '#d9bfd3', '#bfc0d9', '#d8d9bf', '#d9cebf']
     const formContext = useContext(frameContext)?.formContext
     const choosenView = useContext(frameContext)?.choosenViewContext.state
 
@@ -43,7 +43,8 @@ export default function ColorsBoxInput(
         formContext?.insertFormInputs((previousValues) => {
             return {
                 ...previousValues,
-                propColor: color
+                propColor: color,
+                type: 0
             }
         })
     }
