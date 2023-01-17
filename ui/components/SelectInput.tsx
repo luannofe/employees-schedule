@@ -287,9 +287,14 @@ export default function SelectInput(props: {
             let i = 0
             for (let evento of day.eventos) {
 
-                if (day.eventos.length == 1 ) {
+                if (evento.id == FormContext.formInputs.id)  {
                     break
                 }
+
+
+                // if (day.eventos.length == 1 ) {
+                //     break
+                // }
 
                 const eventoPropertyName = String(evento[propertyName]).split(',')
 
