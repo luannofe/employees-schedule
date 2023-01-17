@@ -52,7 +52,6 @@ export default  function Calendar( props: { data: frontEndCalendarEventos[] } ) 
         
         onScroll={(e) => {
             sessionStorage.setItem('calendarScrlPos', String(e.currentTarget.scrollTop))
-            console.log(e.currentTarget.scrollTop)
         }}>
 
             <div className={style.calendarCapsule} 

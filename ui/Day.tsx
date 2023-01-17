@@ -247,17 +247,23 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
 
         function checkInEvents(propertyName: 'funcionarios' | 'veiculo') {
 
+            let debug = thisDay == 24
+
             events.map((event, i) => {
 
                 if (!event[propertyName]) {
+                    debug && console.log('Early returned')
                     return
                 }
-    
+                
+
+
                 const property = String(event[propertyName]).split(',').filter(s => s != '')
+                debug && console.log(`property = ${property}`)
     
                 property.map( (item) => {
     
-                    if (events.filter((evt) => {
+                    const hasRepeatedEvents = events.filter((evt) => {
     
                         if (evt.id == event.id) {
                             return false
@@ -268,33 +274,60 @@ export default function Day(props: { events: frontEndEventos[], day: string, thi
                         }
     
                         const evtProperty = String(evt[propertyName]).split(',').filter(s => s != '').filter( (f, i) => f == item)
-                        console.log(`evtproperty is [${evtProperty}] and is ${evtProperty.length > 0}`)
+                        debug && console.log(`evtproperty is [${evtProperty}] and is ${evtProperty.length > 0}`)
                         return evtProperty.length > 0
     
-                    }).length > 0) {
-                        //if repeated then:
+                    })
+
+                    debug && console.log(`hasRepeatedEvents for ${item} of ${event.titulo} is ${hasRepeatedEvents.length > 0}`)
+
+                    if (hasRepeatedEvents.length > 0) {
+
+                        debug && console.log(`event ${event.titulo} has repeated props.`)
 
                         const eventUl = document.getElementById(`${event.id}_employees_div`)
-                        const eventVehicles = document.getElementById(`${event.id}_vehicles_div`)
+                        debug && console.log(eventUl)
+                        const eventVehicles = [document.getElementById(`${event.id}_vehicles_div0`), document.getElementById(`${event.id}_vehicles_div1`)]
+                        debug && console.log(eventVehicles)
 
-                        if (eventUl && eventVehicles) {
-                            eventUl.style.color = 'red'
-                            eventVehicles.style.color = 'red'
+                        if (propertyName == 'funcionarios') {
+                            if (eventUl) {
+                                eventUl.style.color = 'red'
+                            }
+                        }
+                        
+                        if (propertyName == 'veiculo') {
+
+                            eventVehicles.forEach(vehicleDiv => {
+                                if (vehicleDiv) {
+                                    vehicleDiv.style.color = 'red'
+                                }
+                            });
                         }
 
 
                     } else {
 
+                        debug && console.log(`event ${event.titulo} has no repeated props`)
                         const eventUl = document.getElementById(`${event.id}_employees_div`)
-                        const eventVehicles = document.getElementById(`${event.id}_vehicles_div`)
+                        const eventVehicles = [document.getElementById(`${event.id}_vehicles_div0`), document.getElementById(`${event.id}_vehicles_div1`)]
 
                         const isPast = new Date(event.dataEvento + ' 00:00:00').getTime() < new Date(new Date().setHours(0, 0, 0, 0)).getTime()
                         const color = isPast? 'rgb(160,160,160)' : 'black'
 
+                        if (propertyName == 'funcionarios') {
+                            if (eventUl) {
+                                eventUl.style.color = color
+                            }
+                        }
+                        
+                        if (propertyName == 'veiculo') {
 
-                        if (eventUl && eventVehicles) {
-                            eventUl.style.color = color
-                            eventVehicles.style.color = color
+                            eventVehicles.forEach(vehicleDiv => {
+                                if (vehicleDiv) {
+                                    vehicleDiv.style.color = color
+                                }
+                            });
                         }
                     }
     

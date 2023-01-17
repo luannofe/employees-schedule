@@ -120,8 +120,8 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
                                 <Image style={{ marginRight: '6px' }} src={iconPersonWorker} alt='icone de pessoa'></Image>
                                 {props.event?.responsavel}
                             </span>
-                            {vehiclesArr.map((item) => {
-                                return <span className={style.eventCoord} key={`${props.event.id} ${item}`} id={`${props.event.id}_vehicles_div`}>
+                            {vehiclesArr.map((item, i) => {
+                                return <span className={style.eventCoord} key={`${props.event.id} ${item}`} id={`${props.event.id}_vehicles_div${i}`}>
                                     <Image style={{ marginRight: '6px' }} src={iconVehicle} alt='icone de veículo'></Image>
                                     {item}
                                 </span>
