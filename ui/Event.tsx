@@ -72,7 +72,7 @@ export default function (props: { event: frontEndEventos, repeated?: string[] })
         if (imSelected && choosenView?.state == 'Calendar') {
 
             return setStyles({
-                outline: '3px solid rgb(213, 213, 213)',
+                outline: '3px solid rgb(180, 180, 180)',
             })
 
         } else {
