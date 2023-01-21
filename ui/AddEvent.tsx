@@ -23,6 +23,9 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     //TODO: deletar dias passados
     //TODO: preferencialmente escolher cor que nao esta sendo usada no dia
+    //TODO: FERIADO NO DIA
+    //TODO: magnetismo sla.
+
     
 
     //FIXME: popup não sai do input de carro
@@ -33,6 +36,7 @@ export default function AddEvent(props: {selectedEvent?: frontEndEventos, cerDat
 
     //FIXME: drag and drop melhorado
     //FIXME: aumentar o dia 
+    //FIXME: letra branca
 
     //FIXME: evento especial deve ser o primeiro do dia
 
